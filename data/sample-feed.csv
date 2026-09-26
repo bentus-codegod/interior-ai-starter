@@ -1,0 +1,4 @@
+sku;name;priceEur;category;retailer;affiliateUrl;widthCm;depthCm;heightCm;styleTags
+SF-DEMO-01;Leinensofa "Demo";849.00;Sofa;Beispiel-Händler;https://example-haendler.de/p/SF-DEMO-01?aff=interior-ai;215;94;84;warm-minimal
+TB-DEMO-01;Couchtisch Eiche "Demo";299.00;Couchtisch;Beispiel-Händler;https://example-haendler.de/p/TB-DEMO-01?aff=interior-ai;105;58;40;warm-minimal;soft-modern
+RUG-DEMO-01;Wollteppich "Demo";219.00;Teppich;Beispiel-Händler;https://example-haendler.de/p/RUG-DEMO-01?aff=interior-ai;190;290;2;warm-minimal

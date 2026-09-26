@@ -1,0 +1,66 @@
+import { NextRequest, NextResponse } from "next/server";
+import { renderRoom } from "@/lib/ai/renderRoom";
+import { validateImageUpload } from "@/lib/validation";
+import { checkRateLimit, checkCostCap, recordSpend } from "@/lib/rateLimit";
+
+export const runtime = "nodejs";
+
+// Dieser Endpunkt ist die einzige Stelle, die das KI-Modell aufruft.
+// Der Browser redet nur mit dieser Route — nie direkt mit dem Anbieter.
+// Reihenfolge der Schutzmechanismen: Rate-Limit -> Kosten-Cap ->
+// Upload-Validierung -> erst dann der teure Modell-Call.
+export async function POST(req: NextRequest) {
+  try {
+    const ip =
+      req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
+
+    if (!checkRateLimit(ip)) {
+      return NextResponse.json(
+        { error: "Zu viele Anfragen. Bitte später erneut versuchen." },
+        { status: 429 }
+      );
+    }
+
+    const cap = checkCostCap();
+    if (!cap.ok) {
+      return NextResponse.json(
+        { error: "Tageslimit erreicht. Morgen wieder verfügbar." },
+        { status: 429 }
+      );
+    }
+
+    const body = await req.json().catch(() => null);
+    if (!body || typeof body !== "object") {
+      return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
+    }
+
+    const { imageDataUrl, lookId, budgetCents } = body as {
+      imageDataUrl?: unknown;
+      lookId?: unknown;
+      budgetCents?: unknown;
+    };
+
+    const check = validateImageUpload(imageDataUrl);
+    if (!check.ok) {
+      return NextResponse.json({ error: check.error }, { status: 400 });
+    }
+    if (typeof lookId !== "string") {
+      return NextResponse.json({ error: "Kein Look gewählt." }, { status: 400 });
+    }
+
+    const budget =
+      typeof budgetCents === "number" && budgetCents > 0 ? budgetCents : 0;
+
+    const result = await renderRoom(imageDataUrl as string, lookId, budget);
+    recordSpend();
+
+    return NextResponse.json(result);
+  } catch (err) {
+    // Fehler bewusst generisch nach außen — keine internen Details leaken.
+    console.error("render error:", err);
+    return NextResponse.json(
+      { error: "Render fehlgeschlagen. Bitte erneut versuchen." },
+      { status: 500 }
+    );
+  }
+}
