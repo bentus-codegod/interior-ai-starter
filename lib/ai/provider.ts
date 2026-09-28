@@ -1,5 +1,6 @@
 import "server-only";
 import { env } from "@/lib/env";
+import { comfyProvider } from "@/lib/ai/comfyProvider";
 
 // Einheitliche Schnittstelle für jedes Bildmodell. So kannst du den
 // Anbieter wechseln (Replicate, fal, Google ...), ohne den Rest der
@@ -152,6 +153,11 @@ export function getProvider(): ImageProvider {
       return modelslabProvider;
     case "replicate":
       return replicateProvider;
+    case "comfyui":
+      // Eigene KI (SDXL + ControlNet) auf gemieteter GPU, z. B. RunPod.
+      // In eigener Datei, damit dieser Provider optionale Node-APIs
+      // (fs, FormData) nur lädt, wenn er wirklich gebraucht wird.
+      return comfyProvider;
     default:
       return mockProvider;
   }
