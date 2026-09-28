@@ -54,7 +54,7 @@ async function uploadImage(base: string, dataUrl: string): Promise<string> {
   const filename = `room_${Date.now()}.${ext}`;
 
   const form = new FormData();
-  form.append("image", new Blob([buffer], { type: mime }), filename);
+  form.append("image", new Blob([new Uint8Array(buffer)], { type: mime }), filename);
   form.append("overwrite", "true");
 
   const res = await fetch(`${base}/upload/image`, { method: "POST", body: form });
