@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import { Fraunces, Inter } from "next/font/google";
 import "./globals.css";
+import { SiteFooter } from "@/components/SiteFooter";
 
 const fraunces = Fraunces({
   subsets: ["latin"],
@@ -29,7 +30,10 @@ export default function RootLayout({
 }) {
   return (
     <html lang="de" className={`${fraunces.variable} ${inter.variable}`}>
-      <body className="bg-paper text-ink font-body antialiased">{children}</body>
+      <body className="bg-paper text-ink font-body antialiased">
+        {children}
+        <SiteFooter />
+      </body>
     </html>
   );
 }
