@@ -37,7 +37,7 @@ Nach der Installation ComfyUI einmal **Restart** + Browser neu laden.
 1. `interior_workflow.json` im ComfyUI-Fenster per **Load** öffnen.
 2. Zeigt ein Node rot → fehlt ein Modell/Custom-Node (siehe Schritt 2).
 3. Testfoto in den `input/`-Ordner legen und im `LoadImage`-Node wählen.
-4. **Queue Prompt** → Ergebnis erscheint rechts, liegt in `output/`.
+4. **Queue Prompt** → Ergebnis erscheint rechts (nur als Vorschau in `temp/`, siehe Löschkonzept).
 
 ## 4. Mit der App verbinden
 
@@ -59,6 +59,20 @@ deine eigene KI statt des Platzhalters.
 | `cfg` | wie strikt dem Prompt gefolgt wird | 6.0 |
 | `steps` | mehr = feiner, aber langsamer | 30 |
 | Node `"16"` `strength` | wie stark die Raum-Geometrie gehalten wird | 0.65 |
+
+## 5. Löschkonzept (DSGVO) — Pflicht vor echten Nutzern
+
+ComfyUI hat keine Lösch-Schnittstelle. Jedes hochgeladene Raumfoto bleibt
+sonst in `ComfyUI/input/` liegen.
+
+- Ergebnisbilder: Der Workflow nutzt `PreviewImage` statt `SaveImage` —
+  sie landen nur in `temp/`, das ComfyUI bei jedem Start leert.
+- Uploads heißen `interior_ai_room_…` und werden von `comfy/cleanup.sh`
+  nach 15 Minuten gelöscht. Skript auf den Pod kopieren (`/workspace/`)
+  und per cron alle 10 Minuten starten — Anleitung steht im Skript.
+- Zusätzlich: Pod ohne dauerhaftes Volume betreiben oder das Volume
+  regelmäßig leeren; mit RunPod einen AV-Vertrag (DPA) abschließen und die
+  Region (EU) in der Datenschutzerklärung nennen.
 
 ## Hinweise
 
