@@ -1,7 +1,8 @@
 "use client";
 
 import { useRef, useState } from "react";
-import { MAX_UPLOAD_BYTES, ALLOWED_MIME } from "@/lib/validation";
+import { ALLOWED_MIME } from "@/lib/validation";
+import { drawScaled, resizeImageFile } from "@/lib/imageResize";
 
 // Zusätzlich zu Fotos akzeptieren wir jetzt auch Videos. Aus einem Video
 // ziehen wir automatisch ein Standbild (~0,5 s), das als Bild für den
@@ -9,6 +10,8 @@ import { MAX_UPLOAD_BYTES, ALLOWED_MIME } from "@/lib/validation";
 // (mehrere Frames) ist ein späterer Ausbau.
 const ALLOWED_VIDEO = ["video/mp4", "video/webm", "video/quicktime"];
 const MAX_VIDEO_BYTES = 60 * 1024 * 1024; // 60 MB
+// Rohdatei darf groß sein — sie wird vor dem Senden ohnehin verkleinert.
+const MAX_RAW_IMAGE_BYTES = 25 * 1024 * 1024; // 25 MB
 
 export function RoomUploader({
   imageDataUrl,
@@ -20,17 +23,19 @@ export function RoomUploader({
   const inputRef = useRef<HTMLInputElement>(null);
   const [fromVideo, setFromVideo] = useState(false);
 
-  function handleImage(file: File) {
-    if (file.size > MAX_UPLOAD_BYTES) {
-      alert("Bild ist zu groß (max. 8 MB).");
+  // Foto verkleinert übernehmen (siehe lib/imageResize.ts).
+  async function handleImage(file: File) {
+    if (file.size > MAX_RAW_IMAGE_BYTES) {
+      alert("Bild ist zu groß (max. 25 MB).");
       return;
     }
-    const reader = new FileReader();
-    reader.onload = () => {
+    try {
+      const dataUrl = await resizeImageFile(file);
       setFromVideo(false);
-      onImage(String(reader.result));
-    };
-    reader.readAsDataURL(file);
+      onImage(dataUrl);
+    } catch {
+      alert("Bild konnte nicht gelesen werden.");
+    }
   }
 
   // Aus einem Video ein Standbild extrahieren.
@@ -49,14 +54,13 @@ export function RoomUploader({
       video.currentTime = Math.min(0.5, video.duration || 0.5);
     };
     video.onseeked = () => {
-      const canvas = document.createElement("canvas");
-      canvas.width = video.videoWidth || 1280;
-      canvas.height = video.videoHeight || 960;
-      const ctx = canvas.getContext("2d");
-      if (ctx) {
-        ctx.drawImage(video, 0, 0, canvas.width, canvas.height);
+      try {
         setFromVideo(true);
-        onImage(canvas.toDataURL("image/jpeg", 0.9));
+        onImage(
+          drawScaled(video, video.videoWidth || 1280, video.videoHeight || 960)
+        );
+      } catch {
+        alert("Standbild konnte nicht erzeugt werden.");
       }
       URL.revokeObjectURL(url);
     };
@@ -90,7 +94,7 @@ export function RoomUploader({
           <span className="px-6 text-center text-sm text-ink/60">
             Raumfoto oder -video auswählen
             <span className="mt-1 block text-xs text-ink/40">
-              Foto (JPEG, PNG, WebP · max. 8 MB) oder Video (MP4, WebM, MOV · max. 60 MB)
+              Foto (JPEG, PNG, WebP · max. 25 MB) oder Video (MP4, WebM, MOV · max. 60 MB)
             </span>
           </span>
         )}

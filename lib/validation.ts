@@ -1,4 +1,7 @@
-export const MAX_UPLOAD_BYTES = 8 * 1024 * 1024; // 8 MB
+// Das Frontend verkleinert Fotos auf max. 1536 px (lib/imageResize.ts),
+// das ergibt typischerweise < 1 MB. 3 MB lässt Luft und bleibt sicher
+// unter Vercels Anfrage-Limit von ~4,5 MB (Base64 ist ~33 % größer).
+export const MAX_UPLOAD_BYTES = 3 * 1024 * 1024; // 3 MB
 export const ALLOWED_MIME = ["image/jpeg", "image/png", "image/webp"];
 
 export type UploadCheck =
@@ -26,7 +29,7 @@ export function validateImageUpload(dataUrl: unknown): UploadCheck {
   // Base64 -> ungefähre Bytegröße
   const bytes = Math.floor((base64.length * 3) / 4);
   if (bytes > MAX_UPLOAD_BYTES) {
-    return { ok: false, error: "Bild ist zu groß (max. 8 MB)." };
+    return { ok: false, error: "Bild ist zu groß (max. 3 MB nach Verkleinerung)." };
   }
   return { ok: true, mime, bytes };
 }

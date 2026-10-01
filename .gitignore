@@ -17,3 +17,7 @@
 .DS_Store
 *.pem
 npm-debug.log*
+
+# Build-Artefakte von TypeScript/Next (werden lokal neu erzeugt)
+*.tsbuildinfo
+next-env.d.ts
