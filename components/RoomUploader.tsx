@@ -176,6 +176,8 @@ export function RoomUploader({
         onChange={(e) => {
           const file = e.target.files?.[0];
           if (file) handleFile(file);
+          // Zurücksetzen, damit dieselbe Datei erneut gewählt werden kann.
+          e.target.value = "";
         }}
       />
     </div>

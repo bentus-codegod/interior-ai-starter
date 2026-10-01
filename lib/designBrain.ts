@@ -52,6 +52,12 @@ function pickForCategory(
   }
 
   if (affordable.length > 0) return affordable[affordable.length - 1];
+  // Kein Stück im Stil passt ins Budget -> lieber ein bezahlbares aus
+  // einem anderen Stil als das Budget zu sprengen.
+  const anyAffordable = inCategory(catalog, category)
+    .filter((p) => p.priceCents * quantity <= remainingCents)
+    .sort((a, b) => a.priceCents - b.priceCents);
+  if (anyAffordable.length > 0) return anyAffordable[anyAffordable.length - 1];
   // Deko ist Kür: passt nichts mehr ins Budget, lassen wir sie weg.
   if (isDeko(sorted[0])) return undefined;
   return sorted[0]; // Möbel sind Pflicht: nichts passt -> günstigstes

@@ -10,13 +10,9 @@ import {
   type Measurements,
   type Floorplan,
 } from "@/components/RoomMeasurements";
-import {
-  looksForRoom,
-  rooms,
-  type Product,
-  type RoomItem,
-} from "@/lib/catalog";
+import { looksForRoom, rooms } from "@/lib/catalog";
 import { MAX_STYLE_TEXT } from "@/lib/stylePrompt";
+import type { RenderRoomResult } from "@/lib/ai/renderRoom";
 import type { RoomDims } from "@/lib/fitCheck";
 
 // Wandelt die Texteingaben in Zahlen um. Gibt nur dann Raummaße zurück,
@@ -32,25 +28,12 @@ function toRoomDims(m: Measurements): RoomDims | undefined {
   return { widthCm, lengthCm, doorWidthCm, ceilingHeightCm };
 }
 
-// Antwort von /api/render (siehe RenderRoomResult in lib/ai/renderRoom.ts).
-type Result = {
-  renderImageUrl: string;
-  provider: string;
-  look: {
-    id: string;
-    name: string;
-    description: string;
-    styleTag: string;
-    couplings: string[][];
-  };
-  items: RoomItem[];
-  subtotalCents: number;
-  budget: { budgetCents: number; logisticsCents: number; furnitureBudgetCents: number };
-  alternatives: Record<string, Product[]>;
-};
+// Antwort von /api/render. Nur der Typ wird importiert — der Server-Code
+// selbst landet nicht im Browser-Bundle.
+type Result = RenderRoomResult;
 
 export default function Home() {
-  const [image, setImage] = useState<string | null>(null);
+  const [image, setImageState] = useState<string | null>(null);
   const [roomType, setRoomType] = useState<string>(rooms[0].id);
   const roomLooks = looksForRoom(roomType);
   const [lookId, setLookId] = useState<string>(roomLooks[0].id);
@@ -63,6 +46,13 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
+
+  // Neues Foto/Standbild = altes Ergebnis passt nicht mehr dazu.
+  function setImage(next: string | null) {
+    setImageState(next);
+    setResult(null);
+    setError(null);
+  }
 
   async function generate() {
     if (!image) return;
@@ -242,7 +232,7 @@ export default function Home() {
           {result ? (
             <div className="space-y-6">
               <RenderResult
-                before={image!}
+                before={image ?? ""}
                 after={result.renderImageUrl}
                 provider={result.provider}
               />

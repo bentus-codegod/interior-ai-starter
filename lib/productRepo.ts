@@ -5,8 +5,10 @@ import { jsonProducts, type Product, type RoomItem } from "@/lib/catalog";
 // Die eine Stelle, an der der Server Produkte holt.
 //   * Supabase konfiguriert -> Tabelle public.products (nur aktive)
 //   * sonst                 -> data/catalog.json
-// Fällt die Datenbank aus, nehmen wir ebenfalls die JSON-Datei, damit die
-// Seite nicht leer bleibt (mit Log-Eintrag).
+// Fällt die konfigurierte Datenbank aus (oder ist leer), zeigt die Seite
+// zur Not die JSON-Produkte an — VERKAUFT werden sie dann aber nicht
+// (strict-Modus im Checkout), denn Bestellpositionen verweisen per
+// Fremdschlüssel auf public.products und Preise müssen aus der DB kommen.
 
 type ProductRow = {
   sku: string;
@@ -59,7 +61,7 @@ function rowToProduct(r: ProductRow): Product {
 const CACHE_MS = 60_000;
 let cache: { at: number; products: Product[] } | null = null;
 
-export async function getProducts(): Promise<Product[]> {
+export async function getProducts(opts: { strict?: boolean } = {}): Promise<Product[]> {
   const db = getSupabase();
   if (!db) return jsonProducts;
   if (cache && Date.now() - cache.at < CACHE_MS) return cache.products;
@@ -71,7 +73,10 @@ export async function getProducts(): Promise<Product[]> {
     .returns<ProductRow[]>();
 
   if (error || !data || data.length === 0) {
-    console.error("productRepo: Datenbank nicht nutzbar, nehme catalog.json", error);
+    if (opts.strict) {
+      throw new Error(`Produktdatenbank nicht nutzbar: ${error?.message ?? "keine aktiven Produkte"}`);
+    }
+    console.error("productRepo: Datenbank nicht nutzbar, zeige catalog.json an", error);
     return jsonProducts;
   }
   const products = data.map(rowToProduct);
@@ -88,7 +93,7 @@ export const MAX_QUANTITY = 20;
 export async function resolveItems(
   lines: { sku: string; quantity: number }[]
 ): Promise<RoomItem[]> {
-  const bySku = new Map((await getProducts()).map((p) => [p.sku, p]));
+  const bySku = new Map((await getProducts({ strict: true })).map((p) => [p.sku, p]));
   const out: RoomItem[] = [];
   for (const line of lines) {
     const product = bySku.get(line.sku);

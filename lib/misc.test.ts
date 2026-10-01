@@ -38,3 +38,17 @@ describe("checkFit mit Deckenhöhe", () => {
     expect(checkFit(shelf, { widthCm: 0, lengthCm: 0, doorWidthCm: 0, ceilingHeightCm: 260 }).verdict).toBe("fits");
   });
 });
+
+describe("checkFit Grundfläche (Stück darf gedreht werden)", () => {
+  const sofa = jsonProducts.find((p) => p.sku === "SF-LINEN-01")!; // 220 × 95
+  it("Sofa passt an die lange Wand eines schmalen Raums", () => {
+    // Regression: früher 'Passt nicht', weil nur die kurze Raumseite zählte
+    expect(checkFit(sofa, { widthCm: 200, lengthCm: 450, doorWidthCm: 0 }).verdict).toBe("fits");
+  });
+  it("zu lang für den Raum", () => {
+    expect(checkFit(sofa, { widthCm: 200, lengthCm: 210, doorWidthCm: 0 }).verdict).toBe("no");
+  });
+  it("knapp bei wenig Laufweg", () => {
+    expect(checkFit(sofa, { widthCm: 140, lengthCm: 450, doorWidthCm: 0 }).verdict).toBe("tight");
+  });
+});

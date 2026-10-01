@@ -51,6 +51,8 @@ export async function createPendingOrder(input: {
     }))
   );
   if (itemsError) {
+    // Keine halbe Bestellung zurücklassen.
+    await db.from("orders").delete().eq("id", order.id);
     throw new Error(`Bestellpositionen nicht gespeichert: ${itemsError.message}`);
   }
 }
@@ -64,7 +66,7 @@ export async function markOrderPaid(session: Stripe.Checkout.Session): Promise<v
     return;
   }
   const shipping = session.collected_information?.shipping_details ?? null;
-  const { error } = await db
+  const { data: updated, error } = await db
     .from("orders")
     .update({
       status: "paid",
@@ -75,8 +77,25 @@ export async function markOrderPaid(session: Stripe.Checkout.Session): Promise<v
       shipping_address: shipping?.address ?? null,
     })
     .eq("stripe_session_id", session.id)
-    .eq("status", "pending");
+    .eq("status", "pending")
+    .select("id");
   if (error) throw new Error(`Bestellung nicht aktualisiert: ${error.message}`);
+  if (updated && updated.length > 0) return;
+
+  // Nichts aktualisiert: Entweder kam das Ereignis doppelt (Bestellung ist
+  // schon bezahlt) — dann ist alles gut. Oder es gibt zu dieser Zahlung gar
+  // keine Bestellung — dann Fehler werfen, damit Stripe es erneut versucht
+  // und der Fall im Log/Stripe-Dashboard sichtbar wird statt verloren geht.
+  const { data: existing } = await db
+    .from("orders")
+    .select("status")
+    .eq("stripe_session_id", session.id)
+    .maybeSingle();
+  if (!existing || existing.status === "expired" || existing.status === "cancelled") {
+    throw new Error(
+      `Zahlung ${session.id} ohne passende offene Bestellung (Status: ${existing?.status ?? "fehlt"})`
+    );
+  }
 }
 
 export async function setOrderStatus(

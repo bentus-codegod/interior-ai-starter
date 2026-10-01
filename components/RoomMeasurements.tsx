@@ -159,6 +159,8 @@ export function RoomMeasurements({
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) handleFloorplan(file);
+            // Zurücksetzen, damit dieselbe Datei erneut gewählt werden kann.
+            e.target.value = "";
           }}
         />
       </div>

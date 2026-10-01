@@ -23,7 +23,9 @@ export function renderCostEur(provider: string): number {
 }
 
 export async function logRenderEvent(e: RenderEvent): Promise<void> {
-  const costEur = e.success ? renderCostEur(e.provider) : 0;
+  // Auch fehlgeschlagene Versuche zählen: Anbieter rechnen angefangene
+  // GPU-Zeit oft trotzdem ab. Lieber konservativ als eine löchrige Bremse.
+  const costEur = renderCostEur(e.provider);
   const line = {
     provider: e.provider,
     look_id: e.lookId ?? null,
@@ -44,17 +46,17 @@ export async function logRenderEvent(e: RenderEvent): Promise<void> {
 }
 
 // Heutige Ausgaben laut Datenbank (UTC-Tag), oder null ohne DB / bei Fehler.
-// So gilt die Kostenbremse über alle Server-Instanzen hinweg.
+// So gilt die Kostenbremse über alle Server-Instanzen hinweg. Summiert wird
+// in der Datenbank (View render_costs_daily, eine Zeile je Anbieter) — eine
+// Liste aller Renders wäre bei PostgREST auf 1000 Zeilen begrenzt.
 export async function spentTodayEur(): Promise<number | null> {
   const db = getSupabase();
   if (!db) return null;
-  const startOfDay = new Date();
-  startOfDay.setUTCHours(0, 0, 0, 0);
+  const today = new Date().toISOString().slice(0, 10);
   const { data, error } = await db
-    .from("render_events")
+    .from("render_costs_daily")
     .select("cost_eur")
-    .gte("created_at", startOfDay.toISOString())
-    .gt("cost_eur", 0);
+    .eq("day", today);
   if (error || !data) return null;
-  return data.reduce((sum, r) => sum + Number(r.cost_eur), 0);
+  return data.reduce((sum, r) => sum + Number(r.cost_eur ?? 0), 0);
 }

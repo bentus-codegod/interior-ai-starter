@@ -75,7 +75,13 @@ function checkRateLimitMemory(ip: string, max: number, windowMs: number): boolea
 // über die Modellkosten ruiniert. Mit Supabase zählt die Summe aus
 // render_events (gilt für alle Server-Instanzen); ohne DB der Zähler im
 // Arbeitsspeicher als Notlösung.
+//
+// Renders dauern bis zu 2 Minuten. Damit parallele Anfragen die Bremse
+// nicht gemeinsam überholen, wird der Betrag VOR dem Render reserviert
+// (inFlightEur) und erst nach dem Protokollieren wieder freigegeben.
+// Grenze: Die Reservierung gilt pro Server-Instanz.
 let spentEur = 0;
+let inFlightEur = 0;
 let spendDay = new Date().toDateString();
 
 function resetIfNewDay() {
@@ -86,14 +92,25 @@ function resetIfNewDay() {
   }
 }
 
-export async function checkCostCap(): Promise<{ ok: boolean; remainingEur: number }> {
+// Reserviert die Kosten eines Renders. Gibt eine Freigabe-Funktion zurück
+// oder null, wenn das Tageslimit erreicht ist.
+export async function reserveRenderBudget(provider: string): Promise<(() => void) | null> {
   resetIfNewDay();
+  const cost = renderCostEur(provider);
+  // Erst reservieren, dann (asynchron) prüfen — sonst könnten zwei
+  // Anfragen gleichzeitig denselben Restbetrag sehen.
+  inFlightEur += cost;
   const spent = (await spentTodayEur()) ?? spentEur;
-  const next = spent + renderCostEur(env.aiProvider);
-  if (next > env.dailyCostCapEur) {
-    return { ok: false, remainingEur: Math.max(0, env.dailyCostCapEur - spent) };
+  if (spent + inFlightEur > env.dailyCostCapEur) {
+    inFlightEur -= cost;
+    return null;
   }
-  return { ok: true, remainingEur: env.dailyCostCapEur - next };
+  let released = false;
+  return () => {
+    if (released) return;
+    released = true;
+    inFlightEur -= cost;
+  };
 }
 
 // Zähler im Arbeitsspeicher (Fallback ohne DB). Der Mock kostet nichts.

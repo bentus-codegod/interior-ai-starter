@@ -43,3 +43,15 @@ describe("composeRoom mit dem echten Beispiel-Katalog", () => {
     );
   });
 });
+
+describe("composeRoom Budget-Fallback", () => {
+  it("nimmt ein bezahlbares Stück aus anderem Stil statt das Budget zu sprengen", () => {
+    const look: Look = {
+      id: "t", name: "t", description: "", prompt: "", roomType: "wohnzimmer",
+      styleTag: "soft-modern", categories: ["Sofa"],
+    };
+    // soft-modern-Sofas kosten 899 € / 1.099 €; Cord-Sofa (warm-minimal) 799 €
+    const { items } = composeRoom(jsonProducts, look, 80_000);
+    expect(items[0].product.sku).toBe("SF-CORD-01");
+  });
+});
