@@ -5,6 +5,79 @@ wurde, was offen bleibt. Neueste Session oben.
 
 ---
 
+## Session 3 — 02.10.2026 · Komplettes Code-Review + Schnittstellen
+
+**Auftrag (Anton):** Komplettes Code-Review (Fehler, Unnötiges, Einzelpunkte,
+Gesamtstand) und so viel wie möglich vom Zielbild umsetzen — vor allem die
+Schnittstellen zur Möbel-Datenbank fertig machen.
+
+### Code-Review: Befunde und was passiert ist
+
+Geprüft wurde das ganze Repository (nicht nur der Diff), aus 8 Blickwinkeln.
+Alle 10 Befunde wurden am Code bestätigt und behoben:
+
+| # | Befund | Schwere | Behoben |
+| --- | --- | --- | --- |
+| 1 | Fällt die Produkt-DB aus/ist leer, verkaufte der Checkout JSON-Produkte → Fremdschlüssel-Fehler, halbe Bestellungen | hoch | Checkout verlangt die echte DB (strict), halbe Bestellungen werden gelöscht |
+| 2 | Kostenbremse summierte max. 1000 Zeilen (PostgREST-Limit) → Bremse greift nicht | hoch | Summe in der DB (View) |
+| 3 | Parallele/fehlgeschlagene Renders umgingen die Kostenbremse | mittel | Kosten werden vor dem Render reserviert, Fehlversuche zählen |
+| 4 | Unbekannter Look erst nach Limit/Kosten erkannt, 500 statt 400, beliebig lange Strings im Protokoll | mittel | Prüfung am Anfang der Route |
+| 5 | Rate-Limit-IP aus fälschbarem Header (ohne Vercel) | niedrig | `x-real-ip` bevorzugt, Hinweis für eigene Proxys |
+| 6 | „Anderes Foto“ ließ altes Ergebnis stehen → neues Foto neben altem Render | mittel | neues Foto setzt Ergebnis zurück |
+| 7 | Webhook: Zahlung ohne Bestellung wurde still verworfen | hoch | Fehler → Stripe wiederholt, Duplikate bleiben ok |
+| 8 | Passform-Check verglich nur mit der kurzen Raumseite (Sofa „passt nicht“ in langen Raum) — aus dem Original-Code | mittel | Stück darf gedreht werden |
+| 9 | Dieselbe Datei ließ sich nach „Entfernen“ nicht erneut wählen | niedrig | Input wird zurückgesetzt |
+| 10 | Design-Hirn sprengte das Budget, obwohl ein Stück aus anderem Stil gepasst hätte | niedrig | Fallback auf bezahlbares Stück |
+
+Zusätzlich gefunden: `npm run lint` war kaputt (`next lint` gibt es in Next 16
+nicht mehr) → entfernt, dafür `npm run check`. Der Rate-Limit-Speicher wuchs
+unbegrenzt → wird aufgeräumt.
+
+### Unnötig / Aufgeräumt
+
+| Was | Entscheidung |
+| --- | --- |
+| `lib/affiliateFeed.ts` | **entfernt** — toter Code (nirgends benutzt), durch `lib/sources/` ersetzt; sein CSV-Parser kam mit Anführungszeichen nicht klar |
+| `npm run lint` | **entfernt** (siehe oben) |
+| doppelter Ergebnis-Typ in `app/page.tsx` | **entfernt**, nutzt jetzt den Server-Typ |
+| `seed.sql` von Hand gepflegt | **ersetzt** durch `npm run seed:generate` (aus `catalog.json`) |
+| Replicate-Anbieter (`REPLACE_WITH_MODEL_VERSION`) | **bleibt** — ungenutzt, aber harmlos; entweder Modell wählen oder entfernen (Entscheidung Bent) |
+| ModelsLab-Anbieter | **bleibt** — braucht gehostete Bild-URLs (R2/S3), die es nicht gibt; solange ComfyUI der Plan ist, verzichtbar |
+| Grundriss-Upload | **bleibt** — wird erfasst, aber nicht ausgewertet; entweder auswerten oder ausblenden |
+| 3D-Beispielmodell (4 MB im Repo) | **bleibt** als Demo, durch echte Modelle ersetzen |
+
+### Schnittstellen (neu)
+
+| # | Schnittstelle | Status |
+| --- | --- | --- |
+| 1 | **Produkt-Import** (`lib/sources/`): CSV/gzip-Feeds, JSON-APIs mit Seiten, lokale Datei; Mapping-Vorlagen Awin / generisch DE-EN / eigenes Format; automatische Einordnung (Kategorie, Möbel/Deko, Material-Familie, Stil, Maße, Preise); Prüfung mit Gründen; Dry-Run-Bericht; Deaktivieren verschwundener Produkte; `import_runs` | ✅ |
+| 2 | **Admin-Endpunkt** `/api/admin/import` (ADMIN_TOKEN/CRON_SECRET, zeitkonstanter Vergleich) + täglicher **Vercel Cron** | ✅ |
+| 3 | **Klick-Tracking** `/go/[sku]` (Ziel nur aus dem Katalog, keine offene Weiterleitung) | ✅ |
+| 4 | **Swipe-Statistik** `/api/events` + View `product_feedback` (anonym) | ✅ |
+| 5 | **Container-/Frachtschätzung** (`lib/sourcing/container.ts`, `/api/logistics/estimate`), Schnittstelle `FreightQuoteProvider` | ✅ (Raten = Platzhalter) |
+| 6 | **Raumvermessung** `RoomMeasurer` + `/api/measure` | ⚠️ nur Schnittstelle (501) |
+| 7 | Migration `20261003000000_sources_sourcing_tracking.sql`: Quellen, Import-Läufe, Sourcing-Felder an Lieferanten/Produkten, Klicks, Swipes | ✅ |
+| 8 | Lieferzeit im Shop, wenn bekannt | ✅ |
+
+### Geprüft
+
+- `npm run check`: Typen + **37 Tests** grün; `next build` grün
+- Postgres (PGlite): alle 3 Migrationen + Seed
+- Laufender Server: Import ohne/mit falschem Token → 401; `?source=sample` →
+  4/4 Produkte (Dry-Run ohne DB); unbekannte Quelle → 404; `/go/SF-LINEN-01` →
+  302 auf Händler-Link, unbekannte SKU → Startseite; `/api/events` filtert
+  ungültige Einträge → 204; Fracht für 10 Sofas + 40 Stühle → 27 m³ →
+  ein 20'-Container; `/api/measure` → 501; Render mit unbekanntem Look → 400
+- Browser-Durchlauf wie Session 2 + Händler-Link über `/go/…` + Swipe-Event
+
+### Nicht geprüft / offen
+
+- Import gegen echtes Supabase (Upsert/Deaktivieren laufen nur mit DB) und
+  gegen einen echten Awin-Feed (Spaltennamen per Dry-Run prüfen)
+- Echte Spediteur-Raten, echtes Vermessungsverfahren
+
+---
+
 ## Session 2 — 01./02.10.2026 · Abgleich mit dem Gesamtkonzept
 
 **Auftrag (Anton):** Code gegen das Gesamtkonzept (Stand 29.09.) prüfen,

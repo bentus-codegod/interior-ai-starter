@@ -17,7 +17,7 @@ cp .env.example .env.local   # Werte eintragen (siehe unten)
 npm run dev
 ```
 
-Tests: `npm test` (Vitest) · Typen: `npm run typecheck`
+Tests: `npm test` (Vitest) · Typen: `npm run typecheck` · beides: `npm run check`
 
 Dann `http://localhost:3000` öffnen. Ohne jeden Key läuft alles im **Mock-Modus**:
 Der Render ist ein Platzhalter, der komplette Ablauf ist trotzdem sichtbar.
@@ -36,6 +36,7 @@ Der Render ist ein Platzhalter, der komplette Ablauf ist trotzdem sichtbar.
 | `DAILY_AI_COST_CAP_EUR` | harte Tages-Kostenbremse | Standard 5 |
 | `LOGISTICS_SHARE` | Budget-Anteil für Logistik (0–0,6) | Standard 0 |
 | `UPSTASH_REDIS_REST_URL` + `_TOKEN` | Rate-Limit über alle Server-Instanzen | optional |
+| `ADMIN_TOKEN` / `CRON_SECRET` | Produkt-Import (manuell / täglich) | für Import |
 
 Ohne `STRIPE_SECRET_KEY` funktioniert alles außer dem Checkout-Button.
 Ohne Supabase läuft alles mit `data/catalog.json`; Bestellungen und
@@ -45,8 +46,9 @@ Render-Kosten landen dann nur im Server-Log.
 
 1. Supabase-Projekt anlegen (Region EU, z. B. Frankfurt).
 2. Im SQL-Editor nacheinander ausführen:
-   - `supabase/migrations/20261001000000_init.sql` — Tabellen
-   - `supabase/seed.sql` — der Beispiel-Katalog
+   - alle Dateien in `supabase/migrations/` in Namensreihenfolge
+   - `supabase/seed.sql` — der Beispiel-Katalog (neu erzeugen mit
+     `npm run seed:generate`, wenn sich `data/catalog.json` ändert)
 3. `SUPABASE_URL` und `SUPABASE_SERVICE_ROLE_KEY` (Project Settings → API)
    in `.env.local` bzw. bei Vercel eintragen.
 
@@ -56,6 +58,12 @@ Die Tagesübersicht für die Kostenrechnung: `select * from render_costs_daily;`
 
 Alle Tabellen haben Row Level Security ohne Policies — nur der Server mit
 dem Service-Role-Key kommt heran, der Browser nie.
+
+## Echte Produkte importieren
+
+Feeds von Affiliate-Netzwerken, Händler-APIs und Lieferantenlisten werden über
+`/api/admin/import` eingelesen, automatisch eingeordnet und täglich
+aktualisiert. Anleitung mit Beispielen: **docs/SCHNITTSTELLEN.md**.
 
 ## Bestellungen (Stripe-Webhook)
 
@@ -74,7 +82,12 @@ Lokal: `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
 - `lib/roomEdit.ts` — Swipe, Tauschen und Kopplung (Sets, Material-Familien)
 - `lib/stylePrompt.ts` — Freitext-Stil → Render-Prompt
 - `lib/budget.ts` — Aufteilung Budget in Einrichtung und Logistik
-- `docs/` — Konzept-Abgleich und Protokoll der Overnight-Sessions
+- `lib/sources/` — Produkt-Import aus Feeds, Händler-APIs und Lieferantenlisten
+  (Mapping, automatische Einordnung, Bericht) → `/api/admin/import`
+- `lib/sourcing/container.ts` — Container-/Frachtschätzung → `/api/logistics/estimate`
+- `app/go/[sku]` — Händler-Links mit Klick-Zählung; `app/api/events` — Swipe-Statistik
+- `lib/ai/measure.ts` — Schnittstelle für automatische Raumvermessung (noch ohne Verfahren)
+- `docs/` — Schnittstellen, Konzept-Abgleich, Protokoll der Overnight-Sessions
 - `app/api/render` — ruft das KI-Modell auf (serverseitig, geschützt)
 - `app/api/checkout` — erzeugt die Stripe-Checkout-Session + Bestellung
 - `app/api/stripe/webhook` — Stripe meldet bezahlte/abgelaufene Bestellungen
