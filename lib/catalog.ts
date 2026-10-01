@@ -13,7 +13,15 @@ export type Product = {
   styleTags: string[];
   retailer: string;
   affiliateUrl: string;
+  // "moebel" = großes Stück (mit Passform-Check), "deko" = Accessoire.
+  group: ProductGroup;
+  // Echtes Produktfoto. Fehlt es, zeigt die App die farbige Kachel (tint).
+  imageUrl?: string;
+  // 3D-Modell (.glb). Ist es gesetzt, gibt es die Schaltfläche „In 3D ansehen".
+  modelUrl?: string;
 };
+
+export type ProductGroup = "moebel" | "deko";
 
 export type Look = {
   id: string;
@@ -24,11 +32,16 @@ export type Look = {
   categories: string[];
 };
 
-export const products: Product[] = catalog.products;
+// JSON kennt keine String-Literal-Typen, daher die Typ-Zusicherung.
+export const products = catalog.products as Product[];
 export const looks: Look[] = catalog.looks;
 
 export function getLook(id: string): Look | undefined {
   return looks.find((l) => l.id === id);
+}
+
+export function isDeko(p: Product): boolean {
+  return p.group === "deko";
 }
 
 export function getProduct(sku: string): Product | undefined {

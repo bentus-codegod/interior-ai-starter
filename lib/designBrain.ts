@@ -1,4 +1,5 @@
 import {
+  isDeko,
   products,
   productsInCategory,
   type Look,
@@ -31,7 +32,9 @@ function pickForCategory(
   const sorted = [...candidates].sort((a, b) => a.priceCents - b.priceCents);
   const affordable = sorted.filter((p) => p.priceCents <= remainingCents);
   if (affordable.length > 0) return affordable[affordable.length - 1];
-  return sorted[0]; // nichts passt ins Budget -> günstigstes
+  // Deko ist Kür: passt nichts mehr ins Budget, lassen wir sie weg.
+  if (isDeko(sorted[0])) return undefined;
+  return sorted[0]; // Möbel sind Pflicht: nichts passt -> günstigstes
 }
 
 export type ComposedRoom = { items: Product[]; subtotalCents: number };

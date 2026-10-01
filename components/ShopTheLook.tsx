@@ -1,9 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { formatEur, type Product } from "@/lib/catalog";
+import { formatEur, isDeko, type Product } from "@/lib/catalog";
 import { checkFit, type RoomDims, type FitVerdict } from "@/lib/fitCheck";
 import { alternatives } from "@/lib/designBrain";
+import { ProductThumb } from "@/components/ProductThumb";
+import { Product3DViewer } from "@/components/Product3DViewer";
 
 const fitStyles: Record<FitVerdict, { label: string; className: string }> = {
   fits: { label: "Passt", className: "bg-sage/15 text-sage" },
@@ -20,6 +22,7 @@ export function ShopTheLook({
 }) {
   const [items, setItems] = useState<Product[]>(initialItems);
   const [swapFor, setSwapFor] = useState<string | null>(null);
+  const [view3d, setView3d] = useState<Product | null>(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
 
@@ -53,96 +56,106 @@ export function ShopTheLook({
     }
   }
 
+  const furniture = items.filter((p) => !isDeko(p));
+  const deko = items.filter(isDeko);
+
+  function renderItem(p: Product) {
+    // Passform-Check nur für Möbel — bei Deko ist er sinnlos.
+    const fit = room && !isDeko(p) ? checkFit(p, room) : null;
+    const alts = alternatives(p);
+    const open = swapFor === p.sku;
+    return (
+      <li key={p.sku} className="py-3">
+        <div className="flex items-center gap-4">
+          <ProductThumb product={p} />
+          <span className="min-w-0 flex-1">
+            <span className="block truncate text-sm">{p.name}</span>
+            <span className="block text-xs text-ink/50">
+              {p.dimensions} · {p.retailer}
+            </span>
+            {fit && (
+              <span className="mt-1 inline-flex items-center gap-1.5">
+                <span
+                  className={`rounded-full px-1.5 py-0.5 text-[11px] font-medium ${fitStyles[fit.verdict].className}`}
+                >
+                  {fitStyles[fit.verdict].label}
+                </span>
+                <span className="text-[11px] text-ink/45">{fit.reason}</span>
+              </span>
+            )}
+          </span>
+          <span className="text-sm tabular-nums">{formatEur(p.priceCents)}</span>
+        </div>
+
+        <div className="mt-1.5 flex items-center gap-3 pl-16 text-xs">
+          {alts.length > 0 && (
+            <button
+              type="button"
+              onClick={() => setSwapFor(open ? null : p.sku)}
+              className="text-sage underline underline-offset-4 hover:text-ink"
+            >
+              {open ? "Schließen" : "Tauschen"}
+            </button>
+          )}
+          {p.modelUrl && (
+            <button
+              type="button"
+              onClick={() => setView3d(p)}
+              className="text-sage underline underline-offset-4 hover:text-ink"
+            >
+              In 3D ansehen
+            </button>
+          )}
+          <a
+            href={p.affiliateUrl}
+            target="_blank"
+            rel="noopener sponsored"
+            className="text-ink/50 underline underline-offset-4 hover:text-ink"
+          >
+            Beim Händler ansehen ↗
+          </a>
+        </div>
+
+        {open && (
+          <div className="mt-2 space-y-1.5 rounded-lg border border-mist bg-paper p-2 pl-16">
+            {alts.map((a) => (
+              <button
+                key={a.sku}
+                type="button"
+                onClick={() => swap(p.sku, a)}
+                className="flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left hover:bg-white"
+              >
+                <ProductThumb product={a} size="sm" />
+                <span className="min-w-0 flex-1">
+                  <span className="block truncate text-xs">{a.name}</span>
+                  <span className="block text-[11px] text-ink/45">
+                    {a.retailer}
+                  </span>
+                </span>
+                <span className="text-xs tabular-nums text-ink/70">
+                  {formatEur(a.priceCents)}
+                </span>
+              </button>
+            ))}
+          </div>
+        )}
+      </li>
+    );
+  }
+
   return (
     <div className="rounded-2xl border border-mist bg-white p-5">
       <h3 className="font-display text-xl">Diesen Look kaufen</h3>
-      <ul className="mt-4 divide-y divide-mist">
-        {items.map((p) => {
-          const fit = room ? checkFit(p, room) : null;
-          const alts = alternatives(p);
-          const open = swapFor === p.sku;
-          return (
-            <li key={p.sku} className="py-3">
-              <div className="flex items-center gap-4">
-                <span
-                  className="grid h-12 w-12 shrink-0 place-items-center rounded-lg text-xs font-medium text-white/90"
-                  style={{ backgroundColor: p.tint }}
-                  aria-hidden
-                >
-                  {p.category.slice(0, 2)}
-                </span>
-                <span className="min-w-0 flex-1">
-                  <span className="block truncate text-sm">{p.name}</span>
-                  <span className="block text-xs text-ink/50">
-                    {p.dimensions} · {p.retailer}
-                  </span>
-                  {fit && (
-                    <span className="mt-1 inline-flex items-center gap-1.5">
-                      <span
-                        className={`rounded-full px-1.5 py-0.5 text-[11px] font-medium ${fitStyles[fit.verdict].className}`}
-                      >
-                        {fitStyles[fit.verdict].label}
-                      </span>
-                      <span className="text-[11px] text-ink/45">{fit.reason}</span>
-                    </span>
-                  )}
-                </span>
-                <span className="text-sm tabular-nums">{formatEur(p.priceCents)}</span>
-              </div>
+      <ul className="mt-4 divide-y divide-mist">{furniture.map(renderItem)}</ul>
 
-              <div className="mt-1.5 flex items-center gap-3 pl-16 text-xs">
-                {alts.length > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => setSwapFor(open ? null : p.sku)}
-                    className="text-sage underline underline-offset-4 hover:text-ink"
-                  >
-                    {open ? "Schließen" : "Tauschen"}
-                  </button>
-                )}
-                <a
-                  href={p.affiliateUrl}
-                  target="_blank"
-                  rel="noopener sponsored"
-                  className="text-ink/50 underline underline-offset-4 hover:text-ink"
-                >
-                  Beim Händler ansehen ↗
-                </a>
-              </div>
-
-              {open && (
-                <div className="mt-2 space-y-1.5 rounded-lg border border-mist bg-paper p-2 pl-16">
-                  {alts.map((a) => (
-                    <button
-                      key={a.sku}
-                      type="button"
-                      onClick={() => swap(p.sku, a)}
-                      className="flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left hover:bg-white"
-                    >
-                      <span
-                        className="grid h-8 w-8 shrink-0 place-items-center rounded text-[10px] text-white/90"
-                        style={{ backgroundColor: a.tint }}
-                        aria-hidden
-                      >
-                        {a.category.slice(0, 2)}
-                      </span>
-                      <span className="min-w-0 flex-1">
-                        <span className="block truncate text-xs">{a.name}</span>
-                        <span className="block text-[11px] text-ink/45">
-                          {a.retailer}
-                        </span>
-                      </span>
-                      <span className="text-xs tabular-nums text-ink/70">
-                        {formatEur(a.priceCents)}
-                      </span>
-                    </button>
-                  ))}
-                </div>
-              )}
-            </li>
-          );
-        })}
-      </ul>
+      {deko.length > 0 && (
+        <>
+          <h4 className="mt-5 text-xs font-medium uppercase tracking-wide text-ink/45">
+            Deko &amp; Accessoires
+          </h4>
+          <ul className="mt-1 divide-y divide-mist">{deko.map(renderItem)}</ul>
+        </>
+      )}
 
       <div className="mt-4 flex items-baseline justify-between border-t border-mist pt-4">
         <span className="text-sm text-ink/60">Zwischensumme</span>
@@ -170,6 +183,10 @@ export function ShopTheLook({
         Kaufst du darüber, erhalten wir ggf. eine Provision — für dich ohne
         Aufpreis.
       </p>
+
+      {view3d && (
+        <Product3DViewer product={view3d} onClose={() => setView3d(null)} />
+      )}
     </div>
   );
 }

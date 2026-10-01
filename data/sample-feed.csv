@@ -1,4 +1,5 @@
-sku;name;priceEur;category;retailer;affiliateUrl;widthCm;depthCm;heightCm;styleTags
-SF-DEMO-01;Leinensofa "Demo";849.00;Sofa;Beispiel-Händler;https://example-haendler.de/p/SF-DEMO-01?aff=interior-ai;215;94;84;warm-minimal
-TB-DEMO-01;Couchtisch Eiche "Demo";299.00;Couchtisch;Beispiel-Händler;https://example-haendler.de/p/TB-DEMO-01?aff=interior-ai;105;58;40;warm-minimal;soft-modern
-RUG-DEMO-01;Wollteppich "Demo";219.00;Teppich;Beispiel-Händler;https://example-haendler.de/p/RUG-DEMO-01?aff=interior-ai;190;290;2;warm-minimal
+sku;name;priceEur;category;retailer;affiliateUrl;widthCm;depthCm;heightCm;styleTags;group;imageUrl
+SF-DEMO-01;Leinensofa "Demo";849.00;Sofa;Beispiel-Händler;https://example-haendler.de/p/SF-DEMO-01?aff=interior-ai;215;94;84;warm-minimal;moebel;
+TB-DEMO-01;Couchtisch Eiche "Demo";299.00;Couchtisch;Beispiel-Händler;https://example-haendler.de/p/TB-DEMO-01?aff=interior-ai;105;58;40;warm-minimal|soft-modern;moebel;
+RUG-DEMO-01;Wollteppich "Demo";219.00;Teppich;Beispiel-Händler;https://example-haendler.de/p/RUG-DEMO-01?aff=interior-ai;190;290;2;warm-minimal;moebel;
+DK-DEMO-01;Keramikvase "Demo";45.00;Vase;Beispiel-Händler;https://example-haendler.de/p/DK-DEMO-01?aff=interior-ai;18;18;35;warm-minimal;deko;

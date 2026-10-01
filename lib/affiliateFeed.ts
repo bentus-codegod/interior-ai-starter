@@ -21,7 +21,9 @@ export type FeedRow = {
   widthCm?: string;
   depthCm?: string;
   heightCm?: string;
-  styleTags?: string; // "warm-minimal;soft-modern"
+  styleTags?: string; // "warm-minimal|soft-modern" (| weil ; das CSV-Trennzeichen ist)
+  group?: string; // "moebel" (Standard) oder "deko"
+  imageUrl?: string; // Produktfoto des Händlers
 };
 
 function num(v: string | undefined, fallback = 0): number {
@@ -57,10 +59,12 @@ export function feedRowToProduct(row: FeedRow): Product {
     depthCm: num(row.depthCm),
     heightCm: num(row.heightCm),
     category: row.category,
-    tint: "#C9C2B4", // Platzhalter; in Produktion echtes Produktbild verwenden
-    styleTags: (row.styleTags ?? "").split(";").filter(Boolean),
+    tint: "#C9C2B4", // Ersatzfarbe, falls der Feed kein Bild liefert
+    styleTags: (row.styleTags ?? "").split("|").map((t) => t.trim()).filter(Boolean),
     retailer: row.retailer,
     affiliateUrl: row.affiliateUrl,
+    group: row.group === "deko" ? "deko" : "moebel",
+    imageUrl: row.imageUrl || undefined,
   };
 }
 
