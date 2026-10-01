@@ -1,4 +1,5 @@
 import { env } from "@/lib/env";
+import { renderCostEur, spentTodayEur } from "@/lib/renderLog";
 
 // -------------------------------------------------------------------
 // ACHTUNG: Diese Limiter halten ihren Zustand nur IM ARBEITSSPEICHER.
@@ -27,23 +28,32 @@ export function checkRateLimit(
 }
 
 // Harte Tages-Kostenbremse: verhindert, dass ein Missbraucher dich
-// über die Modellkosten ruiniert.
+// über die Modellkosten ruiniert. Mit Supabase zählt die Summe aus
+// render_events (gilt für alle Server-Instanzen); ohne DB der Zähler im
+// Arbeitsspeicher als Notlösung.
 let spentEur = 0;
 let spendDay = new Date().toDateString();
 
-export function checkCostCap(): { ok: boolean; remainingEur: number } {
+function resetIfNewDay() {
   const today = new Date().toDateString();
   if (today !== spendDay) {
     spentEur = 0;
     spendDay = today;
   }
-  const next = spentEur + env.costPerRenderEur;
+}
+
+export async function checkCostCap(): Promise<{ ok: boolean; remainingEur: number }> {
+  resetIfNewDay();
+  const spent = (await spentTodayEur()) ?? spentEur;
+  const next = spent + renderCostEur(env.aiProvider);
   if (next > env.dailyCostCapEur) {
-    return { ok: false, remainingEur: Math.max(0, env.dailyCostCapEur - spentEur) };
+    return { ok: false, remainingEur: Math.max(0, env.dailyCostCapEur - spent) };
   }
   return { ok: true, remainingEur: env.dailyCostCapEur - next };
 }
 
-export function recordSpend(): void {
-  spentEur += env.costPerRenderEur;
+// Zähler im Arbeitsspeicher (Fallback ohne DB). Der Mock kostet nichts.
+export function recordSpend(provider: string): void {
+  resetIfNewDay();
+  spentEur += renderCostEur(provider);
 }

@@ -2,6 +2,8 @@ import { NextRequest, NextResponse } from "next/server";
 import { renderRoom } from "@/lib/ai/renderRoom";
 import { validateImageUpload } from "@/lib/validation";
 import { checkRateLimit, checkCostCap, recordSpend } from "@/lib/rateLimit";
+import { logRenderEvent } from "@/lib/renderLog";
+import { env } from "@/lib/env";
 
 export const runtime = "nodejs";
 
@@ -21,7 +23,7 @@ export async function POST(req: NextRequest) {
       );
     }
 
-    const cap = checkCostCap();
+    const cap = await checkCostCap();
     if (!cap.ok) {
       return NextResponse.json(
         { error: "Tageslimit erreicht. Morgen wieder verfügbar." },
@@ -51,10 +53,28 @@ export async function POST(req: NextRequest) {
     const budget =
       typeof budgetCents === "number" && budgetCents > 0 ? budgetCents : 0;
 
-    const result = await renderRoom(imageDataUrl as string, lookId, budget);
-    recordSpend();
-
-    return NextResponse.json(result);
+    // Ab hier kostet es Geld -> jeden Versuch protokollieren.
+    const started = Date.now();
+    try {
+      const result = await renderRoom(imageDataUrl as string, lookId, budget);
+      recordSpend(result.provider);
+      await logRenderEvent({
+        provider: result.provider,
+        lookId,
+        success: true,
+        durationMs: Date.now() - started,
+      });
+      return NextResponse.json(result);
+    } catch (err) {
+      await logRenderEvent({
+        provider: env.aiProvider,
+        lookId,
+        success: false,
+        durationMs: Date.now() - started,
+        error: err instanceof Error ? err.message : String(err),
+      });
+      throw err;
+    }
   } catch (err) {
     // Fehler bewusst generisch nach außen — keine internen Details leaken.
     console.error("render error:", err);

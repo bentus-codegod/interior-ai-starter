@@ -1,7 +1,8 @@
 import "server-only";
 import { getProvider } from "@/lib/ai/provider";
 import { getLook, type Product } from "@/lib/catalog";
-import { composeRoom } from "@/lib/designBrain";
+import { alternativesByCategory, composeRoom } from "@/lib/designBrain";
+import { getProducts } from "@/lib/productRepo";
 
 export type RenderRoomResult = {
   renderImageUrl: string;
@@ -9,6 +10,8 @@ export type RenderRoomResult = {
   look: { id: string; name: string; description: string };
   items: Product[];
   subtotalCents: number;
+  // Tausch-Kandidaten je Kategorie (für "Tauschen" im Shop-the-Look).
+  alternatives: Record<string, Product[]>;
 };
 
 // Rendert den Raum und stellt über das Design-Hirn den kaufbaren Look
@@ -23,13 +26,13 @@ export async function renderRoom(
     throw new Error("Unbekannter Look.");
   }
 
-  const provider = getProvider();
-  const render = await provider.renderImage({
-    imageDataUrl,
-    prompt: look.prompt,
-  });
+  // Katalog und Render parallel holen — der Render dauert ohnehin länger.
+  const [catalog, render] = await Promise.all([
+    getProducts(),
+    getProvider().renderImage({ imageDataUrl, prompt: look.prompt }),
+  ]);
 
-  const { items, subtotalCents } = composeRoom(look, budgetCents);
+  const { items, subtotalCents } = composeRoom(catalog, look, budgetCents);
 
   return {
     renderImageUrl: render.imageUrl,
@@ -37,5 +40,6 @@ export async function renderRoom(
     look: { id: look.id, name: look.name, description: look.description },
     items,
     subtotalCents,
+    alternatives: alternativesByCategory(catalog, look.categories),
   };
 }

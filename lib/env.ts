@@ -15,10 +15,21 @@ export const env = {
   // z. B. https://abc123-3000.proxy.runpod.net
   comfyUrl: (process.env.COMFYUI_URL ?? "").replace(/\/$/, ""),
   stripeSecret: process.env.STRIPE_SECRET_KEY ?? "",
+  // Signatur-Geheimnis des Stripe-Webhooks ("whsec_..."), siehe
+  // app/api/stripe/webhook/route.ts.
+  stripeWebhookSecret: process.env.STRIPE_WEBHOOK_SECRET ?? "",
+  // Supabase: Projekt-URL + Service-Role-Key. Der Service-Role-Key hat
+  // Vollzugriff auf die Datenbank — er darf NIE in den Browser.
+  supabaseUrl: (process.env.SUPABASE_URL ?? "").replace(/\/$/, ""),
+  supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
   dailyCostCapEur: Number(process.env.DAILY_AI_COST_CAP_EUR ?? 5),
   costPerRenderEur: Number(process.env.AI_COST_PER_RENDER_EUR ?? 0.05),
 };
+
+export function hasSupabase(): boolean {
+  return Boolean(env.supabaseUrl && env.supabaseServiceKey);
+}
 
 export function hasStripe(): boolean {
   return env.stripeSecret.startsWith("sk_");

@@ -3,7 +3,6 @@
 import { useState } from "react";
 import { formatEur, isDeko, type Product } from "@/lib/catalog";
 import { checkFit, type RoomDims, type FitVerdict } from "@/lib/fitCheck";
-import { alternatives } from "@/lib/designBrain";
 import { ProductThumb } from "@/components/ProductThumb";
 import { Product3DViewer } from "@/components/Product3DViewer";
 
@@ -15,9 +14,12 @@ const fitStyles: Record<FitVerdict, { label: string; className: string }> = {
 
 export function ShopTheLook({
   items: initialItems,
+  alternatives,
   room,
 }: {
   items: Product[];
+  // Tausch-Kandidaten je Kategorie, vom Server mitgeliefert.
+  alternatives: Record<string, Product[]>;
   room?: RoomDims;
 }) {
   const [items, setItems] = useState<Product[]>(initialItems);
@@ -62,7 +64,7 @@ export function ShopTheLook({
   function renderItem(p: Product) {
     // Passform-Check nur für Möbel — bei Deko ist er sinnlos.
     const fit = room && !isDeko(p) ? checkFit(p, room) : null;
-    const alts = alternatives(p);
+    const alts = (alternatives[p.category] ?? []).filter((a) => a.sku !== p.sku);
     const open = swapFor === p.sku;
     return (
       <li key={p.sku} className="py-3">

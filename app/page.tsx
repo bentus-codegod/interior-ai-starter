@@ -29,6 +29,7 @@ type Result = {
   look: { id: string; name: string; description: string };
   items: Product[];
   subtotalCents: number;
+  alternatives: Record<string, Product[]>;
 };
 
 export default function Home() {
@@ -185,6 +186,7 @@ export default function Home() {
               <ShopTheLook
                 key={result.look.id + "-" + result.subtotalCents}
                 items={result.items}
+                alternatives={result.alternatives}
                 room={toRoomDims(measurements)}
               />
             </div>
