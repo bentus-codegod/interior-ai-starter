@@ -17,6 +17,8 @@ cp .env.example .env.local   # Werte eintragen (siehe unten)
 npm run dev
 ```
 
+Tests: `npm test` (Vitest) · Typen: `npm run typecheck`
+
 Dann `http://localhost:3000` öffnen. Ohne jeden Key läuft alles im **Mock-Modus**:
 Der Render ist ein Platzhalter, der komplette Ablauf ist trotzdem sichtbar.
 
@@ -32,6 +34,8 @@ Der Render ist ein Platzhalter, der komplette Ablauf ist trotzdem sichtbar.
 | `STRIPE_WEBHOOK_SECRET` | Stripe meldet bezahlte Bestellungen (`whsec_…`) | für Bestellstatus |
 | `SUPABASE_URL` + `SUPABASE_SERVICE_ROLE_KEY` | Datenbank: Katalog, Bestellungen, Kosten-Protokoll | optional |
 | `DAILY_AI_COST_CAP_EUR` | harte Tages-Kostenbremse | Standard 5 |
+| `LOGISTICS_SHARE` | Budget-Anteil für Logistik (0–0,6) | Standard 0 |
+| `UPSTASH_REDIS_REST_URL` + `_TOKEN` | Rate-Limit über alle Server-Instanzen | optional |
 
 Ohne `STRIPE_SECRET_KEY` funktioniert alles außer dem Checkout-Button.
 Ohne Supabase läuft alles mit `data/catalog.json`; Bestellungen und
@@ -66,7 +70,11 @@ Lokal: `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
 
 ## Wie es aufgebaut ist
 
-- `app/page.tsx` — der Wow-Flow (Upload → Look → Render → Shop the Look)
+- `app/page.tsx` — der Wow-Flow (Upload → Raum & Look → Render → Shop the Look)
+- `lib/roomEdit.ts` — Swipe, Tauschen und Kopplung (Sets, Material-Familien)
+- `lib/stylePrompt.ts` — Freitext-Stil → Render-Prompt
+- `lib/budget.ts` — Aufteilung Budget in Einrichtung und Logistik
+- `docs/` — Konzept-Abgleich und Protokoll der Overnight-Sessions
 - `app/api/render` — ruft das KI-Modell auf (serverseitig, geschützt)
 - `app/api/checkout` — erzeugt die Stripe-Checkout-Session + Bestellung
 - `app/api/stripe/webhook` — Stripe meldet bezahlte/abgelaufene Bestellungen
