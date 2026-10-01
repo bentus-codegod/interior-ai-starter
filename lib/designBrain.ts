@@ -1,4 +1,11 @@
-import { isDeko, type Look, type Product } from "@/lib/catalog";
+import {
+  isDeko,
+  quantityFor,
+  type Look,
+  type Product,
+  type RoomItem,
+} from "@/lib/catalog";
+import { coupledCategories } from "@/lib/roomEdit";
 
 // Das "Design-Hirn": wählt aus dem Katalog die Produkte, die zu Look, Stil
 // und Budget passen. Heute regelbasiert (deterministisch, ohne Kosten und
@@ -13,14 +20,18 @@ function inCategory(catalog: Product[], category: string): Product[] {
   return catalog.filter((p) => p.category === category);
 }
 
-// Für eine Kategorie das teuerste Produkt wählen, das ins Restbudget passt;
-// sonst das günstigste. So bekommt der Nutzer "das Beste, das er sich leisten
-// kann", ohne dass eine benötigte Kategorie wegfällt.
+// Für eine Kategorie das teuerste Produkt wählen, das (in der nötigen
+// Stückzahl) ins Restbudget passt; sonst das günstigste. So bekommt der
+// Nutzer "das Beste, das er sich leisten kann", ohne dass eine benötigte
+// Kategorie wegfällt. Ist eine Familie vorgegeben (Kopplung), wird sie
+// bevorzugt, solange sie bezahlbar ist.
 function pickForCategory(
   catalog: Product[],
   category: string,
   styleTag: string,
-  remainingCents: number
+  remainingCents: number,
+  quantity: number,
+  family?: string
 ): Product | undefined {
   let candidates = inCategory(catalog, category).filter((p) =>
     p.styleTags.includes(styleTag)
@@ -29,14 +40,24 @@ function pickForCategory(
   if (candidates.length === 0) return undefined;
 
   const sorted = [...candidates].sort((a, b) => a.priceCents - b.priceCents);
-  const affordable = sorted.filter((p) => p.priceCents <= remainingCents);
+  const affordable = sorted.filter((p) => p.priceCents * quantity <= remainingCents);
+
+  if (family) {
+    // Passendes Stück derselben Familie — auch außerhalb des Stils, denn
+    // zusammengehörige Möbel sind wichtiger als das Stil-Etikett.
+    const sameFamily = inCategory(catalog, category)
+      .filter((p) => p.family === family && p.priceCents * quantity <= remainingCents)
+      .sort((a, b) => a.priceCents - b.priceCents);
+    if (sameFamily.length > 0) return sameFamily[sameFamily.length - 1];
+  }
+
   if (affordable.length > 0) return affordable[affordable.length - 1];
   // Deko ist Kür: passt nichts mehr ins Budget, lassen wir sie weg.
   if (isDeko(sorted[0])) return undefined;
   return sorted[0]; // Möbel sind Pflicht: nichts passt -> günstigstes
 }
 
-export type ComposedRoom = { items: Product[]; subtotalCents: number };
+export type ComposedRoom = { items: RoomItem[]; subtotalCents: number };
 
 // Stellt aus einem Look einen kompletten, kaufbaren Raum zusammen.
 // budgetCents = 0 bedeutet "kein Budget-Limit".
@@ -45,15 +66,28 @@ export function composeRoom(
   look: Look,
   budgetCents = 0
 ): ComposedRoom {
-  const items: Product[] = [];
+  const items: RoomItem[] = [];
   let spent = 0;
   const cap = budgetCents > 0 ? budgetCents : Number.MAX_SAFE_INTEGER;
 
   for (const category of look.categories) {
-    const pick = pickForCategory(catalog, category, look.styleTag, cap - spent);
+    const quantity = quantityFor(look, category);
+    // Gibt es schon ein gekoppeltes Stück mit Familie? Dann dazu passend.
+    const anchor = items.find(
+      (it) =>
+        it.product.family && coupledCategories(look, category).includes(it.product.category)
+    );
+    const pick = pickForCategory(
+      catalog,
+      category,
+      look.styleTag,
+      cap - spent,
+      quantity,
+      anchor?.product.family
+    );
     if (pick) {
-      items.push(pick);
-      spent += pick.priceCents;
+      items.push({ product: pick, quantity });
+      spent += pick.priceCents * quantity;
     }
   }
   return { items, subtotalCents: spent };

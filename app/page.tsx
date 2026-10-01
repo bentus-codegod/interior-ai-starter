@@ -10,7 +10,13 @@ import {
   type Measurements,
   type Floorplan,
 } from "@/components/RoomMeasurements";
-import { looks, type Product } from "@/lib/catalog";
+import {
+  looksForRoom,
+  rooms,
+  type Product,
+  type RoomItem,
+} from "@/lib/catalog";
+import { MAX_STYLE_TEXT } from "@/lib/stylePrompt";
 import type { RoomDims } from "@/lib/fitCheck";
 
 // Wandelt die Texteingaben in Zahlen um. Gibt nur dann Raummaße zurück,
@@ -19,22 +25,37 @@ function toRoomDims(m: Measurements): RoomDims | undefined {
   const widthCm = Number(m.widthCm) || 0;
   const lengthCm = Number(m.lengthCm) || 0;
   const doorWidthCm = Number(m.doorWidthCm) || 0;
-  if (widthCm <= 0 && lengthCm <= 0 && doorWidthCm <= 0) return undefined;
-  return { widthCm, lengthCm, doorWidthCm };
+  const ceilingHeightCm = Number(m.ceilingHeightCm) || 0;
+  if (widthCm <= 0 && lengthCm <= 0 && doorWidthCm <= 0 && ceilingHeightCm <= 0) {
+    return undefined;
+  }
+  return { widthCm, lengthCm, doorWidthCm, ceilingHeightCm };
 }
 
+// Antwort von /api/render (siehe RenderRoomResult in lib/ai/renderRoom.ts).
 type Result = {
   renderImageUrl: string;
   provider: string;
-  look: { id: string; name: string; description: string };
-  items: Product[];
+  look: {
+    id: string;
+    name: string;
+    description: string;
+    styleTag: string;
+    couplings: string[][];
+  };
+  items: RoomItem[];
   subtotalCents: number;
+  budget: { budgetCents: number; logisticsCents: number; furnitureBudgetCents: number };
   alternatives: Record<string, Product[]>;
 };
 
 export default function Home() {
   const [image, setImage] = useState<string | null>(null);
-  const [lookId, setLookId] = useState<string>(looks[0].id);
+  const [roomType, setRoomType] = useState<string>(rooms[0].id);
+  const roomLooks = looksForRoom(roomType);
+  const [lookId, setLookId] = useState<string>(roomLooks[0].id);
+  const [styleText, setStyleText] = useState("");
+  const [renderCount, setRenderCount] = useState(0);
   const [measurements, setMeasurements] =
     useState<Measurements>(emptyMeasurements);
   const [floorplan, setFloorplan] = useState<Floorplan | null>(null);
@@ -56,6 +77,7 @@ export default function Home() {
           imageDataUrl: image,
           lookId,
           budgetCents: budgetEur > 0 ? budgetEur * 100 : 0,
+          styleText,
         }),
       });
       const data = await res.json();
@@ -64,6 +86,7 @@ export default function Home() {
         return;
       }
       setResult(data);
+      setRenderCount((n) => n + 1);
     } catch {
       setError("Netzwerkfehler. Bitte erneut versuchen.");
     } finally {
@@ -97,9 +120,32 @@ export default function Home() {
           </div>
 
           <div>
-            <h2 className="font-display text-sm text-ink/50">2 · Look wählen</h2>
+            <h2 className="font-display text-sm text-ink/50">2 · Raum &amp; Look</h2>
+            <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="Raumtyp">
+              {rooms.map((r) => {
+                const active = r.id === roomType;
+                return (
+                  <button
+                    key={r.id}
+                    type="button"
+                    aria-pressed={active}
+                    onClick={() => {
+                      setRoomType(r.id);
+                      setLookId(looksForRoom(r.id)[0].id);
+                    }}
+                    className={`rounded-full border px-3.5 py-1.5 text-sm transition ${
+                      active
+                        ? "border-sage bg-sage text-white"
+                        : "border-mist bg-white text-ink/70 hover:border-sage/50"
+                    }`}
+                  >
+                    {r.name}
+                  </button>
+                );
+              })}
+            </div>
             <div className="mt-3 grid gap-3 sm:grid-cols-2">
-              {looks.map((l) => {
+              {roomLooks.map((l) => {
                 const active = l.id === lookId;
                 return (
                   <button
@@ -121,6 +167,22 @@ export default function Home() {
                 );
               })}
             </div>
+            <label className="mt-3 block">
+              <span className="mb-1 block text-xs text-ink/55">
+                Eigener Stil in Worten <span className="text-ink/35">(optional)</span>
+              </span>
+              <textarea
+                value={styleText}
+                maxLength={MAX_STYLE_TEXT}
+                rows={2}
+                onChange={(e) => setStyleText(e.target.value)}
+                placeholder="z. B. hell, skandinavisch, viel Holz, grüne Akzente"
+                className="w-full resize-none rounded-xl border border-mist bg-white px-3 py-2 text-sm outline-none focus:border-sage"
+              />
+              <span className="block text-right text-[11px] text-ink/35">
+                {styleText.length}/{MAX_STYLE_TEXT} · fließt in das KI-Bild ein
+              </span>
+            </label>
           </div>
 
           <div>
@@ -137,14 +199,15 @@ export default function Home() {
               <input
                 type="range"
                 min={500}
-                max={6000}
-                step={100}
+                max={30000}
+                step={250}
                 value={budgetEur}
                 onChange={(e) => setBudgetEur(Number(e.target.value))}
                 className="mt-3 w-full accent-sage"
               />
               <p className="mt-1 text-[11px] text-ink/40">
-                Die KI füllt den Raum bis zu deinem Budget.
+                Die KI füllt den Raum bis zu deinem Budget — auch für eine
+                Komplettausstattung.
               </p>
             </div>
           </div>
@@ -184,10 +247,13 @@ export default function Home() {
                 provider={result.provider}
               />
               <ShopTheLook
-                key={result.look.id + "-" + result.subtotalCents}
+                key={renderCount}
                 items={result.items}
                 alternatives={result.alternatives}
+                look={result.look}
                 room={toRoomDims(measurements)}
+                furnitureBudgetCents={result.budget.furnitureBudgetCents}
+                logisticsCents={result.budget.logisticsCents}
               />
             </div>
           ) : (

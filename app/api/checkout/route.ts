@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import Stripe from "stripe";
 import { env, hasStripe } from "@/lib/env";
-import { formatEur } from "@/lib/catalog";
+import { formatEur, itemsTotalCents } from "@/lib/catalog";
 import { resolveItems } from "@/lib/productRepo";
 import { createPendingOrder } from "@/lib/orders";
 
@@ -27,15 +27,22 @@ export async function POST(req: NextRequest) {
       );
     }
 
+    // Erwartet { items: [{ sku, quantity }] } — ganzer Look oder ein
+    // einzelnes Stück. Alte Form { skus: [...] } (je 1 Stück) geht weiter.
     const body = await req.json().catch(() => null);
-    const skus = (body?.skus ?? []) as unknown;
-    if (!Array.isArray(skus) || skus.length === 0 || skus.length > 50) {
+    const raw: unknown = body?.items ?? body?.skus ?? [];
+    if (!Array.isArray(raw) || raw.length === 0 || raw.length > 50) {
       return NextResponse.json({ error: "Warenkorb ist leer." }, { status: 400 });
     }
+    const lines = raw.map((x) =>
+      typeof x === "object" && x !== null
+        ? { sku: String((x as { sku?: unknown }).sku), quantity: Number((x as { quantity?: unknown }).quantity ?? 1) }
+        : { sku: String(x), quantity: 1 }
+    );
 
     // Preise IMMER serverseitig aus dem Katalog — nie aus dem Browser.
     // So kann niemand den Preis im Frontend manipulieren.
-    const items = await resolveItems(skus.map(String));
+    const items = await resolveItems(lines);
     if (items.length === 0) {
       return NextResponse.json({ error: "Keine gültigen Artikel." }, { status: 400 });
     }
@@ -44,8 +51,8 @@ export async function POST(req: NextRequest) {
 
     const session = await stripe.checkout.sessions.create({
       mode: "payment",
-      line_items: items.map((p) => ({
-        quantity: 1,
+      line_items: items.map(({ product: p, quantity }) => ({
+        quantity,
         price_data: {
           currency: "eur",
           unit_amount: p.priceCents,
@@ -62,7 +69,7 @@ export async function POST(req: NextRequest) {
       cancel_url: `${env.baseUrl}/cancel`,
     });
 
-    const totalCents = items.reduce((s, p) => s + p.priceCents, 0);
+    const totalCents = itemsTotalCents(items);
 
     // Erst speichern, dann weiterleiten: lieber kein Checkout als eine
     // Zahlung ohne Bestellung in der Datenbank.

@@ -6,6 +6,7 @@ export type RoomDims = {
   widthCm: number;
   lengthCm: number;
   doorWidthCm: number;
+  ceilingHeightCm?: number; // 0/leer = unbekannt
 };
 
 export type FitVerdict = "fits" | "tight" | "no";
@@ -42,6 +43,23 @@ export function checkFit(p: Product, room: RoomDims): FitResult {
       return {
         verdict: "tight",
         reason: `Knapp — muss evtl. gekippt durch die Tür (${room.doorWidthCm} cm).`,
+      };
+    }
+  }
+
+  // --- Deckenhöhe (hohe Regale, Stehleuchten, Betten mit Kopfteil) ---
+  const ceiling = room.ceilingHeightCm ?? 0;
+  if (ceiling > 0) {
+    if (p.heightCm > ceiling) {
+      return {
+        verdict: "no",
+        reason: `Zu hoch für den Raum (${p.heightCm} cm, Decke ${ceiling} cm).`,
+      };
+    }
+    if (p.heightCm > ceiling - 15) {
+      return {
+        verdict: "tight",
+        reason: `Knapp unter der Decke (${p.heightCm} cm von ${ceiling} cm).`,
       };
     }
   }

@@ -1,7 +1,7 @@
 import "server-only";
 import type Stripe from "stripe";
 import { getSupabase } from "@/lib/supabase";
-import type { Product } from "@/lib/catalog";
+import type { RoomItem } from "@/lib/catalog";
 
 // Bestellungen: angelegt beim Checkout (Status "pending"), auf "paid"
 // gesetzt vom Stripe-Webhook. Ohne Datenbank wird nur geloggt — dann gibt
@@ -18,7 +18,7 @@ export type OrderStatus =
 
 export async function createPendingOrder(input: {
   stripeSessionId: string;
-  items: Product[];
+  items: RoomItem[];
   amountTotalCents: number;
 }): Promise<void> {
   const db = getSupabase();
@@ -42,12 +42,12 @@ export async function createPendingOrder(input: {
   }
 
   const { error: itemsError } = await db.from("order_items").insert(
-    input.items.map((p) => ({
+    input.items.map(({ product, quantity }) => ({
       order_id: order.id,
-      sku: p.sku,
-      name: p.name,
-      unit_price_cents: p.priceCents,
-      quantity: 1,
+      sku: product.sku,
+      name: product.name,
+      unit_price_cents: product.priceCents,
+      quantity,
     }))
   );
   if (itemsError) {
@@ -105,14 +105,14 @@ export async function getOrderSummary(
   if (!db) return null;
   const { data } = await db
     .from("orders")
-    .select("status, amount_total_cents, order_items(count)")
+    .select("status, amount_total_cents, order_items(quantity)")
     .eq("stripe_session_id", stripeSessionId)
     .maybeSingle();
   if (!data) return null;
-  const counted = data.order_items as unknown as { count: number }[] | null;
+  const lines = (data.order_items ?? []) as { quantity: number }[];
   return {
     status: data.status as OrderStatus,
     amountTotalCents: data.amount_total_cents,
-    itemCount: counted?.[0]?.count ?? 0,
+    itemCount: lines.reduce((s, l) => s + l.quantity, 0),
   };
 }

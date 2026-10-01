@@ -23,7 +23,15 @@ export const env = {
   supabaseUrl: (process.env.SUPABASE_URL ?? "").replace(/\/$/, ""),
   supabaseServiceKey: process.env.SUPABASE_SERVICE_ROLE_KEY ?? "",
   baseUrl: process.env.NEXT_PUBLIC_BASE_URL ?? "http://localhost:3000",
+  // Optional: Upstash Redis (REST) für ein Rate-Limit, das über alle
+  // Server-Instanzen gilt. Ohne Werte: Zähler im Arbeitsspeicher.
+  upstashUrl: (process.env.UPSTASH_REDIS_REST_URL ?? "").replace(/\/$/, ""),
+  upstashToken: process.env.UPSTASH_REDIS_REST_TOKEN ?? "",
   dailyCostCapEur: Number(process.env.DAILY_AI_COST_CAP_EUR ?? 5),
+  // Anteil des Gesamtbudgets, der für Logistik/Lieferung reserviert wird
+  // (0 bis 0,6). Affiliate: 0, der Händler liefert. Private Label mit
+  // Container-Import: laut Konzept ~0,35–0,45 (20.000 € -> 7.000–9.000 €).
+  logisticsShare: Math.min(0.6, Math.max(0, Number(process.env.LOGISTICS_SHARE ?? 0) || 0)),
   costPerRenderEur: Number(process.env.AI_COST_PER_RENDER_EUR ?? 0.05),
 };
 

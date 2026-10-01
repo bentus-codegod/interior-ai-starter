@@ -1,6 +1,6 @@
 import "server-only";
 import { getSupabase } from "@/lib/supabase";
-import { jsonProducts, type Product } from "@/lib/catalog";
+import { jsonProducts, type Product, type RoomItem } from "@/lib/catalog";
 
 // Die eine Stelle, an der der Server Produkte holt.
 //   * Supabase konfiguriert -> Tabelle public.products (nur aktive)
@@ -24,6 +24,7 @@ type ProductRow = {
   affiliate_url: string;
   image_url: string | null;
   model_url: string | null;
+  family: string | null;
 };
 
 // Nur die Spalten, die der Browser sehen darf — Einkaufspreis, Lieferant
@@ -31,7 +32,7 @@ type ProductRow = {
 const PUBLIC_COLUMNS =
   "sku, name, category, product_group, price_cents, width_cm, depth_cm, " +
   "height_cm, dimensions, tint, style_tags, retailer, affiliate_url, " +
-  "image_url, model_url";
+  "image_url, model_url, family";
 
 function rowToProduct(r: ProductRow): Product {
   return {
@@ -50,6 +51,7 @@ function rowToProduct(r: ProductRow): Product {
     group: r.product_group,
     imageUrl: r.image_url ?? undefined,
     modelUrl: r.model_url ?? undefined,
+    family: r.family ?? undefined,
   };
 }
 
@@ -77,12 +79,22 @@ export async function getProducts(): Promise<Product[]> {
   return products;
 }
 
+export const MAX_QUANTITY = 20;
+
 // WICHTIG: Preise werden IMMER hier serverseitig geholt, nie aus dem
 // Request des Browsers übernommen. Sonst könnte jemand den Preis im
-// Frontend manipulieren und für 1 Cent bestellen.
-export async function resolveItems(skus: string[]): Promise<Product[]> {
+// Frontend manipulieren und für 1 Cent bestellen. Vom Browser kommen nur
+// SKU und Stückzahl; unbekannte SKUs fallen weg, Stückzahlen werden begrenzt.
+export async function resolveItems(
+  lines: { sku: string; quantity: number }[]
+): Promise<RoomItem[]> {
   const bySku = new Map((await getProducts()).map((p) => [p.sku, p]));
-  return skus
-    .map((sku) => bySku.get(sku))
-    .filter((p): p is Product => Boolean(p));
+  const out: RoomItem[] = [];
+  for (const line of lines) {
+    const product = bySku.get(line.sku);
+    const q = Math.floor(Number(line.quantity));
+    if (!product || !Number.isFinite(q) || q < 1) continue;
+    out.push({ product, quantity: Math.min(q, MAX_QUANTITY) });
+  }
+  return out;
 }

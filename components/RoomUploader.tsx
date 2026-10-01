@@ -4,14 +4,25 @@ import { useRef, useState } from "react";
 import { ALLOWED_MIME } from "@/lib/validation";
 import { drawScaled, resizeImageFile } from "@/lib/imageResize";
 
-// Zusätzlich zu Fotos akzeptieren wir jetzt auch Videos. Aus einem Video
-// ziehen wir automatisch ein Standbild (~0,5 s), das als Bild für den
-// Render und den Passform-Check dient. Die volle Video-Rundgang-Auswertung
-// (mehrere Frames) ist ein späterer Ausbau.
+// Zusätzlich zu Fotos akzeptieren wir auch Videos (Roomtour). Aus einem
+// Video ziehen wir mehrere Standbilder über die ganze Länge; der Nutzer
+// wählt das beste als Grundlage für den Render. Eine automatische
+// Auswertung aller Bilder (Raumvermessung) ist ein späterer Ausbau.
 const ALLOWED_VIDEO = ["video/mp4", "video/webm", "video/quicktime"];
 const MAX_VIDEO_BYTES = 60 * 1024 * 1024; // 60 MB
 // Rohdatei darf groß sein — sie wird vor dem Senden ohnehin verkleinert.
 const MAX_RAW_IMAGE_BYTES = 25 * 1024 * 1024; // 25 MB
+// An diesen Stellen (Anteil der Videolänge) ziehen wir Standbilder.
+const FRAME_POSITIONS = [0.1, 0.3, 0.5, 0.7, 0.9];
+
+// Springt im Video an `time` und wartet, bis das Bild da ist.
+function seek(video: HTMLVideoElement, time: number): Promise<void> {
+  return new Promise((resolve, reject) => {
+    video.onseeked = () => resolve();
+    video.onerror = () => reject(new Error("seek"));
+    video.currentTime = time;
+  });
+}
 
 export function RoomUploader({
   imageDataUrl,
@@ -22,6 +33,8 @@ export function RoomUploader({
 }) {
   const inputRef = useRef<HTMLInputElement>(null);
   const [fromVideo, setFromVideo] = useState(false);
+  const [frames, setFrames] = useState<string[]>([]);
+  const [extracting, setExtracting] = useState(false);
 
   // Foto verkleinert übernehmen (siehe lib/imageResize.ts).
   async function handleImage(file: File) {
@@ -32,14 +45,15 @@ export function RoomUploader({
     try {
       const dataUrl = await resizeImageFile(file);
       setFromVideo(false);
+      setFrames([]);
       onImage(dataUrl);
     } catch {
       alert("Bild konnte nicht gelesen werden.");
     }
   }
 
-  // Aus einem Video ein Standbild extrahieren.
-  function handleVideo(file: File) {
+  // Aus einem Video mehrere Standbilder ziehen; das mittlere ist vorgewählt.
+  async function handleVideo(file: File) {
     if (file.size > MAX_VIDEO_BYTES) {
       alert("Video ist zu groß (max. 60 MB).");
       return;
@@ -48,26 +62,29 @@ export function RoomUploader({
     const video = document.createElement("video");
     video.preload = "auto";
     video.muted = true;
+    video.playsInline = true;
     video.src = url;
-    video.onloadeddata = () => {
-      // etwas hineinspringen, damit kein schwarzes Startbild kommt
-      video.currentTime = Math.min(0.5, video.duration || 0.5);
-    };
-    video.onseeked = () => {
-      try {
-        setFromVideo(true);
-        onImage(
-          drawScaled(video, video.videoWidth || 1280, video.videoHeight || 960)
-        );
-      } catch {
-        alert("Standbild konnte nicht erzeugt werden.");
+    setExtracting(true);
+    try {
+      await new Promise<void>((resolve, reject) => {
+        video.onloadeddata = () => resolve();
+        video.onerror = () => reject(new Error("load"));
+      });
+      const duration = Number.isFinite(video.duration) && video.duration > 0 ? video.duration : 1;
+      const shots: string[] = [];
+      for (const pos of FRAME_POSITIONS) {
+        await seek(video, duration * pos);
+        shots.push(drawScaled(video, video.videoWidth || 1280, video.videoHeight || 960));
       }
-      URL.revokeObjectURL(url);
-    };
-    video.onerror = () => {
+      setFrames(shots);
+      setFromVideo(true);
+      onImage(shots[Math.floor(shots.length / 2)]);
+    } catch {
       alert("Video konnte nicht gelesen werden.");
+    } finally {
+      setExtracting(false);
       URL.revokeObjectURL(url);
-    };
+    }
   }
 
   function handleFile(file: File) {
@@ -106,6 +123,7 @@ export function RoomUploader({
             type="button"
             onClick={() => {
               setFromVideo(false);
+              setFrames([]);
               onImage(null);
             }}
             className="text-sm text-ink/50 underline underline-offset-4 hover:text-ink"
@@ -115,6 +133,38 @@ export function RoomUploader({
           {fromVideo && (
             <span className="text-xs text-sage">Standbild aus Video</span>
           )}
+        </div>
+      )}
+
+      {extracting && (
+        <p className="text-xs text-ink/50">Standbilder werden aus dem Video gezogen …</p>
+      )}
+
+      {frames.length > 1 && (
+        <div>
+          <span className="mb-1.5 block text-xs text-ink/55">
+            Bestes Standbild wählen
+          </span>
+          <div className="grid grid-cols-5 gap-2">
+            {frames.map((f, i) => {
+              const active = f === imageDataUrl;
+              return (
+                <button
+                  key={i}
+                  type="button"
+                  aria-pressed={active}
+                  aria-label={`Standbild ${i + 1}`}
+                  onClick={() => onImage(f)}
+                  className={`overflow-hidden rounded-lg border-2 transition ${
+                    active ? "border-sage" : "border-transparent hover:border-mist"
+                  }`}
+                >
+                  {/* eslint-disable-next-line @next/next/no-img-element */}
+                  <img src={f} alt="" className="aspect-[4/3] w-full object-cover" />
+                </button>
+              );
+            })}
+          </div>
         </div>
       )}
 

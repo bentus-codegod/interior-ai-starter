@@ -4,6 +4,7 @@ import { validateImageUpload } from "@/lib/validation";
 import { checkRateLimit, checkCostCap, recordSpend } from "@/lib/rateLimit";
 import { logRenderEvent } from "@/lib/renderLog";
 import { env } from "@/lib/env";
+import { cleanStyleText } from "@/lib/stylePrompt";
 
 export const runtime = "nodejs";
 
@@ -16,7 +17,7 @@ export async function POST(req: NextRequest) {
     const ip =
       req.headers.get("x-forwarded-for")?.split(",")[0]?.trim() || "local";
 
-    if (!checkRateLimit(ip)) {
+    if (!(await checkRateLimit(ip))) {
       return NextResponse.json(
         { error: "Zu viele Anfragen. Bitte später erneut versuchen." },
         { status: 429 }
@@ -36,10 +37,11 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: "Ungültige Anfrage." }, { status: 400 });
     }
 
-    const { imageDataUrl, lookId, budgetCents } = body as {
+    const { imageDataUrl, lookId, budgetCents, styleText } = body as {
       imageDataUrl?: unknown;
       lookId?: unknown;
       budgetCents?: unknown;
+      styleText?: unknown;
     };
 
     const check = validateImageUpload(imageDataUrl);
@@ -51,12 +53,17 @@ export async function POST(req: NextRequest) {
     }
 
     const budget =
-      typeof budgetCents === "number" && budgetCents > 0 ? budgetCents : 0;
+      typeof budgetCents === "number" && Number.isFinite(budgetCents) && budgetCents > 0
+        ? Math.min(Math.round(budgetCents), 10_000_000) // max. 100.000 €
+        : 0;
 
     // Ab hier kostet es Geld -> jeden Versuch protokollieren.
     const started = Date.now();
     try {
-      const result = await renderRoom(imageDataUrl as string, lookId, budget);
+      const result = await renderRoom(imageDataUrl as string, lookId, {
+        budgetCents: budget,
+        styleText: cleanStyleText(styleText),
+      });
       recordSpend(result.provider);
       await logRenderEvent({
         provider: result.provider,
