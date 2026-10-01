@@ -57,6 +57,8 @@ Vercel trennt sauber nach Umgebung:
 | `AI_PROVIDER` | `modelslab` (echt) | `mock` oder `modelslab` |
 | `MODELSLAB_API_KEY` | dein Live-Key | ggf. Test-Key |
 | `STRIPE_SECRET_KEY` | **Live** `sk_live_…` (erst später) | **Test** `sk_test_…` |
+| `STRIPE_WEBHOOK_SECRET` | `whsec_…` des Live-Webhooks | `whsec_…` des Test-Webhooks |
+| `SUPABASE_URL` / `SUPABASE_SERVICE_ROLE_KEY` | Produktions-Projekt | eigenes Test-Projekt (oder leer) |
 | `NEXT_PUBLIC_BASE_URL` | deine Produktions-URL | die Preview-URL |
 | `DAILY_AI_COST_CAP_EUR` | z. B. `20` | z. B. `5` |
 

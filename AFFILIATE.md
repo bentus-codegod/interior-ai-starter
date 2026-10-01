@@ -19,8 +19,8 @@ Kauft jemand über deinen Link, bekommst du eine Provision.
 3. **Spalten mappen:** Die Feldnamen sind je Netzwerk anders. Normalisiere sie
    einmal auf die `FeedRow` in `lib/affiliateFeed.ts`.
 4. **Importieren:** `importFeed(csv)` macht daraus Produkte im App-Format.
-   In Produktion schreibst du sie in deine Produkt-Datenbank (Supabase/Postgres)
-   statt in `data/catalog.json`.
+   In Produktion schreibst du sie in die Tabelle `products` (Supabase, siehe
+   README) statt in `data/catalog.json` — die App liest dann automatisch dort.
 5. **Aktuell halten:** Feeds täglich neu laden — Preise und Verfügbarkeit
    ändern sich, sonst hast du tote/falsche Links.
 
@@ -28,7 +28,9 @@ Kauft jemand über deinen Link, bekommst du eine Provision.
 
 - `lib/affiliateFeed.ts` — Parser (`parseCsvFeed`), Mapper (`feedRowToProduct`),
   `importFeed(csv)`.
-- `data/sample-feed.csv` — ein Beispiel-Feed im erwarteten Format.
+- `data/sample-feed.csv` — ein Beispiel-Feed im erwarteten Format
+  (Trennzeichen `;`, mehrere `styleTags` mit `|`, `group` = `moebel`/`deko`,
+  optional `imageUrl` für das Produktfoto).
 - Der Produkt-Typ hat bereits `retailer` und `affiliateUrl`; das Shop-the-Look-
   Panel zeigt „Beim Händler ansehen" (Affiliate-Link) und den Pflicht-Hinweis.
 
@@ -36,7 +38,8 @@ Kauft jemand über deinen Link, bekommst du eine Provision.
 
 - Feed nicht mehr aus einer CSV-Datei, sondern per Netzwerk-API laden.
 - Produkte in Supabase/Postgres statt in `catalog.json` speichern.
-- Echte Produktbilder statt der farbigen Platzhalter-Kacheln.
+- Echte Produktbilder: die App zeigt sie bereits an, sobald `imageUrl`
+  gesetzt ist (sonst die farbige Kachel).
 - `styleTags` aus den Produktdaten ableiten (Kategorie/Titel/KI-Klassifikation),
   damit das Design-Hirn gut kuratieren kann.
 
