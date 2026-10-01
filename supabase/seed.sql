@@ -1,5 +1,5 @@
 -- Beispiel-Katalog (identisch mit data/catalog.json) für ein frisches Projekt.
--- Erzeugt aus data/catalog.json. Echte Produkte kommen später per Feed-Import.
+-- Erzeugt mit `npm run seed:generate` — nicht von Hand bearbeiten.
 -- Erst nach allen Migrationen ausführen.
 insert into public.products
   (sku, name, category, product_group, price_cents, width_cm, depth_cm, height_cm,

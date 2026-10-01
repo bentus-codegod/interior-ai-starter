@@ -22,6 +22,12 @@ export type Product = {
   // Material-/Serien-Familie (z. B. "eiche", "nussbaum"). Gekoppelte Stücke
   // eines Looks (Bett + Nachttische, Tisch + Stühle) halten dieselbe Familie.
   family?: string;
+  // Sourcing-Angaben (aus der Datenbank, falls bekannt). Öffentlich
+  // unbedenklich; Einkaufspreis und Lieferant bleiben in der DB.
+  leadTimeDays?: number; // Lieferzeit in Tagen
+  cbm?: number; // Packvolumen m³ (Container-Planung)
+  weightKg?: number; // Packgewicht
+  originCountry?: string; // ISO-Code Herkunftsland
 };
 
 export type Room = { id: string; name: string };

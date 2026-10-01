@@ -27,6 +27,10 @@ type ProductRow = {
   image_url: string | null;
   model_url: string | null;
   family: string | null;
+  lead_time_days: number | null;
+  cbm: number | null;
+  weight_kg: number | null;
+  origin_country: string | null;
 };
 
 // Nur die Spalten, die der Browser sehen darf — Einkaufspreis, Lieferant
@@ -34,7 +38,7 @@ type ProductRow = {
 const PUBLIC_COLUMNS =
   "sku, name, category, product_group, price_cents, width_cm, depth_cm, " +
   "height_cm, dimensions, tint, style_tags, retailer, affiliate_url, " +
-  "image_url, model_url, family";
+  "image_url, model_url, family, lead_time_days, cbm, weight_kg, origin_country";
 
 function rowToProduct(r: ProductRow): Product {
   return {
@@ -54,12 +58,21 @@ function rowToProduct(r: ProductRow): Product {
     imageUrl: r.image_url ?? undefined,
     modelUrl: r.model_url ?? undefined,
     family: r.family ?? undefined,
+    leadTimeDays: r.lead_time_days ?? undefined,
+    cbm: r.cbm === null ? undefined : Number(r.cbm),
+    weightKg: r.weight_kg === null ? undefined : Number(r.weight_kg),
+    originCountry: r.origin_country ?? undefined,
   };
 }
 
 // Kurzer Cache, damit nicht jeder Render den ganzen Katalog neu lädt.
 const CACHE_MS = 60_000;
 let cache: { at: number; products: Product[] } | null = null;
+
+// Nach einem Import aufrufen, damit neue Produkte sofort erscheinen.
+export function clearProductCache(): void {
+  cache = null;
+}
 
 export async function getProducts(opts: { strict?: boolean } = {}): Promise<Product[]> {
   const db = getSupabase();

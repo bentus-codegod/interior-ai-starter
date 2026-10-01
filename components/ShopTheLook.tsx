@@ -28,9 +28,24 @@ const fitStyles: Record<FitVerdict, { label: string; className: string }> = {
 const SWIPE_PX = 70;
 
 export type ShopLook = {
+  id: string;
   styleTag: string;
   couplings: string[][];
 };
+
+type SwipeAction = "like" | "dislike" | "swap_in" | "swap_out";
+
+// Anonyme Swipe-Statistik an den Server (ohne Nutzer-ID). Fehler egal —
+// die Statistik darf die Bedienung nie stören.
+function track(lookId: string, events: { sku: string; action: SwipeAction }[]) {
+  if (events.length === 0) return;
+  fetch("/api/events", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ events: events.map((e) => ({ ...e, lookId })) }),
+    keepalive: true,
+  }).catch(() => {});
+}
 
 export function ShopTheLook({
   items: initialItems,
@@ -75,6 +90,10 @@ export function ShopTheLook({
   }
 
   function swap(index: number, next: Product) {
+    track(look.id, [
+      { sku: state.items[index].product.sku, action: "swap_out" },
+      { sku: next.sku, action: "swap_in" },
+    ]);
     commit({ ...state, items: replaceWithCoupling(state, index, next, look, alternatives) }, index);
     setSwapFor(null);
   }
@@ -85,10 +104,14 @@ export function ShopTheLook({
       setNotice(`Keine weiteren ${state.items[index].product.category}-Vorschläge.`);
       return;
     }
+    track(look.id, [{ sku: state.items[index].product.sku, action: "dislike" }]);
     commit(next, index);
   }
 
   function like(index: number) {
+    if (!state.liked.has(state.items[index].product.sku)) {
+      track(look.id, [{ sku: state.items[index].product.sku, action: "like" }]);
+    }
     setState(swipeLike(state, index));
   }
 
@@ -141,6 +164,7 @@ export function ShopTheLook({
             </span>
             <span className="block text-xs text-ink/50">
               {p.dimensions} · {p.retailer}
+              {p.leadTimeDays ? ` · Lieferzeit ca. ${p.leadTimeDays} Tage` : ""}
             </span>
             {fit && (
               <span className="mt-1 inline-flex items-center gap-1.5">
@@ -210,14 +234,17 @@ export function ShopTheLook({
               In 3D ansehen
             </button>
           )}
-          <a
-            href={p.affiliateUrl}
-            target="_blank"
-            rel="noopener sponsored"
-            className="text-ink/50 underline underline-offset-4 hover:text-ink"
-          >
-            Beim Händler ansehen ↗
-          </a>
+          {p.affiliateUrl && (
+            // Über /go/ — zählt den Klick und leitet auf den Händler-Link weiter.
+            <a
+              href={`/go/${encodeURIComponent(p.sku)}?look=${encodeURIComponent(look.id)}`}
+              target="_blank"
+              rel="noopener sponsored"
+              className="text-ink/50 underline underline-offset-4 hover:text-ink"
+            >
+              Beim Händler ansehen ↗
+            </a>
+          )}
           <button
             type="button"
             onClick={() => checkout([item], p.sku)}
