@@ -6,12 +6,14 @@ export type Measurements = {
   widthCm: string;
   lengthCm: string;
   doorWidthCm: string;
+  ceilingHeightCm: string;
 };
 
 export const emptyMeasurements: Measurements = {
   widthCm: "",
   lengthCm: "",
   doorWidthCm: "",
+  ceilingHeightCm: "",
 };
 
 // Optionaler Grundriss (Bild oder PDF). Wird erfasst und angezeigt; die
@@ -83,7 +85,7 @@ export function RoomMeasurements({
       <p className="text-xs text-ink/55">
         Optional — für den Passform-Check. In Zentimetern.
       </p>
-      <div className="mt-3 grid grid-cols-3 gap-3">
+      <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
         <Field
           label="Raumbreite"
           value={value.widthCm}
@@ -101,6 +103,12 @@ export function RoomMeasurements({
           value={value.doorWidthCm}
           onChange={(v) => onChange({ ...value, doorWidthCm: v })}
           placeholder="z. B. 80"
+        />
+        <Field
+          label="Deckenhöhe"
+          value={value.ceilingHeightCm}
+          onChange={(v) => onChange({ ...value, ceilingHeightCm: v })}
+          placeholder="z. B. 250"
         />
       </div>
 
@@ -151,6 +159,8 @@ export function RoomMeasurements({
           onChange={(e) => {
             const file = e.target.files?.[0];
             if (file) handleFloorplan(file);
+            // Zurücksetzen, damit dieselbe Datei erneut gewählt werden kann.
+            e.target.value = "";
           }}
         />
       </div>

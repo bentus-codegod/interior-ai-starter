@@ -27,7 +27,9 @@ const NODE = {
   positive: "6", // CLIPTextEncode (positiv) -> inputs.text
   negative: "7", // CLIPTextEncode (negativ) -> inputs.text
   sampler: "3", // KSampler -> seed / steps / cfg / denoise
-  saveImage: "9", // SaveImage -> hier liegt am Ende das Ergebnis
+  // PreviewImage statt SaveImage: Das Ergebnis landet nur im temp-Ordner,
+  // den ComfyUI bei jedem Start leert — nicht dauerhaft in output/.
+  saveImage: "9",
 } as const;
 
 const DEFAULT_NEGATIVE =
@@ -51,7 +53,8 @@ async function loadWorkflow(): Promise<Record<string, any>> {
 async function uploadImage(base: string, dataUrl: string): Promise<string> {
   const { buffer, mime } = dataUrlToBuffer(dataUrl);
   const ext = mime.includes("png") ? "png" : "jpg";
-  const filename = `room_${Date.now()}.${ext}`;
+  // Fester Präfix, damit comfy/cleanup.sh genau diese Uploads findet.
+  const filename = `interior_ai_room_${Date.now()}_${Math.random().toString(36).slice(2, 8)}.${ext}`;
 
   const form = new FormData();
   form.append("image", new Blob([new Uint8Array(buffer)], { type: mime }), filename);
@@ -127,7 +130,7 @@ async function fetchResultAsDataUrl(
   const qs = new URLSearchParams({
     filename: ref.filename,
     subfolder: ref.subfolder ?? "",
-    type: ref.type ?? "output",
+    type: ref.type ?? "temp",
   });
   const res = await fetch(`${base}/view?${qs.toString()}`);
   if (!res.ok) throw new Error(`ComfyUI: Ergebnis nicht abrufbar (${res.status}).`);
