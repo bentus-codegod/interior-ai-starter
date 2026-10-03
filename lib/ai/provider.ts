@@ -30,42 +30,63 @@ const mockProvider: ImageProvider = {
   },
 };
 
-// --- Replicate: echtes Muster für einen produktiven Aufruf.
-// Wird nur benutzt, wenn AI_PROVIDER=replicate und ein Token gesetzt ist.
-// Der Token bleibt serverseitig (diese Datei ist server-only).
+// --- Replicate: fertige Modell-API auf gemieteter GPU, Abrechnung PRO BILD.
+// Keine Lizenz, keine Dauerkosten, keine eigene GPU. Der günstigste Weg zu
+// echten Renders im Prototyp. Wird benutzt, wenn AI_PROVIDER=replicate und
+// ein Token gesetzt ist; der Token bleibt serverseitig (diese Datei ist
+// server-only).
+//
+// Zwei bewusste Entscheidungen:
+//  * Das Modell wird über den Namen angesprochen (owner/name, env.replicateModel),
+//    NICHT über einen festen Versions-Hash — der ändert sich ständig.
+//  * Das Raumfoto geht als Data-URL direkt mit. Replicate akzeptiert Data-URIs,
+//    deshalb braucht dieser Weg (anders als ModelsLab) KEIN R2/S3.
+//
+// Standardmodell "adirik/interior-design" erhält die Raumstruktur (Depth/MLSD)
+// und erwartet die Felder image + prompt + negative_prompt. Bei einem anderen
+// Modell ggf. die Eingabefelder hier anpassen.
 const replicateProvider: ImageProvider = {
   async renderImage({ imageDataUrl, prompt }: RenderInput): Promise<RenderOutput> {
     if (!env.replicateToken) {
       throw new Error("REPLICATE_API_TOKEN fehlt.");
     }
-    // Modell-Version bewusst als Platzhalter — trage die aktuell beste
-    // Inpainting-/img2img-Version ein. Modelle wechseln im Monatstakt,
-    // deshalb steckt der Aufruf hinter dieser Abstraktion.
-    const create = await fetch("https://api.replicate.com/v1/predictions", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${env.replicateToken}`,
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        // TODO: version + input-Felder an dein gewähltes Modell anpassen.
-        version: "REPLACE_WITH_MODEL_VERSION",
-        input: { image: imageDataUrl, prompt },
-      }),
-    });
+
+    const create = await fetch(
+      `https://api.replicate.com/v1/models/${env.replicateModel}/predictions`,
+      {
+        method: "POST",
+        headers: {
+          Authorization: `Bearer ${env.replicateToken}`,
+          "Content-Type": "application/json",
+          // Bis zu 60 s auf das fertige Bild warten, statt sofort "starting".
+          Prefer: "wait",
+        },
+        body: JSON.stringify({
+          input: {
+            image: imageDataUrl,
+            prompt,
+            negative_prompt:
+              "blurry, distorted, deformed, low quality, warped walls, bad perspective, watermark, text",
+          },
+        }),
+      }
+    );
 
     if (!create.ok) {
-      throw new Error(`Replicate-Fehler: ${create.status}`);
+      const detail = await create.text().catch(() => "");
+      throw new Error(`Replicate-Fehler: ${create.status} ${detail}`.trim());
     }
 
     let prediction = await create.json();
 
-    // Einfaches Polling, bis das Ergebnis fertig ist.
+    // Falls "Prefer: wait" nicht reichte: weiter pollen, bis fertig.
     const started = Date.now();
     while (
       prediction.status !== "succeeded" &&
       prediction.status !== "failed" &&
-      Date.now() - started < 60_000
+      prediction.status !== "canceled" &&
+      prediction.urls?.get &&
+      Date.now() - started < 90_000
     ) {
       await new Promise((r) => setTimeout(r, 1500));
       const poll = await fetch(prediction.urls.get, {
@@ -75,12 +96,16 @@ const replicateProvider: ImageProvider = {
     }
 
     if (prediction.status !== "succeeded") {
-      throw new Error("Render fehlgeschlagen.");
+      throw new Error(
+        `Replicate: Render nicht erfolgreich (Status ${prediction.status ?? "unbekannt"}).`
+      );
     }
 
+    // Output ist je nach Modell ein String oder ein Array von Bild-URLs.
     const output = Array.isArray(prediction.output)
       ? prediction.output[prediction.output.length - 1]
       : prediction.output;
+    if (!output) throw new Error("Replicate: leeres Ergebnis.");
 
     return { imageUrl: String(output), provider: "replicate" };
   },

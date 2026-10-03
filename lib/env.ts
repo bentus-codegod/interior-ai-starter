@@ -11,6 +11,10 @@ export const env = {
     | "comfyui",
   modelslabKey: process.env.MODELSLAB_API_KEY ?? "",
   replicateToken: process.env.REPLICATE_API_TOKEN ?? "",
+  // Welches Replicate-Modell gerendert wird (owner/name). Standard ist ein
+  // Interior-Redesign-Modell, das die Raumstruktur erhält. Wechselbar, ohne
+  // Code zu ändern — bei einem anderen Modell ggf. die Eingabefelder anpassen.
+  replicateModel: process.env.REPLICATE_MODEL ?? "adirik/interior-design",
   // Basis-URL deiner eigenen ComfyUI-Instanz (RunPod). Ohne / am Ende,
   // z. B. https://abc123-3000.proxy.runpod.net
   comfyUrl: (process.env.COMFYUI_URL ?? "").replace(/\/$/, ""),
