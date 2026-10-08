@@ -15,6 +15,13 @@ export const env = {
   // Interior-Redesign-Modell, das die Raumstruktur erhält. Wechselbar, ohne
   // Code zu ändern — bei einem anderen Modell ggf. die Eingabefelder anpassen.
   replicateModel: process.env.REPLICATE_MODEL ?? "adirik/interior-design",
+  // --- Phase 2: objektgenaues Bearbeiten (Möbel tauschen/freistellen) ---
+  // Text -> Maske (Grounding DINO + SAM in einem Call). Owner/Name, wechselbar.
+  replicateSegmentModel:
+    process.env.REPLICATE_SEGMENT_MODEL ?? "schananas/grounded_sam",
+  // Maske + Bild + Prompt -> nur der maskierte Bereich wird neu gemalt.
+  replicateInpaintModel:
+    process.env.REPLICATE_INPAINT_MODEL ?? "stability-ai/stable-diffusion-inpainting",
   // Basis-URL deiner eigenen ComfyUI-Instanz (RunPod). Ohne / am Ende,
   // z. B. https://abc123-3000.proxy.runpod.net
   comfyUrl: (process.env.COMFYUI_URL ?? "").replace(/\/$/, ""),
