@@ -4,6 +4,7 @@ import { useState } from "react";
 import { RoomUploader } from "@/components/RoomUploader";
 import { RenderResult } from "@/components/RenderResult";
 import { ShopTheLook } from "@/components/ShopTheLook";
+import { EditPanel } from "@/components/EditPanel";
 import {
   RoomMeasurements,
   emptyMeasurements,
@@ -236,6 +237,9 @@ export default function Home() {
                 after={result.renderImageUrl}
                 provider={result.provider}
               />
+              {result.provider === "replicate" && (
+                <EditPanel baseImageUrl={result.renderImageUrl} />
+              )}
               <ShopTheLook
                 key={renderCount}
                 items={result.items}

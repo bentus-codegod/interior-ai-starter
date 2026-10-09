@@ -39,9 +39,17 @@ export async function POST(req: NextRequest) {
       mode?: unknown;
     };
 
-    const check = validateImageUpload(imageDataUrl);
-    if (!check.ok) {
-      return NextResponse.json({ error: check.error }, { status: 400 });
+    // Zu bearbeiten ist meist das generierte Render — das kommt als
+    // https-URL von Replicate. Daneben erlauben wir eine hochgeladene
+    // Data-URL. Data-URLs werden streng geprüft; https-URLs lassen wir
+    // durch (sie werden nur an Replicate als Bildquelle weitergereicht,
+    // nicht vom Server selbst geladen).
+    const isHttps = typeof imageDataUrl === "string" && /^https:\/\//.test(imageDataUrl);
+    if (!isHttps) {
+      const check = validateImageUpload(imageDataUrl);
+      if (!check.ok) {
+        return NextResponse.json({ error: check.error }, { status: 400 });
+      }
     }
     if (typeof targetObject !== "string" || targetObject.trim().length === 0) {
       return NextResponse.json(
