@@ -1,4 +1,5 @@
 import "server-only";
+import Jimp from "jimp";
 import { env } from "@/lib/env";
 
 // ---------------------------------------------------------------------------
@@ -123,24 +124,29 @@ async function segment(imageDataUrl: string, targetObject: string): Promise<stri
   return lastUrl(output);
 }
 
-// Schritt 2: Nur den maskierten Bereich neu malen.
+// Maske schwarz/weiß umkehren und als Data-URL zurückgeben.
+// Für "keep": wir wollen ALLES AUSSER dem Objekt neu malen, also die vom
+// Segmentierer gelieferte Objektmaske invertieren. Das machen wir selbst
+// (verlässlich), statt auf ein modellspezifisches invert_mask-Flag zu hoffen.
+async function invertMaskToDataUrl(maskUrl: string): Promise<string> {
+  const img = await Jimp.read(maskUrl);
+  img.invert();
+  const buf = await img.getBufferAsync(Jimp.MIME_PNG);
+  return `data:image/png;base64,${buf.toString("base64")}`;
+}
+
+// Schritt 2: Nur den (weißen) Maskenbereich neu malen.
 async function inpaint(
   imageDataUrl: string,
-  maskUrl: string,
+  mask: string,
   prompt: string,
-  negativePrompt: string,
-  invertMask: boolean
+  negativePrompt: string
 ): Promise<string> {
   const output = await callReplicate(env.replicateInpaintModel, {
     image: imageDataUrl,
-    mask: maskUrl,
+    mask,
     prompt,
     negative_prompt: negativePrompt,
-    // "keep" malt AUSSERHALB der Objektmaske -> Maske invertieren. Nicht jedes
-    // Inpaint-Modell kann das per Flag; unterstützt das gewählte Modell kein
-    // invert_mask, braucht "keep" einen kleinen Masken-Invertier-Schritt
-    // (Bildbearbeitung) — siehe KI-MODELLE-LANDKARTE, Phase-2-Notiz.
-    invert_mask: invertMask,
   });
   return firstUrl(output);
 }
@@ -151,12 +157,14 @@ export async function editRoom(input: EditInput): Promise<EditResult> {
   const negativePrompt = input.negativePrompt?.trim() || DEFAULT_NEGATIVE;
 
   const maskUrl = await segment(input.imageDataUrl, input.targetObject);
+  // "swap": Objektmaske direkt (Objekt neu malen).
+  // "keep": invertierte Maske (Objekt behalten, Rest neu malen).
+  const mask = mode === "keep" ? await invertMaskToDataUrl(maskUrl) : maskUrl;
   const imageUrl = await inpaint(
     input.imageDataUrl,
-    maskUrl,
+    mask,
     input.prompt,
-    negativePrompt,
-    mode === "keep" // behalten = außerhalb der Maske malen
+    negativePrompt
   );
 
   return {

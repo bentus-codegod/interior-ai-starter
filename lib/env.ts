@@ -22,6 +22,10 @@ export const env = {
   // Maske + Bild + Prompt -> nur der maskierte Bereich wird neu gemalt.
   replicateInpaintModel:
     process.env.REPLICATE_INPAINT_MODEL ?? "stability-ai/stable-diffusion-inpainting",
+  // Vision-Modell für die grobe Raum-Schätzung (Maße/Tiefe aus Foto).
+  // Muss `image` + `prompt` annehmen und Text zurückgeben. Austauschbar.
+  replicateMeasureModel:
+    process.env.REPLICATE_MEASURE_MODEL ?? "yorickvp/llava-13b",
   // Basis-URL deiner eigenen ComfyUI-Instanz (RunPod). Ohne / am Ende,
   // z. B. https://abc123-3000.proxy.runpod.net
   comfyUrl: (process.env.COMFYUI_URL ?? "").replace(/\/$/, ""),

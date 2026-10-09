@@ -47,6 +47,8 @@ export default function Home() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [result, setResult] = useState<Result | null>(null);
+  const [estimating, setEstimating] = useState(false);
+  const [estimateNote, setEstimateNote] = useState<string | null>(null);
 
   // Neues Foto/Standbild = altes Ergebnis passt nicht mehr dazu.
   function setImage(next: string | null) {
@@ -82,6 +84,38 @@ export default function Home() {
       setError("Netzwerkfehler. Bitte erneut versuchen.");
     } finally {
       setLoading(false);
+    }
+  }
+
+  // Grobe Raum-Schätzung per Vision-Modell -> füllt die Maßfelder vor.
+  async function autoEstimate() {
+    if (!image) return;
+    setEstimating(true);
+    setEstimateNote(null);
+    try {
+      const res = await fetch("/api/measure", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ images: [image] }),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        setEstimateNote(data.error ?? "Schätzung nicht möglich — bitte manuell eintragen.");
+        return;
+      }
+      setMeasurements({
+        widthCm: data.widthCm ? String(data.widthCm) : measurements.widthCm,
+        lengthCm: data.lengthCm ? String(data.lengthCm) : measurements.lengthCm,
+        doorWidthCm: data.doorWidthCm ? String(data.doorWidthCm) : measurements.doorWidthCm,
+        ceilingHeightCm: data.ceilingHeightCm
+          ? String(data.ceilingHeightCm)
+          : measurements.ceilingHeightCm,
+      });
+      setEstimateNote("Grobe KI-Schätzung eingetragen — bitte prüfen und anpassen.");
+    } catch {
+      setEstimateNote("Netzwerkfehler. Bitte erneut versuchen.");
+    } finally {
+      setEstimating(false);
     }
   }
 
@@ -207,6 +241,19 @@ export default function Home() {
             <h2 className="font-display text-sm text-ink/50">
               3 · Raummaße & Grundriss <span className="text-ink/35">(optional)</span>
             </h2>
+            <div className="mt-3">
+              <button
+                type="button"
+                onClick={autoEstimate}
+                disabled={!image || estimating}
+                className="rounded-full border border-sage bg-sage/5 px-3.5 py-1.5 text-sm text-sage transition hover:bg-sage/10 disabled:opacity-40"
+              >
+                {estimating ? "Wird geschätzt …" : "Maße automatisch schätzen (Beta)"}
+              </button>
+              {estimateNote && (
+                <p className="mt-2 text-xs text-ink/55">{estimateNote}</p>
+              )}
+            </div>
             <div className="mt-3">
               <RoomMeasurements
                 value={measurements}
