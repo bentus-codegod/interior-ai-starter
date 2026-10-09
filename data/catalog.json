@@ -1,69 +1,1394 @@
 {
   "rooms": [
-    {"id": "wohnzimmer", "name": "Wohnzimmer"},
-    {"id": "schlafzimmer", "name": "Schlafzimmer"},
-    {"id": "esszimmer", "name": "Esszimmer"},
-    {"id": "aussen", "name": "Balkon & Garten"}
+    {
+      "id": "wohnzimmer",
+      "name": "Wohnzimmer"
+    },
+    {
+      "id": "schlafzimmer",
+      "name": "Schlafzimmer"
+    },
+    {
+      "id": "esszimmer",
+      "name": "Esszimmer"
+    },
+    {
+      "id": "aussen",
+      "name": "Balkon & Garten"
+    }
   ],
   "products": [
-    {"sku": "SF-LINEN-01", "name": "Leinensofa 3-Sitzer \u201eHavel\u201c", "priceCents": 89900, "dimensions": "220 \u00d7 95 \u00d7 85 cm", "widthCm": 220, "depthCm": 95, "heightCm": 85, "category": "Sofa", "tint": "#C9C2B4", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/SF-LINEN-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "SF-BOUCLE-01", "family": "boucle", "name": "Boucl\u00e9-Sofa \u201eWandse\u201c", "priceCents": 109900, "dimensions": "230 \u00d7 98 \u00d7 82 cm", "widthCm": 230, "depthCm": 98, "heightCm": 82, "category": "Sofa", "tint": "#E7E2D6", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/SF-BOUCLE-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "SF-CORD-01", "name": "Cord-Sofa \u201eBille\u201c", "priceCents": 79900, "dimensions": "210 \u00d7 92 \u00d7 84 cm", "widthCm": 210, "depthCm": 92, "heightCm": 84, "category": "Sofa", "tint": "#B7A98C", "styleTags": ["warm-minimal"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/SF-CORD-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "CH-BOUCLE-01", "family": "boucle", "name": "Sessel Boucl\u00e9 \u201eFinkenau\u201c", "priceCents": 44900, "dimensions": "78 \u00d7 82 \u00d7 74 cm", "widthCm": 78, "depthCm": 82, "heightCm": 74, "category": "Sessel", "tint": "#E7E2D6", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/CH-BOUCLE-01?aff=interior-ai", "group": "moebel", "modelUrl": "/models/sheen-chair.glb"},
-    {"sku": "CH-LEATHER-01", "name": "Ledersessel \u201eKontor\u201c", "priceCents": 59900, "dimensions": "80 \u00d7 84 \u00d7 76 cm", "widthCm": 80, "depthCm": 84, "heightCm": 76, "category": "Sessel", "tint": "#8A6B4A", "styleTags": ["warm-minimal"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/CH-LEATHER-01?aff=interior-ai", "group": "moebel", "family": "nussbaum"},
-    {"sku": "TB-OAK-01", "name": "Couchtisch Eiche \u201eElbe\u201c", "priceCents": 32900, "dimensions": "110 \u00d7 60 \u00d7 40 cm", "widthCm": 110, "depthCm": 60, "heightCm": 40, "category": "Couchtisch", "tint": "#B08948", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/TB-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "TB-MARBLE-01", "name": "Couchtisch Marmor \u201eAlster\u201c", "priceCents": 44900, "dimensions": "100 \u00d7 100 \u00d7 38 cm", "widthCm": 100, "depthCm": 100, "heightCm": 38, "category": "Couchtisch", "tint": "#D8D5CE", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/TB-MARBLE-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "RUG-WOOL-01", "name": "Wollteppich \u201eDeich\u201c", "priceCents": 24900, "dimensions": "200 \u00d7 300 cm", "widthCm": 200, "depthCm": 300, "heightCm": 2, "category": "Teppich", "tint": "#9C6B4A", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/RUG-WOOL-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "RUG-BERBER-01", "name": "Berber-Teppich \u201eMoor\u201c", "priceCents": 29900, "dimensions": "170 \u00d7 240 cm", "widthCm": 170, "depthCm": 240, "heightCm": 2, "category": "Teppich", "tint": "#CFC6B4", "styleTags": ["warm-minimal"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/RUG-BERBER-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "LMP-BRASS-01", "name": "Stehleuchte Messing \u201eIsar\u201c", "priceCents": 18900, "dimensions": "\u00d8 28 \u00d7 155 cm", "widthCm": 28, "depthCm": 28, "heightCm": 155, "category": "Leuchte", "tint": "#B99A5B", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/LMP-BRASS-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "LMP-PAPER-01", "name": "Papierleuchte \u201eSpree\u201c", "priceCents": 12900, "dimensions": "\u00d8 45 \u00d7 160 cm", "widthCm": 45, "depthCm": 45, "heightCm": 160, "category": "Leuchte", "tint": "#EEE9DE", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/LMP-PAPER-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "SH-OAK-01", "name": "Regal Eiche \u201eKontor\u201c", "priceCents": 39900, "dimensions": "80 \u00d7 200 \u00d7 32 cm", "widthCm": 80, "depthCm": 32, "heightCm": 200, "category": "Regal", "tint": "#8A6B4A", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/SH-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "SB-OAK-01", "name": "Sideboard Eiche \u201eSpeicher\u201c", "priceCents": 54900, "dimensions": "160 \u00d7 45 \u00d7 70 cm", "widthCm": 160, "depthCm": 45, "heightCm": 70, "category": "Sideboard", "tint": "#9A7B52", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/SB-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "SB-WHITE-01", "name": "Sideboard wei\u00df \u201eNeruda\u201c", "priceCents": 49900, "dimensions": "150 \u00d7 42 \u00d7 68 cm", "widthCm": 150, "depthCm": 42, "heightCm": 68, "category": "Sideboard", "tint": "#EDEBE6", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/SB-WHITE-01?aff=interior-ai", "group": "moebel", "family": "weiss"},
-    {"sku": "DK-PILLOW-01", "name": "Kissen-Set Leinen \u201eWatt\u201c (2 St\u00fcck)", "priceCents": 5900, "dimensions": "50 \u00d7 50 \u00d7 15 cm", "widthCm": 50, "depthCm": 15, "heightCm": 50, "category": "Kissen", "tint": "#D9CFBD", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/DK-PILLOW-01?aff=interior-ai", "group": "deko"},
-    {"sku": "DK-PILLOW-02", "name": "Kissen-Set Boucl\u00e9 \u201eD\u00fcne\u201c (2 St\u00fcck)", "priceCents": 6900, "dimensions": "45 \u00d7 45 \u00d7 15 cm", "widthCm": 45, "depthCm": 15, "heightCm": 45, "category": "Kissen", "tint": "#EFEBE2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/DK-PILLOW-02?aff=interior-ai", "group": "deko"},
-    {"sku": "DK-PLAID-01", "name": "Wollplaid \u201eF\u00f6hr\u201c", "priceCents": 7900, "dimensions": "130 \u00d7 170 cm", "widthCm": 130, "depthCm": 170, "heightCm": 1, "category": "Plaid", "tint": "#A88B6A", "styleTags": ["warm-minimal"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/DK-PLAID-01?aff=interior-ai", "group": "deko"},
-    {"sku": "DK-PLAID-02", "name": "Boucl\u00e9-Plaid \u201eSylt\u201c", "priceCents": 8900, "dimensions": "140 \u00d7 180 cm", "widthCm": 140, "depthCm": 180, "heightCm": 1, "category": "Plaid", "tint": "#E4DED2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/DK-PLAID-02?aff=interior-ai", "group": "deko"},
-    {"sku": "DK-VASE-01", "name": "Keramikvase \u201eTon\u201c", "priceCents": 4900, "dimensions": "\u00d8 18 \u00d7 35 cm", "widthCm": 18, "depthCm": 18, "heightCm": 35, "category": "Vase", "tint": "#B4876A", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/DK-VASE-01?aff=interior-ai", "group": "deko"},
-    {"sku": "DK-VASE-02", "name": "Glasvase \u201eWelle\u201c", "priceCents": 3900, "dimensions": "\u00d8 16 \u00d7 30 cm", "widthCm": 16, "depthCm": 16, "heightCm": 30, "category": "Vase", "tint": "#C8D2CC", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/DK-VASE-02?aff=interior-ai", "group": "deko"},
-    {"sku": "DK-ART-01", "name": "Kunstdruck gerahmt \u201eHorizont\u201c", "priceCents": 9900, "dimensions": "70 \u00d7 100 cm", "widthCm": 70, "depthCm": 3, "heightCm": 100, "category": "Wandbild", "tint": "#CBBFA8", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/DK-ART-01?aff=interior-ai", "group": "deko"},
-    {"sku": "DK-PLANT-01", "name": "Kunstpflanze Olivenbaum \u201eHain\u201c", "priceCents": 11900, "dimensions": "\u00d8 60 \u00d7 150 cm", "widthCm": 60, "depthCm": 60, "heightCm": 150, "category": "Pflanze", "tint": "#7F8A6A", "styleTags": ["soft-modern", "warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/DK-PLANT-01?aff=interior-ai", "group": "deko"},
-    {"sku": "BED-OAK-01", "name": "Bett Eiche \u201eL\u00fche\u201c 160 \u00d7 200", "priceCents": 99900, "dimensions": "170 \u00d7 215 \u00d7 95 cm", "widthCm": 170, "depthCm": 215, "heightCm": 95, "category": "Bett", "tint": "#B08948", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/BED-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "BED-WHITE-01", "name": "Polsterbett \u201eWolke\u201c 180 \u00d7 200", "priceCents": 119900, "dimensions": "190 \u00d7 220 \u00d7 110 cm", "widthCm": 190, "depthCm": 220, "heightCm": 110, "category": "Bett", "tint": "#EEEAE2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/BED-WHITE-01?aff=interior-ai", "group": "moebel", "family": "weiss"},
-    {"sku": "BED-WAL-01", "name": "Bett Nussbaum \u201eIlmenau\u201c 180 \u00d7 200", "priceCents": 134900, "dimensions": "190 \u00d7 215 \u00d7 90 cm", "widthCm": 190, "depthCm": 215, "heightCm": 90, "category": "Bett", "tint": "#6E4E36", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/BED-WAL-01?aff=interior-ai", "group": "moebel", "family": "nussbaum"},
-    {"sku": "NS-OAK-01", "name": "Nachttisch Eiche \u201eL\u00fche\u201c", "priceCents": 14900, "dimensions": "45 \u00d7 40 \u00d7 50 cm", "widthCm": 45, "depthCm": 40, "heightCm": 50, "category": "Nachttisch", "tint": "#B08948", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/NS-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "NS-WHITE-01", "name": "Nachttisch wei\u00df \u201eWolke\u201c", "priceCents": 12900, "dimensions": "45 \u00d7 38 \u00d7 52 cm", "widthCm": 45, "depthCm": 38, "heightCm": 52, "category": "Nachttisch", "tint": "#EEEAE2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/NS-WHITE-01?aff=interior-ai", "group": "moebel", "family": "weiss"},
-    {"sku": "NS-WAL-01", "name": "Nachttisch Nussbaum \u201eIlmenau\u201c", "priceCents": 17900, "dimensions": "48 \u00d7 40 \u00d7 50 cm", "widthCm": 48, "depthCm": 40, "heightCm": 50, "category": "Nachttisch", "tint": "#6E4E36", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/NS-WAL-01?aff=interior-ai", "group": "moebel", "family": "nussbaum"},
-    {"sku": "DR-OAK-01", "name": "Kommode Eiche \u201eL\u00fche\u201c", "priceCents": 54900, "dimensions": "120 \u00d7 45 \u00d7 80 cm", "widthCm": 120, "depthCm": 45, "heightCm": 80, "category": "Kommode", "tint": "#B08948", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/DR-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "DR-WHITE-01", "name": "Kommode wei\u00df \u201eWolke\u201c", "priceCents": 44900, "dimensions": "110 \u00d7 45 \u00d7 85 cm", "widthCm": 110, "depthCm": 45, "heightCm": 85, "category": "Kommode", "tint": "#EEEAE2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/DR-WHITE-01?aff=interior-ai", "group": "moebel", "family": "weiss"},
-    {"sku": "DR-WAL-01", "name": "Kommode Nussbaum \u201eIlmenau\u201c", "priceCents": 64900, "dimensions": "130 \u00d7 46 \u00d7 78 cm", "widthCm": 130, "depthCm": 46, "heightCm": 78, "category": "Kommode", "tint": "#6E4E36", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/DR-WAL-01?aff=interior-ai", "group": "moebel", "family": "nussbaum"},
-    {"sku": "BL-LINEN-01", "name": "Nachttischleuchte Leinen \u201eRuh\u201c", "priceCents": 5900, "dimensions": "\u00d8 25 \u00d7 45 cm", "widthCm": 25, "depthCm": 25, "heightCm": 45, "category": "Nachttischleuchte", "tint": "#E2D8C4", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/BL-LINEN-01?aff=interior-ai", "group": "deko"},
-    {"sku": "BL-OPAL-01", "name": "Nachttischleuchte Opalglas \u201eMond\u201c", "priceCents": 6900, "dimensions": "\u00d8 22 \u00d7 38 cm", "widthCm": 22, "depthCm": 22, "heightCm": 38, "category": "Nachttischleuchte", "tint": "#F2F0EA", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/BL-OPAL-01?aff=interior-ai", "group": "deko"},
-    {"sku": "DT-OAK-01", "name": "Esstisch Eiche \u201eTafel\u201c", "priceCents": 79900, "dimensions": "180 \u00d7 90 \u00d7 75 cm", "widthCm": 180, "depthCm": 90, "heightCm": 75, "category": "Esstisch", "tint": "#B08948", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/DT-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "DT-WHITE-01", "name": "Esstisch rund wei\u00df \u201eKreis\u201c", "priceCents": 59900, "dimensions": "\u00d8 120 \u00d7 75 cm", "widthCm": 120, "depthCm": 120, "heightCm": 75, "category": "Esstisch", "tint": "#EEEAE2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/DT-WHITE-01?aff=interior-ai", "group": "moebel", "family": "weiss"},
-    {"sku": "DT-WAL-01", "name": "Esstisch Nussbaum \u201eGilde\u201c", "priceCents": 119900, "dimensions": "200 \u00d7 95 \u00d7 75 cm", "widthCm": 200, "depthCm": 95, "heightCm": 75, "category": "Esstisch", "tint": "#6E4E36", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/DT-WAL-01?aff=interior-ai", "group": "moebel", "family": "nussbaum"},
-    {"sku": "CHR-OAK-01", "name": "Stuhl Eiche \u201eTafel\u201c", "priceCents": 12900, "dimensions": "46 \u00d7 52 \u00d7 80 cm", "widthCm": 46, "depthCm": 52, "heightCm": 80, "category": "Stuhl", "tint": "#B08948", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/CHR-OAK-01?aff=interior-ai", "group": "moebel", "family": "eiche"},
-    {"sku": "CHR-WHITE-01", "name": "Polsterstuhl Boucl\u00e9 \u201eKreis\u201c", "priceCents": 14900, "dimensions": "50 \u00d7 55 \u00d7 82 cm", "widthCm": 50, "depthCm": 55, "heightCm": 82, "category": "Stuhl", "tint": "#EEEAE2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/CHR-WHITE-01?aff=interior-ai", "group": "moebel", "family": "weiss"},
-    {"sku": "CHR-WAL-01", "name": "Stuhl Nussbaum \u201eGilde\u201c", "priceCents": 16900, "dimensions": "47 \u00d7 52 \u00d7 80 cm", "widthCm": 47, "depthCm": 52, "heightCm": 80, "category": "Stuhl", "tint": "#6E4E36", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/CHR-WAL-01?aff=interior-ai", "group": "moebel", "family": "nussbaum"},
-    {"sku": "PL-BRASS-01", "name": "Pendelleuchte Messing \u201eGlocke\u201c", "priceCents": 21900, "dimensions": "\u00d8 40 \u00d7 30 cm", "widthCm": 40, "depthCm": 40, "heightCm": 30, "category": "Pendelleuchte", "tint": "#B99A5B", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/PL-BRASS-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "PL-PAPER-01", "name": "Pendelleuchte Papier \u201eLaterne\u201c", "priceCents": 9900, "dimensions": "\u00d8 60 \u00d7 45 cm", "widthCm": 60, "depthCm": 60, "heightCm": 45, "category": "Pendelleuchte", "tint": "#EEE9DE", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/PL-PAPER-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "OD-SOFA-TEAK", "name": "Loungesofa Teak \u201eStrand\u201c", "priceCents": 89900, "dimensions": "180 \u00d7 80 \u00d7 70 cm", "widthCm": 180, "depthCm": 80, "heightCm": 70, "category": "Outdoor-Lounge", "tint": "#A0784E", "styleTags": ["warm-minimal"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/OD-SOFA-TEAK?aff=interior-ai", "group": "moebel", "family": "teak"},
-    {"sku": "OD-SOFA-RATTAN", "name": "Loungesofa Rattan \u201eBrise\u201c", "priceCents": 69900, "dimensions": "170 \u00d7 78 \u00d7 72 cm", "widthCm": 170, "depthCm": 78, "heightCm": 72, "category": "Outdoor-Lounge", "tint": "#C9A97C", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/OD-SOFA-RATTAN?aff=interior-ai", "group": "moebel", "family": "rattan"},
-    {"sku": "OD-TB-TEAK", "name": "Loungetisch Teak \u201eStrand\u201c", "priceCents": 24900, "dimensions": "90 \u00d7 60 \u00d7 35 cm", "widthCm": 90, "depthCm": 60, "heightCm": 35, "category": "Outdoor-Tisch", "tint": "#A0784E", "styleTags": ["warm-minimal"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/OD-TB-TEAK?aff=interior-ai", "group": "moebel", "family": "teak"},
-    {"sku": "OD-TB-RATTAN", "name": "Beistelltisch Rattan \u201eBrise\u201c", "priceCents": 14900, "dimensions": "\u00d8 55 \u00d7 45 cm", "widthCm": 55, "depthCm": 55, "heightCm": 45, "category": "Outdoor-Tisch", "tint": "#C9A97C", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/OD-TB-RATTAN?aff=interior-ai", "group": "moebel", "family": "rattan"},
-    {"sku": "OD-RUG-01", "name": "Outdoor-Teppich \u201eD\u00fcne\u201c", "priceCents": 12900, "dimensions": "160 \u00d7 230 cm", "widthCm": 160, "depthCm": 230, "heightCm": 1, "category": "Outdoor-Teppich", "tint": "#BFB49C", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/OD-RUG-01?aff=interior-ai", "group": "moebel"},
-    {"sku": "OD-PLANTER-01", "name": "Pflanzk\u00fcbel Terrakotta \u201eTon\u201c", "priceCents": 4900, "dimensions": "\u00d8 45 \u00d7 40 cm", "widthCm": 45, "depthCm": 45, "heightCm": 40, "category": "Pflanzk\u00fcbel", "tint": "#B4744E", "styleTags": ["warm-minimal"], "retailer": "Nordheim Wohnen", "affiliateUrl": "https://example-haendler.de/p/OD-PLANTER-01?aff=interior-ai", "group": "deko"},
-    {"sku": "OD-PLANTER-02", "name": "Pflanzk\u00fcbel Fiberstone \u201eStein\u201c", "priceCents": 5900, "dimensions": "\u00d8 40 \u00d7 45 cm", "widthCm": 40, "depthCm": 40, "heightCm": 45, "category": "Pflanzk\u00fcbel", "tint": "#BDBAB2", "styleTags": ["soft-modern"], "retailer": "Casa Verde", "affiliateUrl": "https://example-haendler.de/p/OD-PLANTER-02?aff=interior-ai", "group": "deko"},
-    {"sku": "OD-LAMP-01", "name": "Solarleuchte \u201eAbendrot\u201c", "priceCents": 3900, "dimensions": "\u00d8 20 \u00d7 40 cm", "widthCm": 20, "depthCm": 20, "heightCm": 40, "category": "Outdoor-Leuchte", "tint": "#D9C9A3", "styleTags": ["warm-minimal", "soft-modern"], "retailer": "Elbm\u00f6bel", "affiliateUrl": "https://example-haendler.de/p/OD-LAMP-01?aff=interior-ai", "group": "deko"}
+    {
+      "sku": "SF-LINEN-01",
+      "name": "Leinensofa 3-Sitzer „Havel“",
+      "priceCents": 89900,
+      "dimensions": "220 × 95 × 85 cm",
+      "widthCm": 220,
+      "depthCm": 95,
+      "heightCm": 85,
+      "category": "Sofa",
+      "tint": "#C9C2B4",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/SF-LINEN-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "SF-BOUCLE-01",
+      "family": "boucle",
+      "name": "Bouclé-Sofa „Wandse“",
+      "priceCents": 109900,
+      "dimensions": "230 × 98 × 82 cm",
+      "widthCm": 230,
+      "depthCm": 98,
+      "heightCm": 82,
+      "category": "Sofa",
+      "tint": "#E7E2D6",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/SF-BOUCLE-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "SF-CORD-01",
+      "name": "Cord-Sofa „Bille“",
+      "priceCents": 79900,
+      "dimensions": "210 × 92 × 84 cm",
+      "widthCm": 210,
+      "depthCm": 92,
+      "heightCm": 84,
+      "category": "Sofa",
+      "tint": "#B7A98C",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/SF-CORD-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "CH-BOUCLE-01",
+      "family": "boucle",
+      "name": "Sessel Bouclé „Finkenau“",
+      "priceCents": 44900,
+      "dimensions": "78 × 82 × 74 cm",
+      "widthCm": 78,
+      "depthCm": 82,
+      "heightCm": 74,
+      "category": "Sessel",
+      "tint": "#E7E2D6",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/CH-BOUCLE-01?aff=interior-ai",
+      "group": "moebel",
+      "modelUrl": "/models/sheen-chair.glb"
+    },
+    {
+      "sku": "CH-LEATHER-01",
+      "name": "Ledersessel „Kontor“",
+      "priceCents": 59900,
+      "dimensions": "80 × 84 × 76 cm",
+      "widthCm": 80,
+      "depthCm": 84,
+      "heightCm": 76,
+      "category": "Sessel",
+      "tint": "#8A6B4A",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/CH-LEATHER-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "nussbaum"
+    },
+    {
+      "sku": "TB-OAK-01",
+      "name": "Couchtisch Eiche „Elbe“",
+      "priceCents": 32900,
+      "dimensions": "110 × 60 × 40 cm",
+      "widthCm": 110,
+      "depthCm": 60,
+      "heightCm": 40,
+      "category": "Couchtisch",
+      "tint": "#B08948",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/TB-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "TB-MARBLE-01",
+      "name": "Couchtisch Marmor „Alster“",
+      "priceCents": 44900,
+      "dimensions": "100 × 100 × 38 cm",
+      "widthCm": 100,
+      "depthCm": 100,
+      "heightCm": 38,
+      "category": "Couchtisch",
+      "tint": "#D8D5CE",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/TB-MARBLE-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "RUG-WOOL-01",
+      "name": "Wollteppich „Deich“",
+      "priceCents": 24900,
+      "dimensions": "200 × 300 cm",
+      "widthCm": 200,
+      "depthCm": 300,
+      "heightCm": 2,
+      "category": "Teppich",
+      "tint": "#9C6B4A",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/RUG-WOOL-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "RUG-BERBER-01",
+      "name": "Berber-Teppich „Moor“",
+      "priceCents": 29900,
+      "dimensions": "170 × 240 cm",
+      "widthCm": 170,
+      "depthCm": 240,
+      "heightCm": 2,
+      "category": "Teppich",
+      "tint": "#CFC6B4",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/RUG-BERBER-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "LMP-BRASS-01",
+      "name": "Stehleuchte Messing „Isar“",
+      "priceCents": 18900,
+      "dimensions": "Ø 28 × 155 cm",
+      "widthCm": 28,
+      "depthCm": 28,
+      "heightCm": 155,
+      "category": "Leuchte",
+      "tint": "#B99A5B",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/LMP-BRASS-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "LMP-PAPER-01",
+      "name": "Papierleuchte „Spree“",
+      "priceCents": 12900,
+      "dimensions": "Ø 45 × 160 cm",
+      "widthCm": 45,
+      "depthCm": 45,
+      "heightCm": 160,
+      "category": "Leuchte",
+      "tint": "#EEE9DE",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/LMP-PAPER-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "SH-OAK-01",
+      "name": "Regal Eiche „Kontor“",
+      "priceCents": 39900,
+      "dimensions": "80 × 200 × 32 cm",
+      "widthCm": 80,
+      "depthCm": 32,
+      "heightCm": 200,
+      "category": "Regal",
+      "tint": "#8A6B4A",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/SH-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "SB-OAK-01",
+      "name": "Sideboard Eiche „Speicher“",
+      "priceCents": 54900,
+      "dimensions": "160 × 45 × 70 cm",
+      "widthCm": 160,
+      "depthCm": 45,
+      "heightCm": 70,
+      "category": "Sideboard",
+      "tint": "#9A7B52",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/SB-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "SB-WHITE-01",
+      "name": "Sideboard weiß „Neruda“",
+      "priceCents": 49900,
+      "dimensions": "150 × 42 × 68 cm",
+      "widthCm": 150,
+      "depthCm": 42,
+      "heightCm": 68,
+      "category": "Sideboard",
+      "tint": "#EDEBE6",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/SB-WHITE-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "weiss"
+    },
+    {
+      "sku": "DK-PILLOW-01",
+      "name": "Kissen-Set Leinen „Watt“ (2 Stück)",
+      "priceCents": 5900,
+      "dimensions": "50 × 50 × 15 cm",
+      "widthCm": 50,
+      "depthCm": 15,
+      "heightCm": 50,
+      "category": "Kissen",
+      "tint": "#D9CFBD",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/DK-PILLOW-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DK-PILLOW-02",
+      "name": "Kissen-Set Bouclé „Düne“ (2 Stück)",
+      "priceCents": 6900,
+      "dimensions": "45 × 45 × 15 cm",
+      "widthCm": 45,
+      "depthCm": 15,
+      "heightCm": 45,
+      "category": "Kissen",
+      "tint": "#EFEBE2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/DK-PILLOW-02?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DK-PLAID-01",
+      "name": "Wollplaid „Föhr“",
+      "priceCents": 7900,
+      "dimensions": "130 × 170 cm",
+      "widthCm": 130,
+      "depthCm": 170,
+      "heightCm": 1,
+      "category": "Plaid",
+      "tint": "#A88B6A",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/DK-PLAID-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DK-PLAID-02",
+      "name": "Bouclé-Plaid „Sylt“",
+      "priceCents": 8900,
+      "dimensions": "140 × 180 cm",
+      "widthCm": 140,
+      "depthCm": 180,
+      "heightCm": 1,
+      "category": "Plaid",
+      "tint": "#E4DED2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/DK-PLAID-02?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DK-VASE-01",
+      "name": "Keramikvase „Ton“",
+      "priceCents": 4900,
+      "dimensions": "Ø 18 × 35 cm",
+      "widthCm": 18,
+      "depthCm": 18,
+      "heightCm": 35,
+      "category": "Vase",
+      "tint": "#B4876A",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/DK-VASE-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DK-VASE-02",
+      "name": "Glasvase „Welle“",
+      "priceCents": 3900,
+      "dimensions": "Ø 16 × 30 cm",
+      "widthCm": 16,
+      "depthCm": 16,
+      "heightCm": 30,
+      "category": "Vase",
+      "tint": "#C8D2CC",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/DK-VASE-02?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DK-ART-01",
+      "name": "Kunstdruck gerahmt „Horizont“",
+      "priceCents": 9900,
+      "dimensions": "70 × 100 cm",
+      "widthCm": 70,
+      "depthCm": 3,
+      "heightCm": 100,
+      "category": "Wandbild",
+      "tint": "#CBBFA8",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/DK-ART-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DK-PLANT-01",
+      "name": "Kunstpflanze Olivenbaum „Hain“",
+      "priceCents": 11900,
+      "dimensions": "Ø 60 × 150 cm",
+      "widthCm": 60,
+      "depthCm": 60,
+      "heightCm": 150,
+      "category": "Pflanze",
+      "tint": "#7F8A6A",
+      "styleTags": [
+        "soft-modern",
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/DK-PLANT-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "BED-OAK-01",
+      "name": "Bett Eiche „Lühe“ 160 × 200",
+      "priceCents": 99900,
+      "dimensions": "170 × 215 × 95 cm",
+      "widthCm": 170,
+      "depthCm": 215,
+      "heightCm": 95,
+      "category": "Bett",
+      "tint": "#B08948",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/BED-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "BED-WHITE-01",
+      "name": "Polsterbett „Wolke“ 180 × 200",
+      "priceCents": 119900,
+      "dimensions": "190 × 220 × 110 cm",
+      "widthCm": 190,
+      "depthCm": 220,
+      "heightCm": 110,
+      "category": "Bett",
+      "tint": "#EEEAE2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/BED-WHITE-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "weiss"
+    },
+    {
+      "sku": "BED-WAL-01",
+      "name": "Bett Nussbaum „Ilmenau“ 180 × 200",
+      "priceCents": 134900,
+      "dimensions": "190 × 215 × 90 cm",
+      "widthCm": 190,
+      "depthCm": 215,
+      "heightCm": 90,
+      "category": "Bett",
+      "tint": "#6E4E36",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/BED-WAL-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "nussbaum"
+    },
+    {
+      "sku": "NS-OAK-01",
+      "name": "Nachttisch Eiche „Lühe“",
+      "priceCents": 14900,
+      "dimensions": "45 × 40 × 50 cm",
+      "widthCm": 45,
+      "depthCm": 40,
+      "heightCm": 50,
+      "category": "Nachttisch",
+      "tint": "#B08948",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/NS-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "NS-WHITE-01",
+      "name": "Nachttisch weiß „Wolke“",
+      "priceCents": 12900,
+      "dimensions": "45 × 38 × 52 cm",
+      "widthCm": 45,
+      "depthCm": 38,
+      "heightCm": 52,
+      "category": "Nachttisch",
+      "tint": "#EEEAE2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/NS-WHITE-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "weiss"
+    },
+    {
+      "sku": "NS-WAL-01",
+      "name": "Nachttisch Nussbaum „Ilmenau“",
+      "priceCents": 17900,
+      "dimensions": "48 × 40 × 50 cm",
+      "widthCm": 48,
+      "depthCm": 40,
+      "heightCm": 50,
+      "category": "Nachttisch",
+      "tint": "#6E4E36",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/NS-WAL-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "nussbaum"
+    },
+    {
+      "sku": "DR-OAK-01",
+      "name": "Kommode Eiche „Lühe“",
+      "priceCents": 54900,
+      "dimensions": "120 × 45 × 80 cm",
+      "widthCm": 120,
+      "depthCm": 45,
+      "heightCm": 80,
+      "category": "Kommode",
+      "tint": "#B08948",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/DR-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "DR-WHITE-01",
+      "name": "Kommode weiß „Wolke“",
+      "priceCents": 44900,
+      "dimensions": "110 × 45 × 85 cm",
+      "widthCm": 110,
+      "depthCm": 45,
+      "heightCm": 85,
+      "category": "Kommode",
+      "tint": "#EEEAE2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/DR-WHITE-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "weiss"
+    },
+    {
+      "sku": "DR-WAL-01",
+      "name": "Kommode Nussbaum „Ilmenau“",
+      "priceCents": 64900,
+      "dimensions": "130 × 46 × 78 cm",
+      "widthCm": 130,
+      "depthCm": 46,
+      "heightCm": 78,
+      "category": "Kommode",
+      "tint": "#6E4E36",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/DR-WAL-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "nussbaum"
+    },
+    {
+      "sku": "BL-LINEN-01",
+      "name": "Nachttischleuchte Leinen „Ruh“",
+      "priceCents": 5900,
+      "dimensions": "Ø 25 × 45 cm",
+      "widthCm": 25,
+      "depthCm": 25,
+      "heightCm": 45,
+      "category": "Nachttischleuchte",
+      "tint": "#E2D8C4",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/BL-LINEN-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "BL-OPAL-01",
+      "name": "Nachttischleuchte Opalglas „Mond“",
+      "priceCents": 6900,
+      "dimensions": "Ø 22 × 38 cm",
+      "widthCm": 22,
+      "depthCm": 22,
+      "heightCm": 38,
+      "category": "Nachttischleuchte",
+      "tint": "#F2F0EA",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/BL-OPAL-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "DT-OAK-01",
+      "name": "Esstisch Eiche „Tafel“",
+      "priceCents": 79900,
+      "dimensions": "180 × 90 × 75 cm",
+      "widthCm": 180,
+      "depthCm": 90,
+      "heightCm": 75,
+      "category": "Esstisch",
+      "tint": "#B08948",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/DT-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "DT-WHITE-01",
+      "name": "Esstisch rund weiß „Kreis“",
+      "priceCents": 59900,
+      "dimensions": "Ø 120 × 75 cm",
+      "widthCm": 120,
+      "depthCm": 120,
+      "heightCm": 75,
+      "category": "Esstisch",
+      "tint": "#EEEAE2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/DT-WHITE-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "weiss"
+    },
+    {
+      "sku": "DT-WAL-01",
+      "name": "Esstisch Nussbaum „Gilde“",
+      "priceCents": 119900,
+      "dimensions": "200 × 95 × 75 cm",
+      "widthCm": 200,
+      "depthCm": 95,
+      "heightCm": 75,
+      "category": "Esstisch",
+      "tint": "#6E4E36",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/DT-WAL-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "nussbaum"
+    },
+    {
+      "sku": "CHR-OAK-01",
+      "name": "Stuhl Eiche „Tafel“",
+      "priceCents": 12900,
+      "dimensions": "46 × 52 × 80 cm",
+      "widthCm": 46,
+      "depthCm": 52,
+      "heightCm": 80,
+      "category": "Stuhl",
+      "tint": "#B08948",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/CHR-OAK-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "eiche"
+    },
+    {
+      "sku": "CHR-WHITE-01",
+      "name": "Polsterstuhl Bouclé „Kreis“",
+      "priceCents": 14900,
+      "dimensions": "50 × 55 × 82 cm",
+      "widthCm": 50,
+      "depthCm": 55,
+      "heightCm": 82,
+      "category": "Stuhl",
+      "tint": "#EEEAE2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/CHR-WHITE-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "weiss"
+    },
+    {
+      "sku": "CHR-WAL-01",
+      "name": "Stuhl Nussbaum „Gilde“",
+      "priceCents": 16900,
+      "dimensions": "47 × 52 × 80 cm",
+      "widthCm": 47,
+      "depthCm": 52,
+      "heightCm": 80,
+      "category": "Stuhl",
+      "tint": "#6E4E36",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/CHR-WAL-01?aff=interior-ai",
+      "group": "moebel",
+      "family": "nussbaum"
+    },
+    {
+      "sku": "PL-BRASS-01",
+      "name": "Pendelleuchte Messing „Glocke“",
+      "priceCents": 21900,
+      "dimensions": "Ø 40 × 30 cm",
+      "widthCm": 40,
+      "depthCm": 40,
+      "heightCm": 30,
+      "category": "Pendelleuchte",
+      "tint": "#B99A5B",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/PL-BRASS-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "PL-PAPER-01",
+      "name": "Pendelleuchte Papier „Laterne“",
+      "priceCents": 9900,
+      "dimensions": "Ø 60 × 45 cm",
+      "widthCm": 60,
+      "depthCm": 60,
+      "heightCm": 45,
+      "category": "Pendelleuchte",
+      "tint": "#EEE9DE",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/PL-PAPER-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "OD-SOFA-TEAK",
+      "name": "Loungesofa Teak „Strand“",
+      "priceCents": 89900,
+      "dimensions": "180 × 80 × 70 cm",
+      "widthCm": 180,
+      "depthCm": 80,
+      "heightCm": 70,
+      "category": "Outdoor-Lounge",
+      "tint": "#A0784E",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/OD-SOFA-TEAK?aff=interior-ai",
+      "group": "moebel",
+      "family": "teak"
+    },
+    {
+      "sku": "OD-SOFA-RATTAN",
+      "name": "Loungesofa Rattan „Brise“",
+      "priceCents": 69900,
+      "dimensions": "170 × 78 × 72 cm",
+      "widthCm": 170,
+      "depthCm": 78,
+      "heightCm": 72,
+      "category": "Outdoor-Lounge",
+      "tint": "#C9A97C",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/OD-SOFA-RATTAN?aff=interior-ai",
+      "group": "moebel",
+      "family": "rattan"
+    },
+    {
+      "sku": "OD-TB-TEAK",
+      "name": "Loungetisch Teak „Strand“",
+      "priceCents": 24900,
+      "dimensions": "90 × 60 × 35 cm",
+      "widthCm": 90,
+      "depthCm": 60,
+      "heightCm": 35,
+      "category": "Outdoor-Tisch",
+      "tint": "#A0784E",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/OD-TB-TEAK?aff=interior-ai",
+      "group": "moebel",
+      "family": "teak"
+    },
+    {
+      "sku": "OD-TB-RATTAN",
+      "name": "Beistelltisch Rattan „Brise“",
+      "priceCents": 14900,
+      "dimensions": "Ø 55 × 45 cm",
+      "widthCm": 55,
+      "depthCm": 55,
+      "heightCm": 45,
+      "category": "Outdoor-Tisch",
+      "tint": "#C9A97C",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/OD-TB-RATTAN?aff=interior-ai",
+      "group": "moebel",
+      "family": "rattan"
+    },
+    {
+      "sku": "OD-RUG-01",
+      "name": "Outdoor-Teppich „Düne“",
+      "priceCents": 12900,
+      "dimensions": "160 × 230 cm",
+      "widthCm": 160,
+      "depthCm": 230,
+      "heightCm": 1,
+      "category": "Outdoor-Teppich",
+      "tint": "#BFB49C",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/OD-RUG-01?aff=interior-ai",
+      "group": "moebel"
+    },
+    {
+      "sku": "OD-PLANTER-01",
+      "name": "Pflanzkübel Terrakotta „Ton“",
+      "priceCents": 4900,
+      "dimensions": "Ø 45 × 40 cm",
+      "widthCm": 45,
+      "depthCm": 45,
+      "heightCm": 40,
+      "category": "Pflanzkübel",
+      "tint": "#B4744E",
+      "styleTags": [
+        "warm-minimal"
+      ],
+      "retailer": "Nordheim Wohnen",
+      "affiliateUrl": "https://example-haendler.de/p/OD-PLANTER-01?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "OD-PLANTER-02",
+      "name": "Pflanzkübel Fiberstone „Stein“",
+      "priceCents": 5900,
+      "dimensions": "Ø 40 × 45 cm",
+      "widthCm": 40,
+      "depthCm": 40,
+      "heightCm": 45,
+      "category": "Pflanzkübel",
+      "tint": "#BDBAB2",
+      "styleTags": [
+        "soft-modern"
+      ],
+      "retailer": "Casa Verde",
+      "affiliateUrl": "https://example-haendler.de/p/OD-PLANTER-02?aff=interior-ai",
+      "group": "deko"
+    },
+    {
+      "sku": "OD-LAMP-01",
+      "name": "Solarleuchte „Abendrot“",
+      "priceCents": 3900,
+      "dimensions": "Ø 20 × 40 cm",
+      "widthCm": 20,
+      "depthCm": 20,
+      "heightCm": 40,
+      "category": "Outdoor-Leuchte",
+      "tint": "#D9C9A3",
+      "styleTags": [
+        "warm-minimal",
+        "soft-modern"
+      ],
+      "retailer": "Elbmöbel",
+      "affiliateUrl": "https://example-haendler.de/p/OD-LAMP-01?aff=interior-ai",
+      "group": "deko"
+    }
   ],
   "looks": [
-    {"id": "warm-minimal", "name": "Warmer Minimalismus", "description": "Ruhige Fl\u00e4chen, nat\u00fcrliche Materialien, ein Messing-Akzent.", "prompt": "warm minimalist living room, linen sofa, light oak coffee table, brass floor lamp, wool rug, soft daylight, calm neutral palette, editorial interior photography", "styleTag": "warm-minimal", "categories": ["Sofa", "Couchtisch", "Teppich", "Leuchte", "Sideboard", "Kissen", "Plaid", "Vase", "Wandbild"], "roomType": "wohnzimmer", "couplings": [["Couchtisch", "Sideboard"]]},
-    {"id": "soft-modern", "name": "Soft Modern", "description": "Weiche Formen, Boucl\u00e9 und Eiche, wohnlich und hell.", "prompt": "soft modern living room, boucle armchair, oak shelving, wool rug, linen sofa, gentle contrast, airy and bright, editorial interior photography", "styleTag": "soft-modern", "categories": ["Sofa", "Sessel", "Couchtisch", "Teppich", "Leuchte", "Kissen", "Vase", "Pflanze", "Wandbild"], "roomType": "wohnzimmer", "couplings": [["Sofa", "Sessel"]]},
-    {"id": "schlafzimmer-warm-minimal", "roomType": "schlafzimmer", "name": "Warmer Minimalismus", "description": "Eiche, Leinen und ruhige Erdt\u00f6ne zum Runterkommen.", "prompt": "warm minimalist bedroom, oak bed, matching oak nightstands, linen bedding, wool rug, soft daylight, calm neutral palette, natural materials, editorial interior photography", "styleTag": "warm-minimal", "categories": ["Bett", "Nachttisch", "Kommode", "Teppich", "Nachttischleuchte", "Kissen", "Plaid", "Wandbild"], "quantities": {"Nachttisch": 2, "Nachttischleuchte": 2}, "couplings": [["Bett", "Nachttisch", "Kommode"]]},
-    {"id": "schlafzimmer-soft-modern", "roomType": "schlafzimmer", "name": "Soft Modern", "description": "Polsterbett, helle T\u00f6ne, weiche Stoffe.", "prompt": "soft modern bedroom, upholstered bed, white nightstands, boucle textures, light rug, airy and bright, gentle contrast, rounded shapes, editorial interior photography", "styleTag": "soft-modern", "categories": ["Bett", "Nachttisch", "Kommode", "Teppich", "Nachttischleuchte", "Kissen", "Plaid", "Wandbild"], "quantities": {"Nachttisch": 2, "Nachttischleuchte": 2}, "couplings": [["Bett", "Nachttisch", "Kommode"]]},
-    {"id": "esszimmer-warm-minimal", "roomType": "esszimmer", "name": "Warmer Minimalismus", "description": "Langer Eichentisch, passende St\u00fchle, Messinglicht.", "prompt": "warm minimalist dining room, long oak dining table, matching oak chairs, brass pendant lamp, soft daylight, calm neutral palette, natural materials, editorial interior photography", "styleTag": "warm-minimal", "categories": ["Esstisch", "Stuhl", "Pendelleuchte", "Sideboard", "Teppich", "Vase", "Wandbild"], "quantities": {"Stuhl": 4}, "couplings": [["Esstisch", "Stuhl", "Sideboard"]]},
-    {"id": "esszimmer-soft-modern", "roomType": "esszimmer", "name": "Soft Modern", "description": "Runder Tisch, Polsterst\u00fchle, Papierleuchte.", "prompt": "soft modern dining room, round white dining table, boucle upholstered chairs, paper pendant lamp, airy and bright, gentle contrast, rounded shapes, editorial interior photography", "styleTag": "soft-modern", "categories": ["Esstisch", "Stuhl", "Pendelleuchte", "Sideboard", "Vase", "Wandbild"], "quantities": {"Stuhl": 4}, "couplings": [["Esstisch", "Stuhl", "Sideboard"]]},
-    {"id": "aussen-warm-minimal", "roomType": "aussen", "name": "Warmer Minimalismus", "description": "Teak, Terrakotta und warmes Abendlicht.", "prompt": "warm minimalist balcony and garden terrace, teak lounge sofa, teak coffee table, terracotta planters, outdoor rug, soft daylight, calm neutral palette, natural materials, editorial interior photography", "styleTag": "warm-minimal", "categories": ["Outdoor-Lounge", "Outdoor-Tisch", "Outdoor-Teppich", "Pflanzk\u00fcbel", "Outdoor-Leuchte"], "quantities": {"Pflanzk\u00fcbel": 2}, "couplings": [["Outdoor-Lounge", "Outdoor-Tisch"]]},
-    {"id": "aussen-soft-modern", "roomType": "aussen", "name": "Soft Modern", "description": "Rattan, helle Kissen, Steink\u00fcbel.", "prompt": "soft modern balcony and garden terrace, rattan lounge sofa, rattan side table, stone planters, outdoor rug, airy and bright, gentle contrast, rounded shapes, editorial interior photography", "styleTag": "soft-modern", "categories": ["Outdoor-Lounge", "Outdoor-Tisch", "Outdoor-Teppich", "Pflanzk\u00fcbel", "Outdoor-Leuchte"], "quantities": {"Pflanzk\u00fcbel": 2}, "couplings": [["Outdoor-Lounge", "Outdoor-Tisch"]]}
+    {
+      "id": "warm-minimal",
+      "name": "Warmer Minimalismus",
+      "description": "Ruhige Flächen, natürliche Materialien, ein Messing-Akzent.",
+      "prompt": "warm minimalist living room, linen sofa, light oak coffee table, brass floor lamp, wool rug, soft daylight, calm neutral palette, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "categories": [
+        "Sofa",
+        "Couchtisch",
+        "Teppich",
+        "Leuchte",
+        "Sideboard",
+        "Kissen",
+        "Plaid",
+        "Vase",
+        "Wandbild"
+      ],
+      "roomType": "wohnzimmer",
+      "couplings": [
+        [
+          "Couchtisch",
+          "Sideboard"
+        ]
+      ]
+    },
+    {
+      "id": "soft-modern",
+      "name": "Soft Modern",
+      "description": "Weiche Formen, Bouclé und Eiche, wohnlich und hell.",
+      "prompt": "soft modern living room, boucle armchair, oak shelving, wool rug, linen sofa, gentle contrast, airy and bright, editorial interior photography",
+      "styleTag": "soft-modern",
+      "categories": [
+        "Sofa",
+        "Sessel",
+        "Couchtisch",
+        "Teppich",
+        "Leuchte",
+        "Kissen",
+        "Vase",
+        "Pflanze",
+        "Wandbild"
+      ],
+      "roomType": "wohnzimmer",
+      "couplings": [
+        [
+          "Sofa",
+          "Sessel"
+        ]
+      ]
+    },
+    {
+      "id": "schlafzimmer-warm-minimal",
+      "roomType": "schlafzimmer",
+      "name": "Warmer Minimalismus",
+      "description": "Eiche, Leinen und ruhige Erdtöne zum Runterkommen.",
+      "prompt": "warm minimalist bedroom, oak bed, matching oak nightstands, linen bedding, wool rug, soft daylight, calm neutral palette, natural materials, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "categories": [
+        "Bett",
+        "Nachttisch",
+        "Kommode",
+        "Teppich",
+        "Nachttischleuchte",
+        "Kissen",
+        "Plaid",
+        "Wandbild"
+      ],
+      "quantities": {
+        "Nachttisch": 2,
+        "Nachttischleuchte": 2
+      },
+      "couplings": [
+        [
+          "Bett",
+          "Nachttisch",
+          "Kommode"
+        ]
+      ]
+    },
+    {
+      "id": "schlafzimmer-soft-modern",
+      "roomType": "schlafzimmer",
+      "name": "Soft Modern",
+      "description": "Polsterbett, helle Töne, weiche Stoffe.",
+      "prompt": "soft modern bedroom, upholstered bed, white nightstands, boucle textures, light rug, airy and bright, gentle contrast, rounded shapes, editorial interior photography",
+      "styleTag": "soft-modern",
+      "categories": [
+        "Bett",
+        "Nachttisch",
+        "Kommode",
+        "Teppich",
+        "Nachttischleuchte",
+        "Kissen",
+        "Plaid",
+        "Wandbild"
+      ],
+      "quantities": {
+        "Nachttisch": 2,
+        "Nachttischleuchte": 2
+      },
+      "couplings": [
+        [
+          "Bett",
+          "Nachttisch",
+          "Kommode"
+        ]
+      ]
+    },
+    {
+      "id": "esszimmer-warm-minimal",
+      "roomType": "esszimmer",
+      "name": "Warmer Minimalismus",
+      "description": "Langer Eichentisch, passende Stühle, Messinglicht.",
+      "prompt": "warm minimalist dining room, long oak dining table, matching oak chairs, brass pendant lamp, soft daylight, calm neutral palette, natural materials, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "categories": [
+        "Esstisch",
+        "Stuhl",
+        "Pendelleuchte",
+        "Sideboard",
+        "Teppich",
+        "Vase",
+        "Wandbild"
+      ],
+      "quantities": {
+        "Stuhl": 4
+      },
+      "couplings": [
+        [
+          "Esstisch",
+          "Stuhl",
+          "Sideboard"
+        ]
+      ]
+    },
+    {
+      "id": "esszimmer-soft-modern",
+      "roomType": "esszimmer",
+      "name": "Soft Modern",
+      "description": "Runder Tisch, Polsterstühle, Papierleuchte.",
+      "prompt": "soft modern dining room, round white dining table, boucle upholstered chairs, paper pendant lamp, airy and bright, gentle contrast, rounded shapes, editorial interior photography",
+      "styleTag": "soft-modern",
+      "categories": [
+        "Esstisch",
+        "Stuhl",
+        "Pendelleuchte",
+        "Sideboard",
+        "Vase",
+        "Wandbild"
+      ],
+      "quantities": {
+        "Stuhl": 4
+      },
+      "couplings": [
+        [
+          "Esstisch",
+          "Stuhl",
+          "Sideboard"
+        ]
+      ]
+    },
+    {
+      "id": "aussen-warm-minimal",
+      "roomType": "aussen",
+      "name": "Warmer Minimalismus",
+      "description": "Teak, Terrakotta und warmes Abendlicht.",
+      "prompt": "warm minimalist balcony and garden terrace, teak lounge sofa, teak coffee table, terracotta planters, outdoor rug, soft daylight, calm neutral palette, natural materials, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "categories": [
+        "Outdoor-Lounge",
+        "Outdoor-Tisch",
+        "Outdoor-Teppich",
+        "Pflanzkübel",
+        "Outdoor-Leuchte"
+      ],
+      "quantities": {
+        "Pflanzkübel": 2
+      },
+      "couplings": [
+        [
+          "Outdoor-Lounge",
+          "Outdoor-Tisch"
+        ]
+      ]
+    },
+    {
+      "id": "aussen-soft-modern",
+      "roomType": "aussen",
+      "name": "Soft Modern",
+      "description": "Rattan, helle Kissen, Steinkübel.",
+      "prompt": "soft modern balcony and garden terrace, rattan lounge sofa, rattan side table, stone planters, outdoor rug, airy and bright, gentle contrast, rounded shapes, editorial interior photography",
+      "styleTag": "soft-modern",
+      "categories": [
+        "Outdoor-Lounge",
+        "Outdoor-Tisch",
+        "Outdoor-Teppich",
+        "Pflanzkübel",
+        "Outdoor-Leuchte"
+      ],
+      "quantities": {
+        "Pflanzkübel": 2
+      },
+      "couplings": [
+        [
+          "Outdoor-Lounge",
+          "Outdoor-Tisch"
+        ]
+      ]
+    },
+    {
+      "id": "wz-skandi",
+      "name": "Skandinavisch",
+      "description": "Helles Holz, weiße Wände, viel Tageslicht.",
+      "prompt": "scandinavian living room, light oak, white walls, cozy wool textiles, greenery, bright airy, hygge, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "roomType": "wohnzimmer",
+      "categories": [
+        "Sofa",
+        "Couchtisch",
+        "Teppich",
+        "Leuchte",
+        "Sideboard",
+        "Kissen",
+        "Plaid",
+        "Vase",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Couchtisch",
+          "Sideboard"
+        ]
+      ]
+    },
+    {
+      "id": "wz-japandi",
+      "name": "Japandi",
+      "description": "Niedrige Holzmöbel, erdige Töne, ruhig.",
+      "prompt": "japandi living room, low wooden furniture, muted earth tones, paper lamp, minimal serene, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "roomType": "wohnzimmer",
+      "categories": [
+        "Sofa",
+        "Couchtisch",
+        "Teppich",
+        "Leuchte",
+        "Sideboard",
+        "Kissen",
+        "Plaid",
+        "Vase",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Couchtisch",
+          "Sideboard"
+        ]
+      ]
+    },
+    {
+      "id": "wz-industrial",
+      "name": "Industrial",
+      "description": "Leder, Metall, dunkles Holz, Backstein.",
+      "prompt": "industrial living room, leather sofa, metal and dark wood, exposed brick, moody warm light, editorial interior photography",
+      "styleTag": "soft-modern",
+      "roomType": "wohnzimmer",
+      "categories": [
+        "Sofa",
+        "Sessel",
+        "Couchtisch",
+        "Teppich",
+        "Leuchte",
+        "Kissen",
+        "Vase",
+        "Pflanze",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Sofa",
+          "Sessel"
+        ]
+      ]
+    },
+    {
+      "id": "wz-boho",
+      "name": "Boho",
+      "description": "Rattan, Schichten von Textilien, Pflanzen.",
+      "prompt": "boho living room, rattan furniture, layered textiles, plants, warm terracotta accents, relaxed, editorial interior photography",
+      "styleTag": "soft-modern",
+      "roomType": "wohnzimmer",
+      "categories": [
+        "Sofa",
+        "Sessel",
+        "Couchtisch",
+        "Teppich",
+        "Leuchte",
+        "Kissen",
+        "Vase",
+        "Pflanze",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Sofa",
+          "Sessel"
+        ]
+      ]
+    },
+    {
+      "id": "sz-skandi",
+      "name": "Skandinavisch",
+      "description": "Helles Holz, weiche Bettwäsche, luftig.",
+      "prompt": "scandinavian bedroom, light wood bed, white bedding, cozy textiles, soft daylight, calm, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "roomType": "schlafzimmer",
+      "categories": [
+        "Bett",
+        "Nachttisch",
+        "Kommode",
+        "Teppich",
+        "Nachttischleuchte",
+        "Kissen",
+        "Plaid",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Bett",
+          "Nachttisch",
+          "Kommode"
+        ]
+      ],
+      "quantities": {
+        "Nachttisch": 2,
+        "Nachttischleuchte": 2
+      }
+    },
+    {
+      "id": "sz-japandi",
+      "name": "Japandi",
+      "description": "Niedriges Bett, Naturtöne, reduziert.",
+      "prompt": "japandi bedroom, low wooden bed, natural linen, muted earth tones, paper lamp, serene minimal, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "roomType": "schlafzimmer",
+      "categories": [
+        "Bett",
+        "Nachttisch",
+        "Kommode",
+        "Teppich",
+        "Nachttischleuchte",
+        "Kissen",
+        "Plaid",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Bett",
+          "Nachttisch",
+          "Kommode"
+        ]
+      ],
+      "quantities": {
+        "Nachttisch": 2,
+        "Nachttischleuchte": 2
+      }
+    },
+    {
+      "id": "sz-elegant",
+      "name": "Modern-Elegant",
+      "description": "Dunkle Töne, samtige Textilien, ruhig.",
+      "prompt": "modern elegant bedroom, upholstered bed, deep tones, velvet textiles, warm ambient light, refined, editorial interior photography",
+      "styleTag": "soft-modern",
+      "roomType": "schlafzimmer",
+      "categories": [
+        "Bett",
+        "Nachttisch",
+        "Kommode",
+        "Teppich",
+        "Nachttischleuchte",
+        "Kissen",
+        "Plaid",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Bett",
+          "Nachttisch",
+          "Kommode"
+        ]
+      ],
+      "quantities": {
+        "Nachttisch": 2,
+        "Nachttischleuchte": 2
+      }
+    },
+    {
+      "id": "ez-skandi",
+      "name": "Skandinavisch",
+      "description": "Helles Holz, schlichte Stühle, hell.",
+      "prompt": "scandinavian dining room, light oak table, simple wood chairs, white walls, bright airy, editorial interior photography",
+      "styleTag": "warm-minimal",
+      "roomType": "esszimmer",
+      "categories": [
+        "Esstisch",
+        "Stuhl",
+        "Pendelleuchte",
+        "Sideboard",
+        "Teppich",
+        "Vase",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Esstisch",
+          "Stuhl",
+          "Sideboard"
+        ]
+      ],
+      "quantities": {
+        "Stuhl": 4
+      }
+    },
+    {
+      "id": "ez-industrial",
+      "name": "Industrial",
+      "description": "Massivholz, Metall, warme Pendel.",
+      "prompt": "industrial dining room, solid wood table, metal chairs, warm pendant lights, exposed brick, editorial interior photography",
+      "styleTag": "soft-modern",
+      "roomType": "esszimmer",
+      "categories": [
+        "Esstisch",
+        "Stuhl",
+        "Pendelleuchte",
+        "Sideboard",
+        "Vase",
+        "Wandbild"
+      ],
+      "couplings": [
+        [
+          "Esstisch",
+          "Stuhl",
+          "Sideboard"
+        ]
+      ],
+      "quantities": {
+        "Stuhl": 4
+      }
+    },
+    {
+      "id": "au-mediterran",
+      "name": "Mediterran",
+      "description": "Terrakotta, Olivgrün, warmes Licht.",
+      "prompt": "mediterranean terrace, terracotta tones, olive greenery, warm stone, lounge seating, golden hour, editorial outdoor photography",
+      "styleTag": "warm-minimal",
+      "roomType": "aussen",
+      "categories": [
+        "Outdoor-Lounge",
+        "Outdoor-Tisch",
+        "Outdoor-Teppich",
+        "Pflanzkübel",
+        "Outdoor-Leuchte"
+      ],
+      "couplings": [
+        [
+          "Outdoor-Lounge",
+          "Outdoor-Tisch"
+        ]
+      ],
+      "quantities": {
+        "Pflanzkübel": 2
+      }
+    },
+    {
+      "id": "au-modern",
+      "name": "Modern-Lounge",
+      "description": "Klare Linien, dunkle Rattan-Lounge.",
+      "prompt": "modern outdoor lounge, clean lines, dark rattan sofa, neutral cushions, minimalist terrace, soft daylight, editorial outdoor photography",
+      "styleTag": "soft-modern",
+      "roomType": "aussen",
+      "categories": [
+        "Outdoor-Lounge",
+        "Outdoor-Tisch",
+        "Outdoor-Teppich",
+        "Pflanzkübel",
+        "Outdoor-Leuchte"
+      ],
+      "couplings": [
+        [
+          "Outdoor-Lounge",
+          "Outdoor-Tisch"
+        ]
+      ],
+      "quantities": {
+        "Pflanzkübel": 2
+      }
+    }
   ]
 }

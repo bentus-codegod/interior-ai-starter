@@ -49,11 +49,14 @@ export default function Home() {
   const [result, setResult] = useState<Result | null>(null);
   const [estimating, setEstimating] = useState(false);
   const [estimateNote, setEstimateNote] = useState<string | null>(null);
+  // Welche der erzeugten Varianten gerade groß gezeigt wird.
+  const [chosenRender, setChosenRender] = useState<string | null>(null);
 
   // Neues Foto/Standbild = altes Ergebnis passt nicht mehr dazu.
   function setImage(next: string | null) {
     setImageState(next);
     setResult(null);
+    setChosenRender(null);
     setError(null);
   }
 
@@ -79,6 +82,7 @@ export default function Home() {
         return;
       }
       setResult(data);
+      setChosenRender(data.renderImageUrl);
       setRenderCount((n) => n + 1);
     } catch {
       setError("Netzwerkfehler. Bitte erneut versuchen.");
@@ -281,11 +285,41 @@ export default function Home() {
             <div className="space-y-6">
               <RenderResult
                 before={image ?? ""}
-                after={result.renderImageUrl}
+                after={chosenRender ?? result.renderImageUrl}
                 provider={result.provider}
               />
+              {result.variantUrls && result.variantUrls.length > 1 && (
+                <div>
+                  <p className="mb-2 text-xs text-ink/55">
+                    Varianten — wähle deine liebste:
+                  </p>
+                  <div className="flex flex-wrap gap-2">
+                    {result.variantUrls.map((url, i) => {
+                      const active = (chosenRender ?? result.renderImageUrl) === url;
+                      return (
+                        <button
+                          key={url + i}
+                          type="button"
+                          onClick={() => setChosenRender(url)}
+                          aria-pressed={active}
+                          className={`overflow-hidden rounded-xl border-2 transition ${
+                            active ? "border-sage" : "border-mist hover:border-sage/50"
+                          }`}
+                        >
+                          {/* eslint-disable-next-line @next/next/no-img-element */}
+                          <img
+                            src={url}
+                            alt={`Variante ${i + 1}`}
+                            className="h-16 w-20 object-cover"
+                          />
+                        </button>
+                      );
+                    })}
+                  </div>
+                </div>
+              )}
               {result.provider === "replicate" && (
-                <EditPanel baseImageUrl={result.renderImageUrl} />
+                <EditPanel baseImageUrl={chosenRender ?? result.renderImageUrl} />
               )}
               <ShopTheLook
                 key={renderCount}
@@ -298,8 +332,16 @@ export default function Home() {
               />
             </div>
           ) : (
-            <div className="grid aspect-[4/3] place-items-center rounded-2xl border border-dashed border-mist text-sm text-ink/40">
-              Dein gestalteter Raum erscheint hier.
+            <div className="flex aspect-[4/3] flex-col items-center justify-center gap-3 rounded-2xl border border-dashed border-mist px-6 text-center">
+              <p className="text-sm text-ink/60">
+                Dein gestalteter Raum erscheint hier.
+              </p>
+              <ol className="space-y-1 text-xs text-ink/45">
+                <li>1 · Raumfoto hochladen (oder kurzes Video)</li>
+                <li>2 · Look wählen oder in Worten beschreiben</li>
+                <li>3 · „Raum gestalten" → Varianten vergleichen</li>
+                <li>4 · Passende Möbel direkt beim Händler ansehen</li>
+              </ol>
             </div>
           )}
         </div>

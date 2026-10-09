@@ -26,6 +26,12 @@ export const env = {
   // Muss `image` + `prompt` annehmen und Text zurückgeben. Austauschbar.
   replicateMeasureModel:
     process.env.REPLICATE_MEASURE_MODEL ?? "yorickvp/llava-13b",
+  // Wie viele Render-Varianten pro „Raum gestalten" erzeugt werden (1–4).
+  // Jede Variante ist ein eigener (bezahlter) Modell-Aufruf. Standard 2.
+  renderVariants: Math.min(
+    4,
+    Math.max(1, Number(process.env.RENDER_VARIANTS ?? 2) || 2)
+  ),
   // Basis-URL deiner eigenen ComfyUI-Instanz (RunPod). Ohne / am Ende,
   // z. B. https://abc123-3000.proxy.runpod.net
   comfyUrl: (process.env.COMFYUI_URL ?? "").replace(/\/$/, ""),

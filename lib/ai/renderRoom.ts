@@ -9,6 +9,7 @@ import { splitBudget, type BudgetSplit } from "@/lib/budget";
 
 export type RenderRoomResult = {
   renderImageUrl: string;
+  variantUrls: string[]; // alle erzeugten Varianten (erste = renderImageUrl)
   provider: string;
   look: {
     id: string;
@@ -29,27 +30,35 @@ export type RenderRoomResult = {
 export async function renderRoom(
   imageDataUrl: string,
   lookId: string,
-  opts: { budgetCents?: number; styleText?: string } = {}
+  opts: { budgetCents?: number; styleText?: string; variants?: number } = {}
 ): Promise<RenderRoomResult> {
   const look = getLook(lookId);
   if (!look) {
     throw new Error("Unbekannter Look.");
   }
 
-  // Katalog und Render parallel holen — der Render dauert ohnehin länger.
-  const [catalog, render] = await Promise.all([
+  // Mehrere Varianten parallel erzeugen (jede ein eigener Modell-Aufruf),
+  // damit der Nutzer auswählen kann — wie bei den großen Tools.
+  const variants = Math.min(4, Math.max(1, opts.variants ?? env.renderVariants));
+  const prompt = buildPrompt(look.prompt, opts.styleText ?? "");
+  const provider = getProvider();
+  const [catalog, renders] = await Promise.all([
     getProducts(),
-    getProvider().renderImage({
-      imageDataUrl,
-      prompt: buildPrompt(look.prompt, opts.styleText ?? ""),
-    }),
+    Promise.all(
+      Array.from({ length: variants }, () =>
+        provider.renderImage({ imageDataUrl, prompt })
+      )
+    ),
   ]);
+  const render = renders[0];
+  const variantUrls = renders.map((r) => r.imageUrl);
 
   const budget = splitBudget(opts.budgetCents ?? 0, env.logisticsShare);
   const { items, subtotalCents } = composeRoom(catalog, look, budget.furnitureBudgetCents);
 
   return {
     renderImageUrl: render.imageUrl,
+    variantUrls,
     provider: render.provider,
     look: {
       id: look.id,
