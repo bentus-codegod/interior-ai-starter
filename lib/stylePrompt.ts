@@ -22,6 +22,14 @@ export function cleanStyleText(input: unknown): string {
     .slice(0, MAX_STYLE_TEXT);
 }
 
+// Fotografische Qualitäts-Begriffe, die dem Modell „schöne" Ergebnisse
+// nahelegen — wirken bei jedem Bildmodell. Bewusst knapp gehalten, damit
+// sie den eigentlichen Stil nicht überdecken.
+const QUALITY_SUFFIX =
+  "professional interior photography, natural soft light, realistic materials, " +
+  "high detail, architectural digest style, photorealistic, 8k";
+
 export function buildPrompt(lookPrompt: string, styleText: string): string {
-  return styleText ? `${lookPrompt}, ${styleText}` : lookPrompt;
+  const base = styleText ? `${lookPrompt}, ${styleText}` : lookPrompt;
+  return `${base}, ${QUALITY_SUFFIX}`;
 }

@@ -24,9 +24,13 @@ describe("cleanStyleText", () => {
     expect(cleanStyleText("x".repeat(500)).length).toBe(MAX_STYLE_TEXT);
     expect(cleanStyleText(42)).toBe("");
   });
-  it("hängt nur nicht-leeren Text an", () => {
-    expect(buildPrompt("base", "")).toBe("base");
-    expect(buildPrompt("base", "grün")).toBe("base, grün");
+  it("setzt Look + Stil zusammen und hängt Qualitäts-Suffix an", () => {
+    // Ohne Stiltext: nur Look + Suffix.
+    expect(buildPrompt("base", "")).toMatch(/^base, /);
+    // Mit Stiltext: Look, Stil, dann Suffix.
+    expect(buildPrompt("base", "grün")).toMatch(/^base, grün, /);
+    // Suffix ist in beiden Fällen enthalten.
+    expect(buildPrompt("base", "")).toContain("photorealistic");
   });
 });
 
