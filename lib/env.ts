@@ -14,7 +14,12 @@ export const env = {
   // Welches Replicate-Modell gerendert wird (owner/name). Standard ist ein
   // Interior-Redesign-Modell, das die Raumstruktur erhält. Wechselbar, ohne
   // Code zu ändern — bei einem anderen Modell ggf. die Eingabefelder anpassen.
-  replicateModel: process.env.REPLICATE_MODEL ?? "adirik/interior-design",
+  // Render-Modell (owner/name). Standard: SDXL-Lightning-Interior (RealVisXL +
+  // ControlNet) — deutlich schönere Bilder als das alte SD1.5, günstig (wenige
+  // Schritte). Erwartet image + prompt + negative_prompt (Rest hat Defaults).
+  // Fällt etwas aus, in Vercel auf "adirik/interior-design" zurückstellen.
+  replicateModel:
+    process.env.REPLICATE_MODEL ?? "rocketdigitalai/interior-design-sdxl-lightning",
   // --- Phase 2: objektgenaues Bearbeiten (Möbel tauschen/freistellen) ---
   // Text -> Maske (Grounding DINO + SAM in einem Call). Owner/Name, wechselbar.
   replicateSegmentModel:
