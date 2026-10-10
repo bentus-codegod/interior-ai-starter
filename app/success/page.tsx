@@ -27,9 +27,9 @@ export default async function Success({
   return (
     <main className="mx-auto grid min-h-[70vh] max-w-prose place-items-center px-6 text-center">
       <div>
-        <h1 className="text-4xl font-semibold tracking-tight">Danke für deine Bestellung.</h1>
+        <h1 className="text-4xl font-medium tracking-tight">Danke für deine Bestellung.</h1>
         {order ? (
-          <div className="mx-auto mt-6 max-w-xs rounded-xl border border-line bg-panel p-4 text-left text-sm">
+          <div className="mx-auto mt-6 max-w-xs rounded-md border border-line bg-panel p-4 text-left text-sm">
             <div className="flex justify-between">
               <span className="text-muted">Status</span>
               <span>{statusText[order.status]}</span>

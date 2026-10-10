@@ -47,7 +47,7 @@ export function CompareSlider({
 
   return (
     <figure className="enter">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-xl border border-line bg-sunken">
+      <div className="relative aspect-[4/3] overflow-hidden rounded-md border border-line bg-sunken">
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img src={after} alt="Dein Raum, neu eingerichtet" className="absolute inset-0 h-full w-full object-cover" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -65,7 +65,7 @@ export function CompareSlider({
           style={{ left: `${pos}%`, transition }}
         >
           <span className="absolute left-1/2 top-1/2 grid h-9 w-9 -translate-x-1/2 -translate-y-1/2 place-items-center rounded-full bg-white text-[#141816] shadow-[0_2px_10px_rgba(20,24,22,0.25)]">
-            <ArrowsLeftRight size={18} weight="bold" />
+            <ArrowsLeftRight size={18} />
           </span>
         </div>
 

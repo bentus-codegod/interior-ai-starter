@@ -197,7 +197,7 @@ export function ShopTheLook({
             title="Gefällt mir nicht"
             className="press grid h-8 w-8 place-items-center rounded-full border border-line text-muted hover:border-danger/50 hover:text-danger"
           >
-            <X size={14} weight="bold" />
+            <X size={14} />
           </button>
           <button
             type="button"
@@ -207,7 +207,7 @@ export function ShopTheLook({
             title="Gefällt mir"
             className={`press mr-2 grid h-8 w-8 place-items-center rounded-full border ${
               liked
-                ? "border-accent bg-accent text-on-accent"
+                ? "border-accent/40 bg-tint text-accent"
                 : "border-line text-muted hover:border-accent/50 hover:text-accent"
             }`}
           >
@@ -250,7 +250,7 @@ export function ShopTheLook({
         </div>
 
         {open && (
-          <div className="enter mt-2 ml-[72px] space-y-1 rounded-lg border border-line bg-sunken/60 p-1.5">
+          <div className="enter mt-2 ml-[72px] space-y-1 rounded-md border border-line bg-sunken/60 p-1.5">
             {alts.map((a) => (
               <button
                 key={a.sku}
@@ -278,9 +278,9 @@ export function ShopTheLook({
   const overBudget = furnitureBudgetCents > 0 && subtotalCents > furnitureBudgetCents;
 
   return (
-    <section aria-labelledby="shop-title" className="enter rounded-xl border border-line bg-panel">
+    <section aria-labelledby="shop-title" className="enter rounded-md border border-line bg-panel">
       <div className="border-b border-line px-5 py-4">
-        <h2 id="shop-title" className="text-base font-semibold tracking-tight">
+        <h2 id="shop-title" className="text-base font-medium tracking-tight">
           Diesen Look kaufen
         </h2>
         <p className="mt-1 text-sm text-muted">
@@ -288,7 +288,7 @@ export function ShopTheLook({
           Zusammengehörige Stücke ziehen mit.
         </p>
         {notice && (
-          <p role="status" className="enter mt-3 rounded-lg bg-accent/10 px-3 py-2 text-sm text-accent">
+          <p role="status" className="enter mt-3 rounded-md bg-tint px-3 py-2 text-sm text-ink">
             {notice}
           </p>
         )}
@@ -300,7 +300,7 @@ export function ShopTheLook({
 
       {deko.length > 0 && (
         <>
-          <h3 className="border-t border-line px-5 pt-4 text-sm font-semibold">
+          <h3 className="border-t border-line px-5 pt-4 text-sm font-medium">
             Deko und Accessoires
           </h3>
           <ul className="divide-y divide-line px-5">
@@ -312,7 +312,7 @@ export function ShopTheLook({
       <div className="space-y-1.5 border-t border-line px-5 py-4">
         <div className="flex items-baseline justify-between">
           <span className="text-sm text-muted">Zwischensumme</span>
-          <span className="text-xl font-semibold tabular-nums">{formatEur(subtotalCents)}</span>
+          <span className="text-xl font-medium tabular-nums">{formatEur(subtotalCents)}</span>
         </div>
         {furnitureBudgetCents > 0 && (
           <div className="flex items-baseline justify-between text-sm">
@@ -337,9 +337,9 @@ export function ShopTheLook({
           type="button"
           onClick={() => checkout(items, "all")}
           disabled={loading !== null}
-          className="press inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-on-accent hover:bg-accent/90 disabled:opacity-60"
+          className="press inline-flex w-full items-center justify-center gap-2 rounded-md bg-ink px-5 py-3 text-sm font-medium text-surface hover:bg-ink/85 disabled:opacity-60"
         >
-          <ShoppingBag size={18} weight="bold" />
+          <ShoppingBag size={18} />
           {loading === "all" ? "Kasse öffnet …" : "Ganzen Look kaufen"}
         </button>
         <p className="mt-3 text-xs leading-relaxed text-subtle">
@@ -389,7 +389,7 @@ function SwipeRow({
     setDx(0);
   }
 
-  const hint = dx <= -SWIPE_PX ? "bg-danger/5" : dx >= SWIPE_PX ? "bg-accent/5" : "";
+  const hint = dx <= -SWIPE_PX ? "bg-danger/5" : dx >= SWIPE_PX ? "bg-tint/60" : "";
   return (
     <li
       className={`touch-pan-y select-none py-3 transition-colors ${hint}`}

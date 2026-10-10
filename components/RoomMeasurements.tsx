@@ -42,7 +42,7 @@ function Field({
           value={value}
           placeholder={placeholder}
           onChange={(e) => onChange(e.target.value)}
-          className="w-full rounded-lg border border-line bg-panel py-2 pl-3 pr-9 text-sm tabular-nums outline-none transition-colors placeholder:text-subtle focus:border-accent"
+          className="w-full rounded-md border border-line bg-panel py-2 pl-3 pr-9 text-sm tabular-nums outline-none transition-colors placeholder:text-subtle focus:border-accent"
         />
         <span className="pointer-events-none absolute inset-y-0 right-3 grid place-items-center text-xs text-subtle">
           cm
@@ -120,7 +120,7 @@ export function RoomMeasurements({
       <div>
         <span className="mb-1.5 block text-xs font-medium text-muted">Grundriss, Bild oder PDF</span>
         {floorplan ? (
-          <div className="flex items-center gap-3 rounded-lg border border-line bg-panel p-2">
+          <div className="flex items-center gap-3 rounded-md border border-line bg-panel p-2">
             {floorplan.isImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
@@ -146,7 +146,7 @@ export function RoomMeasurements({
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="press rounded-lg border border-line bg-panel px-3 py-2 text-sm text-muted hover:border-accent/50 hover:text-ink"
+            className="press rounded-md border border-line bg-panel px-3 py-2 text-sm text-muted hover:border-accent/50 hover:text-ink"
           >
             Grundriss hochladen
           </button>

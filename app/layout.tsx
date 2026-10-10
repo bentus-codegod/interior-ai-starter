@@ -4,6 +4,7 @@ import { GeistMono } from "geist/font/mono";
 import "./globals.css";
 import { SiteHeader } from "@/components/SiteHeader";
 import { SiteFooter } from "@/components/SiteFooter";
+import { IconProvider } from "@/components/IconProvider";
 
 // Eine Schriftfamilie für alles (Werkzeug-Oberfläche, Impeccable), Mono
 // nur für Zahlen/Maße. Geist wird lokal aus dem npm-Paket ausgeliefert.
@@ -29,9 +30,11 @@ export default function RootLayout({
   return (
     <html lang="de" className={`${GeistSans.variable} ${GeistMono.variable}`}>
       <body className="min-h-[100dvh] bg-surface font-sans text-ink antialiased">
-        <SiteHeader />
-        {children}
-        <SiteFooter />
+        <IconProvider>
+          <SiteHeader />
+          {children}
+          <SiteFooter />
+        </IconProvider>
       </body>
     </html>
   );

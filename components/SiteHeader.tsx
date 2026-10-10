@@ -5,7 +5,7 @@ export function SiteHeader() {
   return (
     <header className="border-b border-line/70">
       <div className="mx-auto flex h-16 max-w-7xl items-center justify-between px-4 sm:px-6">
-        <Link href="/" className="text-[15px] font-semibold tracking-tight">
+        <Link href="/" className="text-[15px] font-medium tracking-[-0.01em]">
           Interior AI
         </Link>
         <nav className="text-sm text-muted">

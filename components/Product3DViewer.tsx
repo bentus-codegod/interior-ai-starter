@@ -41,12 +41,12 @@ export function Product3DViewer({
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-xl bg-panel"
+        className="w-full max-w-2xl overflow-hidden rounded-md bg-panel"
         onClick={(e) => e.stopPropagation()}
       >
         <div className="flex items-center justify-between border-b border-line px-5 py-3">
           <span className="min-w-0">
-            <span className="block truncate font-semibold tracking-tight">{product.name}</span>
+            <span className="block truncate font-medium tracking-tight">{product.name}</span>
             <span className="block text-xs text-muted">{product.dimensions}</span>
           </span>
           <button

@@ -11,22 +11,22 @@ export const metadata: Metadata = {
 export default function Datenschutz() {
   return (
     <main className="mx-auto max-w-prose px-6 py-14 sm:py-20">
-      <div className="mb-8 rounded-xl border border-warn/40 bg-warn/5 p-4 text-sm text-muted">
-        <strong className="font-semibold tracking-tight">Entwurf.</strong> Diese Datenschutz­-
+      <div className="mb-8 rounded-md border border-warn/40 bg-warn/5 p-4 text-sm text-muted">
+        <strong className="font-medium tracking-tight">Entwurf.</strong> Diese Datenschutz­-
         erklärung ist eine ehrliche Beschreibung der Technik, aber noch kein
         rechtsgeprüfter Text. Vor dem öffentlichen Start prüfen lassen.
       </div>
 
-      <h1 className="font-semibold tracking-tight text-3xl sm:text-4xl">Datenschutzerklärung</h1>
+      <h1 className="font-medium tracking-tight text-3xl sm:text-4xl">Datenschutzerklärung</h1>
 
       <div className="mt-8 space-y-6 text-muted">
         <section>
-          <h2 className="font-semibold tracking-tight text-sm text-muted">Verantwortlicher</h2>
+          <h2 className="font-medium tracking-tight text-sm text-muted">Verantwortlicher</h2>
           <p className="mt-2">[[Name / Firma und Anschrift — wie im Impressum]]</p>
         </section>
 
         <section>
-          <h2 className="font-semibold tracking-tight text-sm text-muted">
+          <h2 className="font-medium tracking-tight text-sm text-muted">
             Welche Daten wir verarbeiten
           </h2>
           <p className="mt-2">
@@ -48,7 +48,7 @@ export default function Datenschutz() {
         </section>
 
         <section>
-          <h2 className="font-semibold tracking-tight text-sm text-muted">
+          <h2 className="font-medium tracking-tight text-sm text-muted">
             Auftragsverarbeiter / Dienste
           </h2>
           <p className="mt-2">
@@ -63,7 +63,7 @@ export default function Datenschutz() {
         </section>
 
         <section>
-          <h2 className="font-semibold tracking-tight text-sm text-muted">Speicherdauer</h2>
+          <h2 className="font-medium tracking-tight text-sm text-muted">Speicherdauer</h2>
           <p className="mt-2">
             [[Konkret angeben: Wie lange werden Fotos und Ergebnisse
             aufbewahrt? Wenn nicht dauerhaft gespeichert wird, hier klar sagen.]]
@@ -71,7 +71,7 @@ export default function Datenschutz() {
         </section>
 
         <section>
-          <h2 className="font-semibold tracking-tight text-sm text-muted">Rechtsgrundlage</h2>
+          <h2 className="font-medium tracking-tight text-sm text-muted">Rechtsgrundlage</h2>
           <p className="mt-2">
             [[Art. 6 DSGVO — je nach Fall Einwilligung oder Vertragserfüllung;
             von fachkundiger Person bestimmen lassen.]]
@@ -79,7 +79,7 @@ export default function Datenschutz() {
         </section>
 
         <section>
-          <h2 className="font-semibold tracking-tight text-sm text-muted">Deine Rechte</h2>
+          <h2 className="font-medium tracking-tight text-sm text-muted">Deine Rechte</h2>
           <p className="mt-2">
             Du hast das Recht auf Auskunft, Berichtigung, Löschung, Einschränkung
             der Verarbeitung, Datenübertragbarkeit und Widerspruch sowie das

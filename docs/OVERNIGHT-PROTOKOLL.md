@@ -5,6 +5,37 @@ wurde, was offen bleibt. Neueste Session oben.
 
 ---
 
+## Session 4b · Edler und schlichter (weniger nach KI aussehend)
+
+**Auftrag (Anton):** Die ganze Website soll nicht nach KI aussehen: edel,
+schlicht, keine bunten Farben, höchstens Pastelltöne. Mit den geprüften
+Design-Skills (Taste, Emil Kowalski).
+
+Design-Einordnung (Taste 0.B): Werkzeug-Seite für einrichtungsbewusste
+Privatkunden, ruhige, zurückhaltend-luxuriöse Sprache, monochrom mit einem
+Pastellton. Regler: Gestaltungsfreiheit 6, Bewegung 4, Dichte 3.
+
+| Vorher | Nachher | Warum (Skill) |
+| --- | --- | --- |
+| Produktkacheln in Ocker/Messing (`#B08948` im Katalog) | Produktfarbe nur als Pastell-Hauch (`color-mix` mit der Fläche), feines Icon | Taste: Messing-Palette verboten, keine lauten Flächen |
+| Sparkle-Icon auf „Raum gestalten“, Zauberstab bei „Maße schätzen“ | entfernt | Glitzer/Zauber = KI-Klischee |
+| Waldgrüne Knopfflächen | Hauptknöpfe Anthrazit, Akzent nur Salbei-Pastell | monochrom + ein Pastellton |
+| Schwarz gefüllte Auswahl-Chips | feine Kontur, Auswahl als Pastellfläche | weniger Kontrast-Lärm |
+| Überschriften fett (600) | Hero 400, Zwischenüberschriften 500, enge Laufweite | leichte Schnitte wirken hochwertiger |
+| Icons im grünen Kreis („So funktioniert's“) | nur feine Linien-Icons | Icon-im-Kreis ist ein Vorlagen-Muster |
+| Radien 8 px / 12 px gemischt | einheitlich 6 px, Chips rund | Taste: Shape Consistency Lock |
+| Icon-Strichstärken gemischt | alle `light` (zentral per `IconProvider`) | Taste: ein Gewicht |
+| Stile auf dem Handy untereinander (6 lange Kacheln) | zwei Spalten | kürzere Seite |
+| Platzhalter-Bild mit kräftigem Grün | neutrales Pastell | Farbkonsistenz |
+
+Mehr Luft: größere Abstände zwischen den Eingabe-Blöcken, mehr Abstand oben.
+
+Geprüft: Typen, 37 Tests, Build; Browser hell/dunkel/Handy ohne seitliches
+Scrollen und ohne Konsolenfehler; Überschrift bei 1024/1280/1440 px auf
+2 Zeilen; 0 Gedankenstriche; alle Farbpaare WCAG AA (≥ 4,5:1) in beiden Modi.
+
+---
+
 ## Session 4 — 10.10.2026 · Frontend mit geprüften Design-Skills
 
 **Auftrag (Anton):** Frontend fertig bauen, damit man es ansehen kann. Die

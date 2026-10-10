@@ -112,14 +112,14 @@ export function RoomUploader({
           if (file) handleFile(file);
         }}
         aria-describedby="upload-hint"
-        className={`press group relative flex w-full items-center justify-center overflow-hidden rounded-xl border transition-colors ${
+        className={`press group relative flex w-full items-center justify-center overflow-hidden rounded-md border transition-colors ${
           imageDataUrl ? "aspect-[4/3]" : "aspect-[16/9]"
         } ${
           imageDataUrl
             ? "border-line bg-sunken"
             : dragOver
-              ? "border-accent bg-accent/5"
-              : "border-dashed border-line bg-panel hover:border-accent/60 hover:bg-accent/[0.03]"
+              ? "border-accent/60 bg-tint"
+              : "border-dashed border-line bg-panel hover:border-accent/50 hover:bg-tint/50"
         }`}
       >
         {imageDataUrl ? (
@@ -131,10 +131,8 @@ export function RoomUploader({
           />
         ) : (
           <span className="flex flex-col items-center px-6 text-center">
-            <span className="grid h-12 w-12 place-items-center rounded-full bg-accent text-on-accent">
-              <UploadSimple size={22} weight="bold" />
-            </span>
-            <span className="mt-3 text-sm font-semibold">Foto oder Video hochladen</span>
+            <UploadSimple size={28} className="text-muted" />
+            <span className="mt-3 text-sm font-medium">Foto oder Video hochladen</span>
             <span id="upload-hint" className="mt-1 text-xs text-subtle">
               Hierher ziehen oder klicken. Foto bis 25 MB, Video bis 60 MB.
             </span>
@@ -167,7 +165,7 @@ export function RoomUploader({
         <div className="grid grid-cols-5 gap-2" aria-live="polite">
           <span className="sr-only">Standbilder werden aus dem Video gezogen</span>
           {Array.from({ length: 5 }).map((_, i) => (
-            <span key={i} className="skeleton aspect-[4/3] rounded-lg" />
+            <span key={i} className="skeleton aspect-[4/3] rounded-md" />
           ))}
         </div>
       )}
@@ -185,7 +183,7 @@ export function RoomUploader({
                   aria-pressed={active}
                   aria-label={`Standbild ${i + 1}`}
                   onClick={() => onImage(f)}
-                  className={`press overflow-hidden rounded-lg ring-2 ring-offset-2 ring-offset-surface ${
+                  className={`press overflow-hidden rounded-md ring-2 ring-offset-2 ring-offset-surface ${
                     active ? "ring-accent" : "ring-transparent hover:ring-line"
                   }`}
                 >

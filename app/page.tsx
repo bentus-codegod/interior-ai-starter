@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Camera, MagicWand, Swatches, ShoppingBag, Sparkle } from "@phosphor-icons/react";
+import { Camera, Swatches, ShoppingBag } from "@phosphor-icons/react";
 import { RoomUploader } from "@/components/RoomUploader";
 import { CompareSlider } from "@/components/CompareSlider";
 import { ShopTheLook } from "@/components/ShopTheLook";
@@ -46,8 +46,8 @@ function Step({
   children: React.ReactNode;
 }) {
   return (
-    <section className="border-t border-line pt-6 first:border-t-0 first:pt-0">
-      <h2 className="text-base font-semibold tracking-tight">{title}</h2>
+    <section className="border-t border-line pt-8 first:border-t-0 first:pt-0">
+      <h2 className="text-base font-medium tracking-tight">{title}</h2>
       {hint && <p className="mt-1 text-sm text-muted">{hint}</p>}
       <div className="mt-4">{children}</div>
     </section>
@@ -159,18 +159,18 @@ export default function Home() {
       {/* Arbeitsfläche: links Eingaben, rechts Ergebnis */}
       <div
         id="gestalten"
-        className="mx-auto grid max-w-7xl gap-10 px-4 pb-20 pt-10 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14 lg:pt-14"
+        className="mx-auto grid max-w-7xl gap-10 px-4 pb-24 pt-12 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:pt-20"
       >
         <div>
-          <h1 className="text-4xl font-semibold leading-[1.05] tracking-tight sm:text-5xl lg:text-[2rem] xl:text-[2.75rem]">
+          <h1 className="text-4xl font-normal leading-[1.05] tracking-[-0.035em] sm:text-5xl lg:text-[2rem] xl:text-[2.75rem]">
             Dein Raum, eingerichtet und kaufbar.
           </h1>
-          <p className="mt-4 max-w-prose text-lg leading-relaxed text-muted">
+          <p className="mt-5 max-w-prose text-lg leading-relaxed text-muted">
             Foto hochladen, Stil und Budget wählen. Du siehst deinen Raum neu und kaufst den
             Look mit einem Klick.
           </p>
 
-          <div className="mt-10 space-y-6">
+          <div className="mt-12 space-y-8">
             <Step title="Foto deines Raums">
               <RoomUploader imageDataUrl={image} onImage={setImage} />
             </Step>
@@ -191,7 +191,7 @@ export default function Home() {
                       }}
                       className={`press rounded-full border px-4 py-1.5 text-sm ${
                         active
-                          ? "border-ink bg-ink text-surface"
+                          ? "border-accent/40 bg-tint text-ink"
                           : "border-line bg-panel text-muted hover:border-ink/30 hover:text-ink"
                       }`}
                     >
@@ -201,7 +201,7 @@ export default function Home() {
                 })}
               </div>
 
-              <div className="mt-4 grid gap-3 sm:grid-cols-2" role="radiogroup" aria-label="Stil">
+              <div className="mt-4 grid grid-cols-2 gap-3" role="radiogroup" aria-label="Stil">
                 {roomLooks.map((l) => {
                   const active = l.id === lookId;
                   return (
@@ -211,13 +211,13 @@ export default function Home() {
                       role="radio"
                       aria-checked={active}
                       onClick={() => setLookId(l.id)}
-                      className={`press rounded-lg border p-4 text-left ${
+                      className={`press rounded-md border p-4 text-left ${
                         active
-                          ? "border-accent bg-accent/[0.06] ring-1 ring-inset ring-accent"
+                          ? "border-accent/50 bg-tint"
                           : "border-line bg-panel hover:border-ink/30"
                       }`}
                     >
-                      <span className="block text-sm font-semibold">{l.name}</span>
+                      <span className="block text-sm font-medium">{l.name}</span>
                       <span className="mt-1 block text-sm leading-snug text-muted">
                         {l.description}
                       </span>
@@ -236,7 +236,7 @@ export default function Home() {
                   rows={2}
                   onChange={(e) => setStyleText(e.target.value)}
                   placeholder="Zum Beispiel: hell, viel Holz, grüne Akzente"
-                  className="w-full resize-none rounded-lg border border-line bg-panel px-3 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent"
+                  className="w-full resize-none rounded-md border border-line bg-panel px-3 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent"
                 />
                 <span className="mt-1 block text-right text-xs tabular-nums text-subtle">
                   {styleText.length} / {MAX_STYLE_TEXT}
@@ -249,7 +249,7 @@ export default function Home() {
                 <label htmlFor="budget" className="text-sm text-muted">
                   Gesamtbudget
                 </label>
-                <output htmlFor="budget" className="text-lg font-semibold tabular-nums">
+                <output htmlFor="budget" className="text-lg font-medium tabular-nums">
                   {formatEur(budgetEur * 100).replace(",00", "")}
                 </output>
               </div>
@@ -271,7 +271,7 @@ export default function Home() {
 
             <section className="border-t border-line pt-6">
               <details className="group">
-                <summary className="press flex cursor-pointer list-none items-center justify-between rounded-md text-base font-semibold tracking-tight">
+                <summary className="press flex cursor-pointer list-none items-center justify-between rounded-md text-base font-medium tracking-tight">
                   Maße und Grundriss
                   <span className="text-sm font-normal text-subtle group-open:hidden">optional</span>
                 </summary>
@@ -281,9 +281,8 @@ export default function Home() {
                       type="button"
                       onClick={autoEstimate}
                       disabled={!image || estimating}
-                      className="press inline-flex items-center gap-2 rounded-lg border border-line bg-panel px-3 py-2 text-sm hover:border-accent/50 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="press inline-flex items-center gap-2 rounded-md border border-line bg-panel px-3 py-2 text-sm hover:border-accent/50 disabled:cursor-not-allowed disabled:opacity-40"
                     >
-                      <MagicWand size={16} />
                       {estimating ? "Wird geschätzt …" : "Maße aus dem Foto schätzen (Beta)"}
                     </button>
                     {!image && (
@@ -310,9 +309,8 @@ export default function Home() {
                 type="button"
                 onClick={generate}
                 disabled={!image || loading}
-                className="press inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3.5 text-sm font-semibold text-on-accent hover:bg-accent/90 disabled:cursor-not-allowed disabled:opacity-40"
+                className="press inline-flex w-full items-center justify-center gap-2 rounded-md bg-ink px-5 py-3.5 text-sm font-medium text-surface hover:bg-ink/85 disabled:cursor-not-allowed disabled:opacity-40"
               >
-                <Sparkle size={18} weight="fill" />
                 {loading ? "Raum wird gestaltet …" : "Raum gestalten"}
               </button>
               {!image && (
@@ -321,7 +319,7 @@ export default function Home() {
                 </p>
               )}
               {error && (
-                <p role="alert" className="mt-3 rounded-lg bg-danger/10 px-3 py-2 text-sm text-danger">
+                <p role="alert" className="mt-3 rounded-md bg-danger/10 px-3 py-2 text-sm text-danger">
                   {error}
                 </p>
               )}
@@ -334,11 +332,11 @@ export default function Home() {
           {loading ? (
             <div className="space-y-6" aria-live="polite" aria-busy="true">
               <span className="sr-only">Dein Raum wird gestaltet.</span>
-              <div className="skeleton aspect-[4/3] rounded-xl" />
-              <div className="space-y-3 rounded-xl border border-line bg-panel p-5">
+              <div className="skeleton aspect-[4/3] rounded-md" />
+              <div className="space-y-3 rounded-md border border-line bg-panel p-5">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="flex items-center gap-4">
-                    <span className="skeleton h-14 w-14 rounded-lg" />
+                    <span className="skeleton h-14 w-14 rounded-md" />
                     <span className="flex-1 space-y-2">
                       <span className="skeleton block h-3 w-2/3 rounded" />
                       <span className="skeleton block h-3 w-1/3 rounded" />
@@ -368,7 +366,7 @@ export default function Home() {
                           onClick={() => setChosenVariant(i)}
                           aria-pressed={active}
                           aria-label={`Variante ${i + 1}`}
-                          className={`press overflow-hidden rounded-lg ring-2 ring-offset-2 ring-offset-surface ${
+                          className={`press overflow-hidden rounded-md ring-2 ring-offset-2 ring-offset-surface ${
                             active ? "ring-accent" : "ring-transparent hover:ring-line"
                           }`}
                         >
@@ -402,7 +400,7 @@ export default function Home() {
       {/* So funktioniert's: Verben als Überschriften, keine Nummern-Etiketten */}
       <section id="ablauf" className="scroll-mt-6 border-t border-line bg-panel">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14 lg:py-20">
-          <h2 className="text-3xl font-semibold leading-tight tracking-tight">
+          <h2 className="text-3xl font-normal leading-tight tracking-[-0.03em]">
             Vom Foto zum fertigen Raum.
           </h2>
           <dl className="grid gap-8 sm:grid-cols-[auto_1fr] sm:gap-x-6">
@@ -424,10 +422,8 @@ export default function Home() {
               },
             ].map(({ icon: IconCmp, title, text }) => (
               <div key={title} className="contents">
-                <dt className="flex items-center gap-3 text-base font-semibold sm:pt-0.5">
-                  <span className="grid h-9 w-9 place-items-center rounded-full bg-accent/10 text-accent">
-                    <IconCmp size={18} weight="bold" />
-                  </span>
+                <dt className="flex items-center gap-3 text-base font-medium sm:pt-0.5">
+                  <IconCmp size={22} className="text-accent" />
                   {title}
                 </dt>
                 <dd className="-mt-5 max-w-prose text-muted sm:mt-0 sm:pt-1.5">{text}</dd>

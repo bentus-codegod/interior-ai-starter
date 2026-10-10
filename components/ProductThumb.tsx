@@ -49,17 +49,10 @@ const ICONS: Record<string, Icon> = {
   Plaid: Waves,
 };
 
-// Helle Kachel -> dunkles Icon, dunkle Kachel -> helles Icon.
-function isLight(hex: string): boolean {
-  const m = /^#?([0-9a-f]{6})$/i.exec(hex);
-  if (!m) return true;
-  const n = parseInt(m[1], 16);
-  const [r, g, b] = [(n >> 16) & 255, (n >> 8) & 255, n & 255];
-  return 0.299 * r + 0.587 * g + 0.114 * b > 150;
-}
-
-// Produktbild: echtes Foto, falls vorhanden, sonst eine Kachel in der
-// Produktfarbe mit Kategorie-Icon. So läuft der Katalog mit und ohne Bilder.
+// Produktbild: echtes Foto, falls vorhanden, sonst eine Kachel mit
+// Kategorie-Icon. Die Kachel nimmt die Produktfarbe nur als Hauch auf
+// (Pastell, per color-mix mit der Fläche gemischt), damit Ocker- und
+// Messingtöne aus dem Katalog nicht laut werden.
 export function ProductThumb({
   product,
   size = "md",
@@ -67,7 +60,7 @@ export function ProductThumb({
   product: Product;
   size?: "sm" | "md";
 }) {
-  const box = size === "sm" ? "h-9 w-9 rounded-lg" : "h-14 w-14 rounded-lg";
+  const box = size === "sm" ? "h-9 w-9 rounded-md" : "h-14 w-14 rounded-md";
 
   if (product.imageUrl) {
     return (
@@ -84,15 +77,11 @@ export function ProductThumb({
   const IconCmp = ICONS[product.category] ?? Cube;
   return (
     <span
-      className={`${box} grid shrink-0 place-items-center ring-1 ring-inset ring-black/5`}
-      style={{ backgroundColor: product.tint }}
+      className={`${box} grid shrink-0 place-items-center text-ink/60 ring-1 ring-inset ring-line/80`}
+      style={{ backgroundColor: `color-mix(in oklab, ${product.tint} 30%, rgb(var(--panel)))` }}
       aria-hidden
     >
-      <IconCmp
-        size={size === "sm" ? 18 : 24}
-        weight="regular"
-        color={isLight(product.tint) ? "rgba(20,24,22,0.72)" : "rgba(246,247,245,0.9)"}
-      />
+      <IconCmp size={size === "sm" ? 18 : 24} />
     </span>
   );
 }

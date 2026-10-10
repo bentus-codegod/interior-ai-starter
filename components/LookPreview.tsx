@@ -47,9 +47,9 @@ export function LookPreview({
   const deko = data?.items.filter((i) => isDeko(i.product)) ?? [];
 
   return (
-    <section aria-labelledby="preview-title" className="rounded-xl border border-line bg-panel">
+    <section aria-labelledby="preview-title" className="rounded-md border border-line bg-panel">
       <div className="border-b border-line px-5 py-4">
-        <h2 id="preview-title" className="text-base font-semibold tracking-tight">
+        <h2 id="preview-title" className="text-base font-medium tracking-tight">
           {lookName}: diese Stücke würden wir wählen
         </h2>
         <p className="mt-1 text-sm text-muted">
@@ -65,7 +65,7 @@ export function LookPreview({
         <ul className="space-y-3 px-5 py-4" aria-hidden>
           {Array.from({ length: 5 }).map((_, i) => (
             <li key={i} className="flex items-center gap-4">
-              <span className="skeleton h-14 w-14 rounded-lg" />
+              <span className="skeleton h-14 w-14 rounded-md" />
               <span className="flex-1 space-y-2">
                 <span className="skeleton block h-3 w-2/3 rounded" />
                 <span className="skeleton block h-3 w-1/3 rounded" />
@@ -100,7 +100,7 @@ export function LookPreview({
           )}
           <div className="flex items-baseline justify-between border-t border-line px-5 py-4">
             <span className="text-sm text-muted">Summe dieses Looks</span>
-            <span className="text-lg font-semibold tabular-nums">{formatEur(data.subtotalCents)}</span>
+            <span className="text-lg font-medium tabular-nums">{formatEur(data.subtotalCents)}</span>
           </div>
         </>
       )}

@@ -53,15 +53,15 @@ export function EditPanel({ baseImageUrl }: { baseImageUrl: string }) {
   const segBtn = (active: boolean) =>
     `press rounded-full border px-3.5 py-1.5 text-sm ${
       active
-        ? "border-ink bg-ink text-surface"
+        ? "border-accent/40 bg-tint text-ink"
         : "border-line bg-panel text-muted hover:border-ink/30 hover:text-ink"
     }`;
   const field =
-    "w-full rounded-lg border border-line bg-panel px-3 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent";
+    "w-full rounded-md border border-line bg-panel px-3 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent";
 
   return (
-    <section aria-labelledby="edit-title" className="enter rounded-xl border border-line bg-panel p-5">
-      <h2 id="edit-title" className="text-base font-semibold tracking-tight">
+    <section aria-labelledby="edit-title" className="enter rounded-md border border-line bg-panel p-5">
+      <h2 id="edit-title" className="text-base font-medium tracking-tight">
         Möbel gezielt ändern <span className="text-sm font-normal text-subtle">Beta</span>
       </h2>
       <p className="mt-1 text-sm text-muted">
@@ -122,22 +122,22 @@ export function EditPanel({ baseImageUrl }: { baseImageUrl: string }) {
           type="button"
           onClick={apply}
           disabled={loading}
-          className="press w-full rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-surface hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
+          className="press w-full rounded-md bg-ink px-5 py-3 text-sm font-medium text-surface hover:bg-ink/85 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {loading ? "Wird angewendet …" : "Anwenden"}
         </button>
         {error && (
-          <p role="alert" className="rounded-lg bg-danger/10 px-3 py-2 text-sm text-danger">
+          <p role="alert" className="rounded-md bg-danger/10 px-3 py-2 text-sm text-danger">
             {error}
           </p>
         )}
       </div>
 
-      {loading && <div className="skeleton mt-4 aspect-[4/3] rounded-xl" aria-hidden />}
+      {loading && <div className="skeleton mt-4 aspect-[4/3] rounded-md" aria-hidden />}
 
       {resultUrl && !loading && (
         <figure className="enter mt-4">
-          <div className="overflow-hidden rounded-xl border border-line bg-sunken">
+          <div className="overflow-hidden rounded-md border border-line bg-sunken">
             {/* eslint-disable-next-line @next/next/no-img-element */}
             <img src={resultUrl} alt="Bearbeitetes Bild" className="aspect-[4/3] w-full object-cover" />
           </div>
