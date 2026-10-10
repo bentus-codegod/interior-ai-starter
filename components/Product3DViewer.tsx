@@ -37,30 +37,30 @@ export function Product3DViewer({
       role="dialog"
       aria-modal="true"
       aria-label={`${product.name} in 3D`}
-      className="fixed inset-0 z-50 grid place-items-center bg-ink/50 p-4"
+      className="fixed inset-0 z-50 grid place-items-center bg-black/50 p-4 backdrop-blur-[2px]"
       onClick={onClose}
     >
       <div
-        className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white"
+        className="w-full max-w-2xl overflow-hidden rounded-xl bg-panel"
         onClick={(e) => e.stopPropagation()}
       >
-        <div className="flex items-center justify-between border-b border-mist px-5 py-3">
+        <div className="flex items-center justify-between border-b border-line px-5 py-3">
           <span className="min-w-0">
-            <span className="block truncate font-display">{product.name}</span>
-            <span className="block text-xs text-ink/50">{product.dimensions}</span>
+            <span className="block truncate font-semibold tracking-tight">{product.name}</span>
+            <span className="block text-xs text-muted">{product.dimensions}</span>
           </span>
           <button
             type="button"
             onClick={onClose}
-            className="text-sm text-ink/50 underline underline-offset-4 hover:text-ink"
+            className="text-sm text-muted underline underline-offset-4 hover:text-ink"
           >
             Schließen
           </button>
         </div>
 
-        <div className="aspect-[4/3] w-full bg-paper">
+        <div className="aspect-[4/3] w-full bg-sunken">
           {failed ? (
-            <p className="grid h-full place-items-center text-sm text-clay">
+            <p className="grid h-full place-items-center text-sm text-danger">
               3D-Ansicht konnte nicht geladen werden.
             </p>
           ) : ready && product.modelUrl ? (
@@ -74,13 +74,13 @@ export function Product3DViewer({
               style={{ width: "100%", height: "100%" }}
             />
           ) : (
-            <p className="grid h-full place-items-center text-sm text-ink/40">
+            <p className="grid h-full place-items-center text-sm text-subtle">
               3D-Modell wird geladen …
             </p>
           )}
         </div>
 
-        <p className="px-5 py-3 text-[11px] text-ink/40">
+        <p className="px-5 py-3 text-xs text-subtle">
           Ziehen zum Drehen, scrollen zum Zoomen. Auf dem Handy kannst du das
           Stück per AR in deinen Raum stellen.
         </p>

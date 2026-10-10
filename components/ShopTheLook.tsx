@@ -15,13 +15,14 @@ import {
   swipeLike,
   type EditState,
 } from "@/lib/roomEdit";
+import { ArrowSquareOut, Cube, Heart, ShoppingBag, X } from "@phosphor-icons/react";
 import { ProductThumb } from "@/components/ProductThumb";
 import { Product3DViewer } from "@/components/Product3DViewer";
 
 const fitStyles: Record<FitVerdict, { label: string; className: string }> = {
-  fits: { label: "Passt", className: "bg-sage/15 text-sage" },
-  tight: { label: "Knapp", className: "bg-brass/15 text-brass" },
-  no: { label: "Passt nicht", className: "bg-clay/15 text-clay" },
+  fits: { label: "Passt", className: "text-accent" },
+  tight: { label: "Knapp", className: "text-warn" },
+  no: { label: "Passt nicht", className: "text-danger" },
 };
 
 // Ab dieser Wischstrecke (px) zählt eine Geste als Swipe.
@@ -35,7 +36,7 @@ export type ShopLook = {
 
 type SwipeAction = "like" | "dislike" | "swap_in" | "swap_out";
 
-// Anonyme Swipe-Statistik an den Server (ohne Nutzer-ID). Fehler egal —
+// Anonyme Swipe-Statistik an den Server (ohne Nutzer-ID). Fehler egal,
 // die Statistik darf die Bedienung nie stören.
 function track(lookId: string, events: { sku: string; action: SwipeAction }[]) {
   if (events.length === 0) return;
@@ -147,131 +148,122 @@ export function ShopTheLook({
     const alts = (alternatives[p.category] ?? []).filter((a) => a.sku !== p.sku);
     const open = swapFor === p.sku;
     const liked = state.liked.has(p.sku);
+    const linkBtn =
+      "press inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-muted hover:bg-sunken hover:text-ink disabled:opacity-50";
     return (
       <SwipeRow
         key={p.category}
         onSwipeLeft={() => dislike(index)}
         onSwipeRight={() => like(index)}
       >
-        <div className="flex items-center gap-4">
+        <div className="flex items-start gap-4">
           <ProductThumb product={p} />
           <span className="min-w-0 flex-1">
-            <span className="block truncate text-sm">
-              {item.quantity > 1 && (
-                <span className="mr-1 font-medium text-sage">{item.quantity} ×</span>
-              )}
+            <span className="block text-sm font-medium leading-snug">
+              {item.quantity > 1 && <span className="text-accent">{item.quantity} × </span>}
               {p.name}
             </span>
-            <span className="block text-xs text-ink/50">
-              {p.dimensions} · {p.retailer}
-              {p.leadTimeDays ? ` · Lieferzeit ca. ${p.leadTimeDays} Tage` : ""}
+            <span className="mt-0.5 block text-xs text-subtle">
+              {p.dimensions}, {p.retailer}
+              {p.leadTimeDays ? `, Lieferzeit ca. ${p.leadTimeDays} Tage` : ""}
             </span>
             {fit && (
-              <span className="mt-1 inline-flex items-center gap-1.5">
-                <span
-                  className={`rounded-full px-1.5 py-0.5 text-[11px] font-medium ${fitStyles[fit.verdict].className}`}
-                >
-                  {fitStyles[fit.verdict].label}
-                </span>
-                <span className="text-[11px] text-ink/45">{fit.reason}</span>
+              <span className="mt-1 block text-xs">
+                <span className={`font-medium ${fitStyles[fit.verdict].className}`}>
+                  {fitStyles[fit.verdict].label}.
+                </span>{" "}
+                <span className="text-subtle">{fit.reason}</span>
               </span>
             )}
           </span>
-          <span className="text-right">
-            <span className="block text-sm tabular-nums">
+          <span className="shrink-0 text-right">
+            <span className="block text-sm font-medium tabular-nums">
               {formatEur(p.priceCents * item.quantity)}
             </span>
             {item.quantity > 1 && (
-              <span className="block text-[11px] tabular-nums text-ink/45">
+              <span className="block text-xs tabular-nums text-subtle">
                 je {formatEur(p.priceCents)}
               </span>
             )}
           </span>
         </div>
 
-        <div className="mt-2 flex flex-wrap items-center gap-x-3 gap-y-1.5 pl-16 text-xs">
-          {/* Swipe als Knöpfe — für Maus und Tastatur */}
-          <span className="inline-flex gap-1.5">
-            <button
-              type="button"
-              onClick={() => dislike(index)}
-              aria-label={`${p.name} gefällt mir nicht`}
-              title="Gefällt mir nicht — nächster Vorschlag"
-              className="grid h-7 w-7 place-items-center rounded-full border border-mist text-ink/55 hover:border-clay hover:text-clay"
-            >
-              ✕
-            </button>
-            <button
-              type="button"
-              onClick={() => like(index)}
-              aria-pressed={liked}
-              aria-label={`${p.name} gefällt mir`}
-              title="Gefällt mir — Stück behalten"
-              className={`grid h-7 w-7 place-items-center rounded-full border ${
-                liked
-                  ? "border-sage bg-sage text-white"
-                  : "border-mist text-ink/55 hover:border-sage hover:text-sage"
-              }`}
-            >
-              ♥
-            </button>
-          </span>
+        <div className="mt-2 flex flex-wrap items-center gap-x-1 gap-y-1 pl-[72px] text-xs">
+          {/* Swipe als Knöpfe, für Maus und Tastatur */}
+          <button
+            type="button"
+            onClick={() => dislike(index)}
+            aria-label={`${p.name}: gefällt mir nicht, nächsten Vorschlag zeigen`}
+            title="Gefällt mir nicht"
+            className="press grid h-8 w-8 place-items-center rounded-full border border-line text-muted hover:border-danger/50 hover:text-danger"
+          >
+            <X size={14} weight="bold" />
+          </button>
+          <button
+            type="button"
+            onClick={() => like(index)}
+            aria-pressed={liked}
+            aria-label={`${p.name}: gefällt mir, behalten`}
+            title="Gefällt mir"
+            className={`press mr-2 grid h-8 w-8 place-items-center rounded-full border ${
+              liked
+                ? "border-accent bg-accent text-on-accent"
+                : "border-line text-muted hover:border-accent/50 hover:text-accent"
+            }`}
+          >
+            <Heart size={14} weight={liked ? "fill" : "bold"} />
+          </button>
           {alts.length > 0 && (
             <button
               type="button"
               onClick={() => setSwapFor(open ? null : p.sku)}
-              className="text-sage underline underline-offset-4 hover:text-ink"
+              aria-expanded={open}
+              className={linkBtn}
             >
               {open ? "Schließen" : "Tauschen"}
             </button>
           )}
           {p.modelUrl && (
-            <button
-              type="button"
-              onClick={() => setView3d(p)}
-              className="text-sage underline underline-offset-4 hover:text-ink"
-            >
-              In 3D ansehen
+            <button type="button" onClick={() => setView3d(p)} className={linkBtn}>
+              <Cube size={14} /> 3D
             </button>
           )}
           {p.affiliateUrl && (
-            // Über /go/ — zählt den Klick und leitet auf den Händler-Link weiter.
+            // Über /go/: zählt den Klick und leitet auf den Händler-Link weiter.
             <a
               href={`/go/${encodeURIComponent(p.sku)}?look=${encodeURIComponent(look.id)}`}
               target="_blank"
               rel="noopener sponsored"
-              className="text-ink/50 underline underline-offset-4 hover:text-ink"
+              className={linkBtn}
             >
-              Beim Händler ansehen ↗
+              Händler <ArrowSquareOut size={13} />
             </a>
           )}
           <button
             type="button"
             onClick={() => checkout([item], p.sku)}
             disabled={loading !== null}
-            className="text-ink/50 underline underline-offset-4 hover:text-ink disabled:opacity-50"
+            className={linkBtn}
           >
-            {loading === p.sku ? "Wird geöffnet …" : "Einzeln kaufen"}
+            {loading === p.sku ? "Öffnet …" : "Einzeln kaufen"}
           </button>
         </div>
 
         {open && (
-          <div className="mt-2 space-y-1.5 rounded-lg border border-mist bg-paper p-2 pl-16">
+          <div className="enter mt-2 ml-[72px] space-y-1 rounded-lg border border-line bg-sunken/60 p-1.5">
             {alts.map((a) => (
               <button
                 key={a.sku}
                 type="button"
                 onClick={() => swap(index, a)}
-                className="flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left hover:bg-white"
+                className="press flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left hover:bg-panel"
               >
                 <ProductThumb product={a} size="sm" />
                 <span className="min-w-0 flex-1">
-                  <span className="block truncate text-xs">{a.name}</span>
-                  <span className="block text-[11px] text-ink/45">{a.retailer}</span>
+                  <span className="block truncate text-sm">{a.name}</span>
+                  <span className="block text-xs text-subtle">{a.retailer}</span>
                 </span>
-                <span className="text-xs tabular-nums text-ink/70">
-                  {formatEur(a.priceCents)}
-                </span>
+                <span className="text-xs tabular-nums text-muted">{formatEur(a.priceCents)}</span>
               </button>
             ))}
           </div>
@@ -286,82 +278,79 @@ export function ShopTheLook({
   const overBudget = furnitureBudgetCents > 0 && subtotalCents > furnitureBudgetCents;
 
   return (
-    <div className="rounded-2xl border border-mist bg-white p-5">
-      <h3 className="font-display text-xl">Diesen Look kaufen</h3>
-      <p className="mt-1 text-xs text-ink/45">
-        Wische ein Stück nach links (✕) für den nächsten Vorschlag, nach rechts
-        (♥) zum Behalten. Zusammengehörige Stücke ziehen mit.
-      </p>
-
-      {notice && (
-        <p role="status" className="mt-3 rounded-lg bg-sage/10 px-3 py-2 text-xs text-sage">
-          {notice}
+    <section aria-labelledby="shop-title" className="enter rounded-xl border border-line bg-panel">
+      <div className="border-b border-line px-5 py-4">
+        <h2 id="shop-title" className="text-base font-semibold tracking-tight">
+          Diesen Look kaufen
+        </h2>
+        <p className="mt-1 text-sm text-muted">
+          Wische ein Stück nach links für einen neuen Vorschlag, nach rechts zum Behalten.
+          Zusammengehörige Stücke ziehen mit.
         </p>
-      )}
+        {notice && (
+          <p role="status" className="enter mt-3 rounded-lg bg-accent/10 px-3 py-2 text-sm text-accent">
+            {notice}
+          </p>
+        )}
+      </div>
 
-      <ul className="mt-3 divide-y divide-mist">
+      <ul className="divide-y divide-line px-5">
         {furniture.map(({ item, index }) => renderItem(item, index))}
       </ul>
 
       {deko.length > 0 && (
         <>
-          <h4 className="mt-5 text-xs font-medium uppercase tracking-wide text-ink/45">
-            Deko &amp; Accessoires
-          </h4>
-          <ul className="mt-1 divide-y divide-mist">
+          <h3 className="border-t border-line px-5 pt-4 text-sm font-semibold">
+            Deko und Accessoires
+          </h3>
+          <ul className="divide-y divide-line px-5">
             {deko.map(({ item, index }) => renderItem(item, index))}
           </ul>
         </>
       )}
 
-      <div className="mt-4 space-y-1 border-t border-mist pt-4">
+      <div className="space-y-1.5 border-t border-line px-5 py-4">
         <div className="flex items-baseline justify-between">
-          <span className="text-sm text-ink/60">Zwischensumme</span>
-          <span className="font-display text-lg tabular-nums">
-            {formatEur(subtotalCents)}
-          </span>
+          <span className="text-sm text-muted">Zwischensumme</span>
+          <span className="text-xl font-semibold tabular-nums">{formatEur(subtotalCents)}</span>
         </div>
         {furnitureBudgetCents > 0 && (
-          <div className="flex items-baseline justify-between text-xs">
-            <span className="text-ink/45">Budget für Möbel &amp; Deko</span>
-            <span className={`tabular-nums ${overBudget ? "text-clay" : "text-ink/45"}`}>
+          <div className="flex items-baseline justify-between text-sm">
+            <span className="text-subtle">Budget für Möbel und Deko</span>
+            <span className={`tabular-nums ${overBudget ? "font-medium text-danger" : "text-subtle"}`}>
               {formatEur(furnitureBudgetCents)}
-              {overBudget && " · überschritten"}
+              {overBudget && ", überschritten"}
             </span>
           </div>
         )}
         {logisticsCents > 0 && (
-          <div className="flex items-baseline justify-between text-xs">
-            <span className="text-ink/45">Reserviert für Logistik &amp; Lieferung (Schätzung)</span>
-            <span className="tabular-nums text-ink/45">{formatEur(logisticsCents)}</span>
+          <div className="flex items-baseline justify-between text-sm">
+            <span className="text-subtle">Reserviert für Logistik (Schätzung)</span>
+            <span className="tabular-nums text-subtle">{formatEur(logisticsCents)}</span>
           </div>
         )}
       </div>
 
-      {error && <p className="mt-3 text-sm text-clay">{error}</p>}
+      <div className="border-t border-line px-5 py-4">
+        {error && <p className="mb-3 text-sm text-danger">{error}</p>}
+        <button
+          type="button"
+          onClick={() => checkout(items, "all")}
+          disabled={loading !== null}
+          className="press inline-flex w-full items-center justify-center gap-2 rounded-lg bg-accent px-5 py-3 text-sm font-semibold text-on-accent hover:bg-accent/90 disabled:opacity-60"
+        >
+          <ShoppingBag size={18} weight="bold" />
+          {loading === "all" ? "Kasse öffnet …" : "Ganzen Look kaufen"}
+        </button>
+        <p className="mt-3 text-xs leading-relaxed text-subtle">
+          Bezahlung über Stripe (Test-Modus). Links zu Händlern sind Werbe- bzw.
+          Affiliate-Links: Kaufst du darüber, erhalten wir eventuell eine Provision.
+          Für dich ändert sich der Preis nicht.
+        </p>
+      </div>
 
-      <button
-        type="button"
-        onClick={() => checkout(items, "all")}
-        disabled={loading !== null}
-        className="mt-4 w-full rounded-xl bg-brass px-5 py-3 text-sm font-medium text-white transition hover:bg-brass/90 disabled:opacity-60"
-      >
-        {loading === "all" ? "Wird geöffnet …" : "Ganzen Look kaufen"}
-      </button>
-      <p className="mt-2 text-center text-xs text-ink/40">
-        Bezahlung über Stripe (Test-Modus). Einzelne Stücke über „Einzeln
-        kaufen“ oder beim Händler.
-      </p>
-      <p className="mt-3 border-t border-mist pt-3 text-center text-[11px] text-ink/40">
-        * Affiliate-Hinweis: Links zu Händlern sind Werbe-/Affiliate-Links.
-        Kaufst du darüber, erhalten wir ggf. eine Provision — für dich ohne
-        Aufpreis.
-      </p>
-
-      {view3d && (
-        <Product3DViewer product={view3d} onClose={() => setView3d(null)} />
-      )}
-    </div>
+      {view3d && <Product3DViewer product={view3d} onClose={() => setView3d(null)} />}
+    </section>
   );
 }
 
@@ -400,7 +389,7 @@ function SwipeRow({
     setDx(0);
   }
 
-  const hint = dx <= -SWIPE_PX ? "bg-clay/10" : dx >= SWIPE_PX ? "bg-sage/10" : "";
+  const hint = dx <= -SWIPE_PX ? "bg-danger/5" : dx >= SWIPE_PX ? "bg-accent/5" : "";
   return (
     <li
       className={`touch-pan-y select-none py-3 transition-colors ${hint}`}
@@ -413,7 +402,7 @@ function SwipeRow({
       <div
         style={{
           transform: dx ? `translateX(${dx}px)` : undefined,
-          transition: dx ? "none" : "transform 150ms ease-out",
+          transition: dx ? "none" : "transform 200ms var(--ease-out)",
         }}
       >
         {children}

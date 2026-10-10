@@ -50,72 +50,71 @@ export function EditPanel({ baseImageUrl }: { baseImageUrl: string }) {
     }
   }
 
+  const segBtn = (active: boolean) =>
+    `press rounded-full border px-3.5 py-1.5 text-sm ${
+      active
+        ? "border-ink bg-ink text-surface"
+        : "border-line bg-panel text-muted hover:border-ink/30 hover:text-ink"
+    }`;
+  const field =
+    "w-full rounded-lg border border-line bg-panel px-3 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent";
+
   return (
-    <div className="rounded-2xl border border-mist bg-white p-4">
-      <h3 className="font-display text-sm text-ink/70">
-        Möbel gezielt ändern <span className="text-ink/35">(Beta)</span>
-      </h3>
-      <p className="mt-1 text-xs text-ink/50">
-        Einzelnes Stück tauschen oder behalten — die KI erkennt es, stellt es
-        frei und malt nur diese Stelle neu.
+    <section aria-labelledby="edit-title" className="enter rounded-xl border border-line bg-panel p-5">
+      <h2 id="edit-title" className="text-base font-semibold tracking-tight">
+        Möbel gezielt ändern <span className="text-sm font-normal text-subtle">Beta</span>
+      </h2>
+      <p className="mt-1 text-sm text-muted">
+        Ein Stück tauschen oder behalten. Die KI erkennt es, stellt es frei und malt nur
+        diese Stelle neu.
       </p>
 
-      <div className="mt-3 grid gap-3">
+      <div className="mt-4 grid gap-4">
         <label className="block">
-          <span className="mb-1 block text-xs text-ink/55">Welches Möbel?</span>
+          <span className="mb-1.5 block text-xs font-medium text-muted">Welches Möbelstück?</span>
           <input
             value={targetObject}
             onChange={(e) => setTargetObject(e.target.value)}
             maxLength={120}
-            placeholder="z. B. Sofa, Couch"
-            className="w-full rounded-xl border border-mist bg-white px-3 py-2 text-sm outline-none focus:border-sage"
+            placeholder="Zum Beispiel: Sofa"
+            className={field}
           />
         </label>
 
-        <div className="flex flex-wrap gap-2" role="group" aria-label="Modus">
+        <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Modus">
           <button
             type="button"
-            aria-pressed={mode === "swap"}
+            role="radio"
+            aria-checked={mode === "swap"}
             onClick={() => setMode("swap")}
-            className={`rounded-full border px-3.5 py-1.5 text-sm transition ${
-              mode === "swap"
-                ? "border-sage bg-sage text-white"
-                : "border-mist bg-white text-ink/70 hover:border-sage/50"
-            }`}
+            className={segBtn(mode === "swap")}
           >
             Tauschen
           </button>
           <button
             type="button"
-            aria-pressed={mode === "keep"}
+            role="radio"
+            aria-checked={mode === "keep"}
             onClick={() => setMode("keep")}
-            className={`rounded-full border px-3.5 py-1.5 text-sm transition ${
-              mode === "keep"
-                ? "border-sage bg-sage text-white"
-                : "border-mist bg-white text-ink/70 hover:border-sage/50"
-            }`}
+            className={segBtn(mode === "keep")}
           >
             Behalten, Rest ändern
           </button>
         </div>
 
         <label className="block">
-          <span className="mb-1 block text-xs text-ink/55">
-            {mode === "swap"
-              ? "Wodurch ersetzen?"
-              : "Wie soll der Rest aussehen?"}{" "}
-            <span className="text-ink/35">(optional)</span>
+          <span className="mb-1.5 block text-xs font-medium text-muted">
+            {mode === "swap" ? "Wodurch ersetzen?" : "Wie soll der Rest aussehen?"}{" "}
+            <span className="font-normal text-subtle">optional</span>
           </span>
           <input
             value={prompt}
             onChange={(e) => setPrompt(e.target.value)}
             maxLength={200}
             placeholder={
-              mode === "swap"
-                ? "z. B. graues Bouclé-Sofa"
-                : "z. B. warme, helle Wände"
+              mode === "swap" ? "Zum Beispiel: graues Bouclé-Sofa" : "Zum Beispiel: warme, helle Wände"
             }
-            className="w-full rounded-xl border border-mist bg-white px-3 py-2 text-sm outline-none focus:border-sage"
+            className={field}
           />
         </label>
 
@@ -123,22 +122,30 @@ export function EditPanel({ baseImageUrl }: { baseImageUrl: string }) {
           type="button"
           onClick={apply}
           disabled={loading}
-          className="w-full rounded-xl bg-ink px-5 py-3 text-sm font-medium text-paper transition hover:bg-ink/90 disabled:opacity-40"
+          className="press w-full rounded-lg bg-ink px-5 py-3 text-sm font-semibold text-surface hover:bg-ink/90 disabled:cursor-not-allowed disabled:opacity-40"
         >
           {loading ? "Wird angewendet …" : "Anwenden"}
         </button>
-        {error && <p className="text-sm text-clay">{error}</p>}
+        {error && (
+          <p role="alert" className="rounded-lg bg-danger/10 px-3 py-2 text-sm text-danger">
+            {error}
+          </p>
+        )}
       </div>
 
-      {resultUrl && (
-        <figure className="mt-4 space-y-2">
-          <div className="overflow-hidden rounded-2xl border border-mist bg-white">
+      {loading && <div className="skeleton mt-4 aspect-[4/3] rounded-xl" aria-hidden />}
+
+      {resultUrl && !loading && (
+        <figure className="enter mt-4">
+          <div className="overflow-hidden rounded-xl border border-line bg-sunken">
             {/* eslint-disable-next-line @next/next/no-img-element */}
-            <img src={resultUrl} alt="Bearbeitet" className="aspect-[4/3] w-full object-cover" />
+            <img src={resultUrl} alt="Bearbeitetes Bild" className="aspect-[4/3] w-full object-cover" />
           </div>
-          <figcaption className="text-xs text-ink/50">Bearbeitet · du kannst darauf aufbauen</figcaption>
+          <figcaption className="mt-2 text-xs text-subtle">
+            Bearbeitet. Weitere Änderungen bauen auf diesem Bild auf.
+          </figcaption>
         </figure>
       )}
-    </div>
+    </section>
   );
 }

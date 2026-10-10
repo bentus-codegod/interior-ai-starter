@@ -33,16 +33,21 @@ function Field({
 }) {
   return (
     <label className="block">
-      <span className="mb-1 block text-xs text-ink/55">{label}</span>
-      <input
-        type="number"
-        inputMode="numeric"
-        min={0}
-        value={value}
-        placeholder={placeholder}
-        onChange={(e) => onChange(e.target.value)}
-        className="w-full rounded-lg border border-mist bg-white px-3 py-2 text-sm outline-none focus:border-sage"
-      />
+      <span className="mb-1 block text-xs font-medium text-muted">{label}</span>
+      <span className="relative block">
+        <input
+          type="number"
+          inputMode="numeric"
+          min={0}
+          value={value}
+          placeholder={placeholder}
+          onChange={(e) => onChange(e.target.value)}
+          className="w-full rounded-lg border border-line bg-panel py-2 pl-3 pr-9 text-sm tabular-nums outline-none transition-colors placeholder:text-subtle focus:border-accent"
+        />
+        <span className="pointer-events-none absolute inset-y-0 right-3 grid place-items-center text-xs text-subtle">
+          cm
+        </span>
+      </span>
     </label>
   );
 }
@@ -81,63 +86,58 @@ export function RoomMeasurements({
   }
 
   return (
-    <div className="rounded-xl border border-mist bg-white p-4">
-      <p className="text-xs text-ink/55">
-        Optional — für den Passform-Check. In Zentimetern.
+    <div className="space-y-4">
+      <p className="text-sm text-muted">
+        Für den Passform-Check: Wir prüfen, ob jedes Stück durch die Tür und in den Raum passt.
       </p>
-      <div className="mt-3 grid grid-cols-2 gap-3 sm:grid-cols-4">
+      <div className="grid grid-cols-2 gap-3">
         <Field
           label="Raumbreite"
           value={value.widthCm}
           onChange={(v) => onChange({ ...value, widthCm: v })}
-          placeholder="z. B. 400"
+          placeholder="400"
         />
         <Field
           label="Raumlänge"
           value={value.lengthCm}
           onChange={(v) => onChange({ ...value, lengthCm: v })}
-          placeholder="z. B. 520"
+          placeholder="520"
         />
         <Field
           label="Türbreite"
           value={value.doorWidthCm}
           onChange={(v) => onChange({ ...value, doorWidthCm: v })}
-          placeholder="z. B. 80"
+          placeholder="80"
         />
         <Field
           label="Deckenhöhe"
           value={value.ceilingHeightCm}
           onChange={(v) => onChange({ ...value, ceilingHeightCm: v })}
-          placeholder="z. B. 250"
+          placeholder="250"
         />
       </div>
 
-      {/* Optionaler Grundriss-Upload */}
-      <div className="mt-4 border-t border-mist pt-4">
-        <span className="mb-2 block text-xs text-ink/55">
-          Grundriss (optional) — Bild oder PDF
-        </span>
+      <div>
+        <span className="mb-1.5 block text-xs font-medium text-muted">Grundriss, Bild oder PDF</span>
         {floorplan ? (
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 rounded-lg border border-line bg-panel p-2">
             {floorplan.isImage ? (
               // eslint-disable-next-line @next/next/no-img-element
               <img
                 src={floorplan.dataUrl}
                 alt="Grundriss"
-                className="h-16 w-16 rounded-lg border border-mist object-cover"
+                className="h-12 w-12 rounded-md object-cover"
               />
             ) : (
-              <span className="grid h-16 w-16 place-items-center rounded-lg border border-mist bg-paper text-xs text-ink/50">
+              <span className="grid h-12 w-12 place-items-center rounded-md bg-sunken text-xs text-muted">
                 PDF
               </span>
             )}
-            <span className="min-w-0 flex-1 truncate text-sm text-ink/70">
-              {floorplan.name}
-            </span>
+            <span className="min-w-0 flex-1 truncate text-sm">{floorplan.name}</span>
             <button
               type="button"
               onClick={() => onFloorplan(null)}
-              className="text-xs text-ink/50 underline underline-offset-4 hover:text-ink"
+              className="press rounded-md px-2 py-1 text-sm text-muted hover:bg-sunken hover:text-ink"
             >
               Entfernen
             </button>
@@ -146,7 +146,7 @@ export function RoomMeasurements({
           <button
             type="button"
             onClick={() => fileRef.current?.click()}
-            className="rounded-lg border border-dashed border-mist px-4 py-2 text-sm text-ink/60 transition hover:border-sage"
+            className="press rounded-lg border border-line bg-panel px-3 py-2 text-sm text-muted hover:border-accent/50 hover:text-ink"
           >
             Grundriss hochladen
           </button>

@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { UploadSimple, VideoCamera } from "@phosphor-icons/react";
 import { ALLOWED_MIME } from "@/lib/validation";
 import { drawScaled, resizeImageFile } from "@/lib/imageResize";
 
@@ -35,6 +36,7 @@ export function RoomUploader({
   const [fromVideo, setFromVideo] = useState(false);
   const [frames, setFrames] = useState<string[]>([]);
   const [extracting, setExtracting] = useState(false);
+  const [dragOver, setDragOver] = useState(false);
 
   // Foto verkleinert übernehmen (siehe lib/imageResize.ts).
   async function handleImage(file: File) {
@@ -98,7 +100,27 @@ export function RoomUploader({
       <button
         type="button"
         onClick={() => inputRef.current?.click()}
-        className="group relative flex aspect-[4/3] w-full items-center justify-center overflow-hidden rounded-2xl border border-mist bg-white transition hover:border-sage"
+        onDragOver={(e) => {
+          e.preventDefault();
+          setDragOver(true);
+        }}
+        onDragLeave={() => setDragOver(false)}
+        onDrop={(e) => {
+          e.preventDefault();
+          setDragOver(false);
+          const file = e.dataTransfer.files?.[0];
+          if (file) handleFile(file);
+        }}
+        aria-describedby="upload-hint"
+        className={`press group relative flex w-full items-center justify-center overflow-hidden rounded-xl border transition-colors ${
+          imageDataUrl ? "aspect-[4/3]" : "aspect-[16/9]"
+        } ${
+          imageDataUrl
+            ? "border-line bg-sunken"
+            : dragOver
+              ? "border-accent bg-accent/5"
+              : "border-dashed border-line bg-panel hover:border-accent/60 hover:bg-accent/[0.03]"
+        }`}
       >
         {imageDataUrl ? (
           // eslint-disable-next-line @next/next/no-img-element
@@ -108,17 +130,20 @@ export function RoomUploader({
             className="h-full w-full object-cover"
           />
         ) : (
-          <span className="px-6 text-center text-sm text-ink/60">
-            Raumfoto oder -video auswählen
-            <span className="mt-1 block text-xs text-ink/40">
-              Foto (JPEG, PNG, WebP · max. 25 MB) oder Video (MP4, WebM, MOV · max. 60 MB)
+          <span className="flex flex-col items-center px-6 text-center">
+            <span className="grid h-12 w-12 place-items-center rounded-full bg-accent text-on-accent">
+              <UploadSimple size={22} weight="bold" />
+            </span>
+            <span className="mt-3 text-sm font-semibold">Foto oder Video hochladen</span>
+            <span id="upload-hint" className="mt-1 text-xs text-subtle">
+              Hierher ziehen oder klicken. Foto bis 25 MB, Video bis 60 MB.
             </span>
           </span>
         )}
       </button>
 
       {imageDataUrl && (
-        <div className="flex items-center justify-between">
+        <div className="flex items-center justify-between text-sm">
           <button
             type="button"
             onClick={() => {
@@ -126,25 +151,30 @@ export function RoomUploader({
               setFrames([]);
               onImage(null);
             }}
-            className="text-sm text-ink/50 underline underline-offset-4 hover:text-ink"
+            className="press rounded-md px-1.5 py-1 text-muted underline hover:text-ink"
           >
-            Anderes Foto/Video wählen
+            Anderes Foto wählen
           </button>
           {fromVideo && (
-            <span className="text-xs text-sage">Standbild aus Video</span>
+            <span className="inline-flex items-center gap-1.5 text-xs text-subtle">
+              <VideoCamera size={14} /> Standbild aus deinem Video
+            </span>
           )}
         </div>
       )}
 
       {extracting && (
-        <p className="text-xs text-ink/50">Standbilder werden aus dem Video gezogen …</p>
+        <div className="grid grid-cols-5 gap-2" aria-live="polite">
+          <span className="sr-only">Standbilder werden aus dem Video gezogen</span>
+          {Array.from({ length: 5 }).map((_, i) => (
+            <span key={i} className="skeleton aspect-[4/3] rounded-lg" />
+          ))}
+        </div>
       )}
 
       {frames.length > 1 && (
-        <div>
-          <span className="mb-1.5 block text-xs text-ink/55">
-            Bestes Standbild wählen
-          </span>
+        <fieldset>
+          <legend className="mb-1.5 text-xs text-muted">Bestes Standbild wählen</legend>
           <div className="grid grid-cols-5 gap-2">
             {frames.map((f, i) => {
               const active = f === imageDataUrl;
@@ -155,8 +185,8 @@ export function RoomUploader({
                   aria-pressed={active}
                   aria-label={`Standbild ${i + 1}`}
                   onClick={() => onImage(f)}
-                  className={`overflow-hidden rounded-lg border-2 transition ${
-                    active ? "border-sage" : "border-transparent hover:border-mist"
+                  className={`press overflow-hidden rounded-lg ring-2 ring-offset-2 ring-offset-surface ${
+                    active ? "ring-accent" : "ring-transparent hover:ring-line"
                   }`}
                 >
                   {/* eslint-disable-next-line @next/next/no-img-element */}
@@ -165,7 +195,7 @@ export function RoomUploader({
               );
             })}
           </div>
-        </div>
+        </fieldset>
       )}
 
       <input

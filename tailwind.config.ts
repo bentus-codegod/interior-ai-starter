@@ -1,26 +1,42 @@
 import type { Config } from "tailwindcss";
 
+// Farben kommen aus CSS-Variablen (app/globals.css), damit Hell- und
+// Dunkelmodus dieselben Klassen nutzen. Semantische Namen statt Farbnamen:
+// surface = Seitengrund, panel = Flächen, sunken = vertiefte Flächen,
+// line = Linien, ink/muted/subtle = Text in drei Stufen, accent = die eine
+// Akzentfarbe (Waldgrün), warn/danger = Zustände.
+const token = (name: string) => `rgb(var(--${name}) / <alpha-value>)`;
+
 const config: Config = {
-  content: [
-    "./app/**/*.{ts,tsx}",
-    "./components/**/*.{ts,tsx}",
-  ],
+  content: ["./app/**/*.{ts,tsx}", "./components/**/*.{ts,tsx}"],
   theme: {
     extend: {
       colors: {
-        paper: "#F6F6F3",   // warmes, kühl gebrochenes Neutral (kein Creme-Klischee)
-        ink: "#1C1C1A",     // fast-schwarze Tinte
-        sage: "#6B7A5E",    // gedämpftes Botanik-Grün — Interior, natürlich
-        brass: "#B08948",   // Messing, nur für die primäre Aktion
-        mist: "#E7E7E1",    // ruhige Trennlinien / Flächen
-        clay: "#9C6B4A",    // warmes Holz, sparsam als Sekundärton
+        surface: token("surface"),
+        panel: token("panel"),
+        sunken: token("sunken"),
+        line: token("line"),
+        ink: token("ink"),
+        muted: token("muted"),
+        subtle: token("subtle"),
+        accent: token("accent"),
+        "on-accent": token("on-accent"),
+        warn: token("warn"),
+        danger: token("danger"),
       },
       fontFamily: {
-        display: ["var(--font-fraunces)", "Georgia", "serif"],
-        body: ["var(--font-inter)", "system-ui", "sans-serif"],
+        sans: ["var(--font-geist-sans)", "system-ui", "sans-serif"],
+        mono: ["var(--font-geist-mono)", "ui-monospace", "monospace"],
+      },
+      // Eckenradien (eine feste Regel, siehe globals.css):
+      // Bedienelemente 8px (rounded-lg), Flächen und Bilder 12px (rounded-xl),
+      // Auswahl-Chips und runde Icon-Knöpfe voll rund (rounded-full).
+      transitionTimingFunction: {
+        out: "cubic-bezier(0.23, 1, 0.32, 1)",
+        "in-out": "cubic-bezier(0.77, 0, 0.175, 1)",
       },
       maxWidth: {
-        prose: "68ch",
+        prose: "65ch",
       },
     },
   },

@@ -5,6 +5,78 @@ wurde, was offen bleibt. Neueste Session oben.
 
 ---
 
+## Session 4 — 10.10.2026 · Frontend mit geprüften Design-Skills
+
+**Auftrag (Anton):** Frontend fertig bauen, damit man es ansehen kann. Die
+Design-Skills (Emil Kowalski, Leonxlnx Taste, Paul Bakaus Impeccable) vorher
+mit NVIDIAs Skill-Scanner prüfen.
+
+### Skill-Prüfung (Details: `docs/DESIGN-SKILLS-PRUEFUNG.md`)
+- Scanner: NVIDIA SkillSpector v2.12.0, statisch.
+- **Emil Kowalski** (`emil-design-eng`): sauber, installiert.
+- **Taste** (`design-taste-frontend`): MITTEL, alle Befunde von Hand geprüft
+  (Fehlalarme), installiert.
+- **Impeccable**: KRITISCH. Bringt ausführbaren Code mit, lädt eine
+  Programmdatei nach, will Hooks in die Claude-Einstellungen schreiben.
+  **Nicht installiert**, Grundsätze nur gelesen.
+- Installiert in `.claude/skills/` (nur Textdateien, mit Lizenz, Commit notiert).
+
+### Frontend
+Design-Einordnung: Werkzeug (Operate) mit kurzem Einstieg. Regler nach Taste:
+Gestaltungsfreiheit 5, Bewegung 4, Dichte 5.
+
+| Bereich | Vorher | Jetzt | Regel |
+| --- | --- | --- | --- |
+| Farben | Creme, Messing, Ton, Salbei | kühles Neutral + eine Akzentfarbe (Waldgrün), Hell- **und Dunkelmodus** | Taste: Premium-Palette-Verbot, Dark Mode Pflicht |
+| Schrift | Fraunces (Serife) + Inter | **Geist** (eine Familie, lokal ausgeliefert) | Taste: Fraunces verboten, Inter nicht als Standard; Impeccable: eine Familie für Werkzeuge |
+| Aufbau | Formular links, leeres Feld rechts | Eingaben links, rechts **echte Vorschau** des Looks mit Katalogdaten, dann Ergebnis | Impeccable: Leerzustand erklärt die Oberfläche |
+| Ergebnis | zwei Bilder nebeneinander | **Vorher/Nachher-Schieberegler** (clip-path, Tastatur, Touch), wischt einmal zur Mitte | Emil: Comparison Slider; Impeccable: ein inszenierter Moment |
+| Laden | Text „Wird gestaltet …“ | **Skelett** in Form des Ergebnisses | Taste/Impeccable: keine Spinner |
+| Produkte | Farbkachel mit 2 Buchstaben | Kachel mit **Phosphor-Icon** je Kategorie | Taste: Icons aus einer Bibliothek, keine Emoji/Zeichen |
+| Swipe | ✕ und ♥ als Textzeichen | Icon-Knöpfe, Druck-Rückmeldung | Emil: scale(0.97) beim Drücken |
+| Upload | Klickfläche | zusätzlich **Drag & Drop**, Video-Standbilder als Skelett | |
+| Texte | Gedankenstriche, „1 · Raumfoto“ | **null Gedankenstriche**, Verben statt Schrittnummern | Taste: Em-Dash-Verbot, keine „Step 1“-Labels |
+| Browser-Details | Standard | Auswahlfarbe, Cursor, Fokus-Ring, Scrollbalken, Regler in Akzentfarbe | Impeccable: Browser-Flächen |
+| Bewegung | `transition` ohne Kurve | eigene ease-out-Kurve, < 300 ms, `prefers-reduced-motion` | Emil |
+
+Neu: `components/SiteHeader.tsx`, `components/CompareSlider.tsx` (ersetzt
+`RenderResult.tsx`), `components/LookPreview.tsx`, `app/api/preview`.
+Rechtstexte (Impressum, Datenschutz) nur umgefärbt, Inhalt unverändert.
+
+### Zusammenführung mit Bents neuem Stand
+PR #1 war bereits gemergt; `main` hatte inzwischen Bents Phase-2-Funktionen.
+Das Redesign wurde auf den aktuellen `main` gesetzt und übernimmt diese:
+- **Render-Varianten** (`RENDER_VARIANTS`): Auswahl als Vorschaubilder unter
+  dem Vorher/Nachher-Regler. Auswahl jetzt per Position statt per URL (vorher
+  waren bei gleichen Adressen alle Varianten gleichzeitig „ausgewählt“).
+- **Möbel gezielt ändern** (`EditPanel`, nur mit Replicate): neu gestaltet,
+  Logik unverändert, Lade-Skelett ergänzt.
+- **Maße aus dem Foto schätzen (Beta)**: Knopf im Bereich „Maße und Grundriss“.
+- **Erweiterte Stil-Bibliothek** (19 Looks): passt ins Stil-Raster.
+- Bents nummerierte Anleitung im leeren Ergebnisfeld ist durch die
+  Look-Vorschau und den Abschnitt „So funktioniert's“ ersetzt (Taste: keine
+  „1 · …“-Labels).
+
+### Geprüft
+- Typen, 37 Tests, Build grün.
+- Browser (Playwright): Desktop hell/dunkel, Handy; kein seitliches Scrollen;
+  0 Gedankenstriche auf allen Seiten; Überschrift bei 1024/1280/1440 px auf
+  2 Zeilen; Upload ohne Scrollen sichtbar; Schieberegler per Tastatur;
+  Kopplung meldet „Passend dazu angepasst: Nachttisch, Kommode“; keine
+  Konsolenfehler.
+- Kontraste (WCAG): alle Text/Grund-Paare in beiden Modi ≥ 4,5:1.
+
+### Offen
+- **Echte Fotos fehlen.** Diese Umgebung erreicht keine Bildquellen
+  (Unsplash, Openverse usw. gesperrt). Es gibt keine Fake-Bilder; Produkte
+  zeigen Icon-Kacheln, bis Feeds Produktfotos liefern.
+- Das Platzhalter-Bild im Mock-Modus ist ein einfaches SVG; mit echter KI
+  erscheint dort der Raum.
+- Rechtstexte enthalten noch Gedankenstriche und `[[…]]`-Platzhalter
+  (Inhalt bewusst nicht angefasst).
+
+---
+
 ## Session 3 — 02.10.2026 · Komplettes Code-Review + Schnittstellen
 
 **Auftrag (Anton):** Komplettes Code-Review (Fehler, Unnötiges, Einzelpunkte,
