@@ -15,10 +15,19 @@ export function CompareSlider({
   before,
   after,
   provider,
+  beforeAlt = "Dein Raum vorher",
+  afterAlt = "Dein Raum, neu eingerichtet",
+  aspect = "aspect-[4/3]",
+  note,
 }: {
   before: string;
   after: string;
-  provider: string;
+  provider?: string;
+  beforeAlt?: string;
+  afterAlt?: string;
+  aspect?: string;
+  // Optionaler Hinweis unter dem Bild (z. B. Herkunft eines Demobilds).
+  note?: React.ReactNode;
 }) {
   const [pos, setPos] = useState(100);
   const [intro, setIntro] = useState(true);
@@ -47,13 +56,13 @@ export function CompareSlider({
 
   return (
     <figure className="enter">
-      <div className="relative aspect-[4/3] overflow-hidden rounded-md border border-line bg-sunken">
+      <div className={`relative ${aspect} overflow-hidden rounded-md bg-sunken`}>
         {/* eslint-disable-next-line @next/next/no-img-element */}
-        <img src={after} alt="Dein Raum, neu eingerichtet" className="absolute inset-0 h-full w-full object-cover" />
+        <img src={after} alt={afterAlt} className="absolute inset-0 h-full w-full object-cover" />
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
           src={before}
-          alt="Dein Raum vorher"
+          alt={beforeAlt}
           className="absolute inset-0 h-full w-full object-cover"
           style={{ clipPath: `inset(0 ${100 - pos}% 0 0)`, transition }}
         />
@@ -84,11 +93,12 @@ export function CompareSlider({
           className="absolute inset-0 h-full w-full cursor-ew-resize opacity-0"
         />
       </div>
-      <figcaption className="mt-2 flex items-center justify-between text-xs text-subtle">
-        <span>Vorher</span>
-        <span>
-          {provider === "mock" ? "Nachher (Platzhalter, Mock-Modus)" : "Nachher"}
+      <figcaption className="mt-2 text-xs text-subtle">
+        <span className="flex items-center justify-between">
+          <span>Vorher</span>
+          <span>{provider === "mock" ? "Nachher (Platzhalter, Mock-Modus)" : "Nachher"}</span>
         </span>
+        {note && <span className="mt-1 block leading-relaxed">{note}</span>}
       </figcaption>
     </figure>
   );

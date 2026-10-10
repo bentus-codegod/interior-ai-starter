@@ -1,0 +1,308 @@
+<!doctype html>
+<meta charset="utf-8" />
+<style>html,body{margin:0;background:#fff}</style>
+<script type="importmap">
+  { "imports": { "three": "/three/build/three.module.js", "three/addons/": "/three/examples/jsm/" } }
+</script>
+<script type="module">
+  // Ein schlichter Wohnraum, einmal leer (vorher) und einmal eingerichtet
+  // (nachher), aus exakt derselben Kamera. Maße in Metern.
+  import * as THREE from "three";
+  import { GLTFLoader } from "three/addons/loaders/GLTFLoader.js";
+  import { RoomEnvironment } from "three/addons/environments/RoomEnvironment.js";
+  import { RectAreaLightUniformsLib } from "three/addons/lights/RectAreaLightUniformsLib.js";
+
+  const W = 1600, H = 1000;
+  const loader = new GLTFLoader();
+  // Lichter aus den Modellen (KHR_lights_punctual) fliegen raus, der Raum hat eigene.
+  const load = (name) =>
+    loader.loadAsync(`/models/${name}.glb`).then((g) => {
+      const lights = [];
+      g.scene.traverse((o) => o.isLight && lights.push(o));
+      lights.forEach((l) => l.removeFromParent());
+      return g.scene;
+    });
+  // Stoffe in ruhige Töne umfärben (die Originale sind Navy, Mango und Seide).
+  const recolor = (obj, test, color, sheen) =>
+    obj.traverse((o) => {
+      if (!o.isMesh) return;
+      for (const m of [o.material].flat()) {
+        if (!test(m.name ?? "")) continue;
+        m.map = null;
+        m.color.set(color);
+        if ("sheenColor" in m) { m.sheenColor.set(sheen); m.sheenColorMap = null; m.sheenRoughness = 0.7; }
+        m.needsUpdate = true;
+      }
+    });
+
+  if (location.search.includes("probe")) {
+    for (const n of ["GlamVelvetSofa","SheenChair","SpecularSilkPouf","DiffuseTransmissionPlant","GlassVaseFlowers","AnisotropyBarnLamp"]) {
+      const b = new THREE.Box3().setFromObject(await load(n));
+      const v = (x) => x.toArray().map((a) => a.toFixed(2)).join(" ");
+      console.log(n, "size", v(b.getSize(new THREE.Vector3())), "min", v(b.min));
+    }
+    window.__done = true;
+    throw new Error("probe done");
+  }
+
+  const renderer = new THREE.WebGLRenderer({ antialias: true, preserveDrawingBuffer: true });
+  renderer.setPixelRatio(1);
+  renderer.setSize(W, H);
+  renderer.outputColorSpace = THREE.SRGBColorSpace;
+  renderer.toneMapping = THREE.NeutralToneMapping;
+  renderer.toneMappingExposure = 1.0;
+  renderer.shadowMap.enabled = true;
+  renderer.shadowMap.type = THREE.VSMShadowMap;
+  document.body.appendChild(renderer.domElement);
+  RectAreaLightUniformsLib.init();
+
+  const scene = new THREE.Scene();
+  scene.background = new THREE.Color("#e9ebe8");
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  scene.environment = pmrem.fromScene(new RoomEnvironment(), 0.04).texture;
+  scene.environmentIntensity = 0.45;
+
+  // Raum: 5,2 m breit, 4,6 m tief, 2,7 m hoch. Linke Wand mit Fenster.
+  const RW = 5.2, RD = 4.6, RH = 2.7;
+  const x0 = -RW / 2, x1 = RW / 2, zBack = -2.3;
+  const wallMat = new THREE.MeshStandardMaterial({ color: "#eceae5", roughness: 0.95 });
+  const box = (w, h, d, mat, x, y, z) => {
+    const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), mat);
+    m.position.set(x, y, z);
+    m.castShadow = m.receiveShadow = true;
+    scene.add(m);
+    return m;
+  };
+
+  // Boden: helle Eichendielen als Canvas-Textur.
+  function plankTexture() {
+    const c = document.createElement("canvas");
+    c.width = 2048; c.height = 2048;
+    const g = c.getContext("2d");
+    let seed = 7;
+    const rnd = () => ((seed = (seed * 16807) % 2147483647) / 2147483647);
+    const rows = 12, ph = c.height / rows;
+    for (let r = 0; r < rows; r++) {
+      let x = -rnd() * 900;
+      while (x < c.width) {
+        const len = 700 + rnd() * 700;
+        const l = 74 + rnd() * 6, a = 9 + rnd() * 4;
+        g.fillStyle = `hsl(34 ${30 + rnd() * 10}% ${l}%)`;
+        g.fillRect(x, r * ph, len, ph);
+        for (let i = 0; i < 40; i++) {
+          g.strokeStyle = `hsla(30 35% ${l - a}% / ${0.06 + rnd() * 0.08})`;
+          g.lineWidth = 1 + rnd() * 2;
+          const yy = r * ph + rnd() * ph;
+          g.beginPath(); g.moveTo(x, yy);
+          g.bezierCurveTo(x + len / 3, yy + (rnd() - 0.5) * 8, x + (2 * len) / 3, yy + (rnd() - 0.5) * 8, x + len, yy);
+          g.stroke();
+        }
+        g.fillStyle = "hsla(30 30% 45% / .35)";
+        g.fillRect(x, r * ph, 2, ph);
+        x += len;
+      }
+      g.fillStyle = "hsla(30 30% 45% / .3)";
+      g.fillRect(0, r * ph, c.width, 2);
+    }
+    const t = new THREE.CanvasTexture(c);
+    t.colorSpace = THREE.SRGBColorSpace;
+    t.wrapS = t.wrapT = THREE.RepeatWrapping;
+    t.repeat.set(2.2, 2.2);
+    t.anisotropy = 8;
+    return t;
+  }
+  const floor = new THREE.Mesh(
+    new THREE.PlaneGeometry(RW, RD + 2),
+    new THREE.MeshStandardMaterial({ map: plankTexture(), roughness: 0.55 }),
+  );
+  floor.rotation.x = -Math.PI / 2;
+  floor.position.z = zBack + (RD + 2) / 2;
+  floor.receiveShadow = true;
+  scene.add(floor);
+
+  const ceil = new THREE.Mesh(new THREE.PlaneGeometry(RW, RD + 2), wallMat);
+  ceil.rotation.x = Math.PI / 2;
+  ceil.position.set(0, RH, zBack + (RD + 2) / 2);
+  scene.add(ceil);
+
+  const t = 0.12; // Wandstärke
+  box(RW + 2 * t, RH, t, wallMat, 0, RH / 2, zBack - t / 2); // Rückwand
+  box(t, RH, RD + 2, wallMat, x1 + t / 2, RH / 2, zBack + (RD + 2) / 2); // rechts
+  // Linke Wand mit Fensteröffnung (z von -1.5 bis 0.3, y von 0.5 bis 2.35).
+  const wz0 = -1.5, wz1 = 0.3, wy0 = 0.5, wy1 = 2.35;
+  const lx = x0 - t / 2, zEnd = zBack + RD + 2;
+  box(t, RH, wz0 - zBack, wallMat, lx, RH / 2, (zBack + wz0) / 2);
+  box(t, RH, zEnd - wz1, wallMat, lx, RH / 2, (wz1 + zEnd) / 2);
+  box(t, wy0, wz1 - wz0, wallMat, lx, wy0 / 2, (wz0 + wz1) / 2);
+  box(t, RH - wy1, wz1 - wz0, wallMat, lx, (wy1 + RH) / 2, (wz0 + wz1) / 2);
+  // Fensterrahmen und Sprosse.
+  const frameMat = new THREE.MeshStandardMaterial({ color: "#f4f3ef", roughness: 0.6 });
+  box(0.06, 0.05, wz1 - wz0, frameMat, x0 - 0.02, wy0 + 0.025, (wz0 + wz1) / 2);
+  box(0.06, 0.05, wz1 - wz0, frameMat, x0 - 0.02, wy1 - 0.025, (wz0 + wz1) / 2);
+  box(0.06, wy1 - wy0, 0.05, frameMat, x0 - 0.02, (wy0 + wy1) / 2, wz0 + 0.025);
+  box(0.06, wy1 - wy0, 0.05, frameMat, x0 - 0.02, (wy0 + wy1) / 2, wz1 - 0.025);
+  box(0.06, wy1 - wy0, 0.04, frameMat, x0 - 0.02, (wy0 + wy1) / 2, (wz0 + wz1) / 2);
+  // Fensterbank.
+  box(0.22, 0.03, wz1 - wz0 + 0.1, frameMat, x0 + 0.05, wy0, (wz0 + wz1) / 2);
+  // Draußen: heller, leicht grünlicher Himmel.
+  const sky = new THREE.Mesh(
+    new THREE.PlaneGeometry(12, 8),
+    new THREE.MeshBasicMaterial({ color: new THREE.Color("#f4f7f3").multiplyScalar(1.4) }),
+  );
+  sky.rotation.y = Math.PI / 2;
+  sky.position.set(x0 - 3, 2, -0.6);
+  scene.add(sky);
+  // Sockelleisten.
+  box(RW, 0.08, 0.015, frameMat, 0, 0.04, zBack + 0.008);
+  box(0.015, 0.08, RD + 2, frameMat, x1 - 0.008, 0.04, zBack + (RD + 2) / 2);
+
+  // Licht: Sonne durchs Fenster, weiches Fensterlicht, schwache Grundhelligkeit.
+  const sun = new THREE.DirectionalLight("#fff4e6", 3.2);
+  sun.position.set(x0 - 5, 4.2, 1.6);
+  sun.target.position.set(0, 0, -0.9);
+  sun.castShadow = true;
+  sun.shadow.mapSize.set(4096, 4096);
+  Object.assign(sun.shadow.camera, { left: -5, right: 5, top: 5, bottom: -5, near: 0.5, far: 16 });
+  sun.shadow.bias = -0.0002;
+  sun.shadow.normalBias = 0.02;
+  sun.shadow.radius = 10;
+  sun.shadow.blurSamples = 16;
+  scene.add(sun, sun.target);
+  const win = new THREE.RectAreaLight("#f2f6f4", 5, wz1 - wz0, wy1 - wy0);
+  win.position.set(x0 + 0.02, (wy0 + wy1) / 2, (wz0 + wz1) / 2);
+  win.lookAt(0, (wy0 + wy1) / 2, (wz0 + wz1) / 2);
+  scene.add(win);
+  scene.add(new THREE.HemisphereLight("#f3f4f1", "#c9bba8", 0.55));
+
+  const camera = new THREE.PerspectiveCamera(46, W / H, 0.05, 50);
+  camera.position.set(0.9, 1.35, 3.1);
+  camera.lookAt(-0.15, 0.85, -1.3);
+
+  const shoot = () => {
+    renderer.render(scene, camera);
+    return renderer.domElement.toDataURL("image/webp", 0.86);
+  };
+  const images = {};
+  images["vorher.webp"] = shoot();
+
+  // Einrichtung.
+  const furnished = new THREE.Group();
+  scene.add(furnished);
+  const place = (obj, x, z, rotY = 0, y = 0) => {
+    obj.position.set(x, y, z);
+    obj.rotation.y = rotY;
+    obj.traverse((o) => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+    furnished.add(obj);
+    return obj;
+  };
+
+  // Teppich: Wollton mit feiner Struktur.
+  {
+    const c = document.createElement("canvas");
+    c.width = c.height = 512;
+    const g = c.getContext("2d");
+    g.fillStyle = "#d9d6cd"; g.fillRect(0, 0, 512, 512);
+    for (let i = 0; i < 9000; i++) {
+      g.fillStyle = `rgba(${Math.random() < 0.5 ? "255,255,255" : "120,110,95"},${Math.random() * 0.08})`;
+      g.fillRect(Math.random() * 512, Math.random() * 512, 2, 2);
+    }
+    g.strokeStyle = "rgba(110,120,105,.35)"; g.lineWidth = 6;
+    g.strokeRect(22, 22, 468, 468);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const rug = new THREE.Mesh(new THREE.BoxGeometry(2.9, 0.012, 2.0), new THREE.MeshStandardMaterial({ map: tex, roughness: 1 }));
+    rug.position.set(0.15, 0.006, -1.05);
+    rug.receiveShadow = true;
+    furnished.add(rug);
+  }
+
+  // Weiche Kontaktschatten unter den Möbeln (radialer Verlauf).
+  const blobTex = (() => {
+    const c = document.createElement("canvas");
+    c.width = c.height = 256;
+    const g = c.getContext("2d");
+    const gr = g.createRadialGradient(128, 128, 10, 128, 128, 128);
+    gr.addColorStop(0, "#7d776d");
+    gr.addColorStop(0.45, "#bdb8b0");
+    gr.addColorStop(1, "#fff");
+    g.fillStyle = gr; g.fillRect(0, 0, 256, 256);
+    const tx = new THREE.CanvasTexture(c);
+    tx.colorSpace = THREE.SRGBColorSpace;
+    return tx;
+  })();
+  // Multiplizieren statt Transparenz: weiß lässt den Boden unverändert.
+  const blob = (x, z, w, d, rot = 0) => {
+    const mat = new THREE.MeshBasicMaterial({ map: blobTex, blending: THREE.MultiplyBlending, premultipliedAlpha: true, depthWrite: false, toneMapped: false });
+    const m = new THREE.Mesh(new THREE.PlaneGeometry(w, d), mat);
+    m.renderOrder = 1;
+    m.rotation.set(-Math.PI / 2, 0, rot);
+    m.position.set(x, 0.014, z);
+    furnished.add(m);
+  };
+
+  const sofa = await load("GlamVelvetSofa");
+  recolor(sofa, (n) => n.includes("fabric"), "#bdb7aa", "#a9a497");
+  place(sofa, 0.15, zBack + 0.58);
+  blob(0.15, zBack + 0.58, 2.6, 1.3, 0);
+  const chair = await load("SheenChair");
+  recolor(chair, (n) => n.includes("fabric"), "#8f9d8c", "#a9b6a6");
+  place(chair, -1.55, -0.55, Math.PI * 0.32);
+  blob(-1.55, -0.55, 1.1, 0.85, Math.PI * 0.32);
+  const pouf = await load("SpecularSilkPouf");
+  recolor(pouf, () => true, "#cfcac0", "#b9b4aa");
+  place(pouf, 1.55, -0.35, 0.3);
+  blob(1.55, -0.35, 0.85, 0.85, 0);
+  blob(2.05, zBack + 0.5, 0.9, 0.9, 0);
+  blob(0.2, -0.95, 1.2, 1.2, 0);
+  place(await load("DiffuseTransmissionPlant").then((p) => (p.scale.setScalar(1.35), p)), 2.05, zBack + 0.5, 0.6);
+
+  // Couchtisch: helle Eiche, rund.
+  {
+    const oak = new THREE.MeshStandardMaterial({ color: "#c9a77f", roughness: 0.5 });
+    const tbl = new THREE.Group();
+    const top = new THREE.Mesh(new THREE.CylinderGeometry(0.45, 0.45, 0.035, 64), oak);
+    top.position.y = 0.4;
+    tbl.add(top);
+    for (let i = 0; i < 3; i++) {
+      const a = (i / 3) * Math.PI * 2;
+      const leg = new THREE.Mesh(new THREE.CylinderGeometry(0.022, 0.018, 0.39, 16), oak);
+      leg.position.set(Math.cos(a) * 0.3, 0.195, Math.sin(a) * 0.3);
+      tbl.add(leg);
+    }
+    place(tbl, 0.2, -0.95);
+    place(await load("GlassVaseFlowers").then((v) => (v.scale.setScalar(1.6), v)), 0.32, -1.0, 0.4, 0.418);
+  }
+
+  // Bild über dem Sofa: ruhige Fläche in Salbei und Sand.
+  {
+    const c = document.createElement("canvas");
+    c.width = 600; c.height = 800;
+    const g = c.getContext("2d");
+    g.fillStyle = "#f1efe9"; g.fillRect(0, 0, 600, 800);
+    g.fillStyle = "#b9c4b5"; g.beginPath(); g.ellipse(250, 330, 190, 210, 0, 0, Math.PI * 2); g.fill();
+    g.fillStyle = "#d8cbb6"; g.fillRect(250, 430, 260, 300);
+    const tex = new THREE.CanvasTexture(c);
+    tex.colorSpace = THREE.SRGBColorSpace;
+    const frame = new THREE.MeshStandardMaterial({ color: "#2a2a28", roughness: 0.5 });
+    const art = new THREE.Group();
+    const fr = new THREE.Mesh(new THREE.BoxGeometry(0.66, 0.86, 0.03), frame);
+    const pic = new THREE.Mesh(new THREE.PlaneGeometry(0.6, 0.8), new THREE.MeshStandardMaterial({ map: tex, roughness: 0.9 }));
+    pic.position.z = 0.016;
+    art.add(fr, pic);
+    place(art, 0.15, zBack + 0.02, 0, 1.6);
+  }
+
+  // Zwei Wandleuchten links und rechts vom Bild.
+  for (const x of [-0.85, 1.15]) {
+    const lamp = await load("AnisotropyBarnLamp");
+    lamp.scale.setScalar(1.3);
+    place(lamp, x, zBack, 0, 1.75);
+    const glow = new THREE.PointLight("#ffd9a8", 0.6, 3, 2);
+    glow.position.set(x, 1.55, zBack + 0.25);
+    furnished.add(glow);
+  }
+
+  images["nachher.webp"] = shoot();
+  window.__images = images;
+  window.__done = true;
+</script>

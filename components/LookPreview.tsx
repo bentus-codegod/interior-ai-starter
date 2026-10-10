@@ -47,8 +47,8 @@ export function LookPreview({
   const deko = data?.items.filter((i) => isDeko(i.product)) ?? [];
 
   return (
-    <section aria-labelledby="preview-title" className="rounded-md border border-line bg-panel">
-      <div className="border-b border-line px-5 py-4">
+    <section aria-labelledby="preview-title">
+      <div className="pb-4">
         <h2 id="preview-title" className="text-base font-medium tracking-tight">
           {lookName}: diese Stücke würden wir wählen
         </h2>
@@ -58,11 +58,11 @@ export function LookPreview({
       </div>
 
       {failed && (
-        <p className="px-5 py-6 text-sm text-danger">Vorschau gerade nicht verfügbar.</p>
+        <p className="py-6 text-sm text-danger">Vorschau gerade nicht verfügbar.</p>
       )}
 
       {!data && !failed && (
-        <ul className="space-y-3 px-5 py-4" aria-hidden>
+        <ul className="space-y-3 border-t border-line py-4" aria-hidden>
           {Array.from({ length: 5 }).map((_, i) => (
             <li key={i} className="flex items-center gap-4">
               <span className="skeleton h-14 w-14 rounded-md" />
@@ -77,7 +77,7 @@ export function LookPreview({
 
       {data && (
         <>
-          <ul className="grid gap-x-6 gap-y-3 px-5 py-4 sm:grid-cols-2">
+          <ul className="grid gap-x-6 gap-y-3 border-t border-line py-4 sm:grid-cols-2">
             {furniture.map(({ product, quantity }) => (
               <li key={product.sku} className="flex items-center gap-3">
                 <ProductThumb product={product} />
@@ -94,11 +94,11 @@ export function LookPreview({
             ))}
           </ul>
           {deko.length > 0 && (
-            <p className="border-t border-line px-5 py-3 text-sm text-muted">
+            <p className="border-t border-line py-3 text-sm text-muted">
               Dazu {deko.length} Deko-Stücke, zum Beispiel {deko[0].product.name}.
             </p>
           )}
-          <div className="flex items-baseline justify-between border-t border-line px-5 py-4">
+          <div className="flex items-baseline justify-between border-t border-line py-4">
             <span className="text-sm text-muted">Summe dieses Looks</span>
             <span className="text-lg font-medium tabular-nums">{formatEur(data.subtotalCents)}</span>
           </div>

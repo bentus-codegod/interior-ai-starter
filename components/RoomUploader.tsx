@@ -116,10 +116,10 @@ export function RoomUploader({
           imageDataUrl ? "aspect-[4/3]" : "aspect-[16/9]"
         } ${
           imageDataUrl
-            ? "border-line bg-sunken"
+            ? "border-transparent bg-sunken"
             : dragOver
-              ? "border-accent/60 bg-tint"
-              : "border-dashed border-line bg-panel hover:border-accent/50 hover:bg-tint/50"
+              ? "border-dashed border-accent bg-tint/40"
+              : "border-dashed border-ink/20 hover:border-accent/70"
         }`}
       >
         {imageDataUrl ? (

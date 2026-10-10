@@ -1,7 +1,7 @@
 "use client";
 
 import { useState } from "react";
-import { Camera, Swatches, ShoppingBag } from "@phosphor-icons/react";
+import { ArrowDown, Camera, Swatches, ShoppingBag } from "@phosphor-icons/react";
 import { RoomUploader } from "@/components/RoomUploader";
 import { CompareSlider } from "@/components/CompareSlider";
 import { ShopTheLook } from "@/components/ShopTheLook";
@@ -156,27 +156,62 @@ export default function Home() {
 
   return (
     <main>
-      {/* Arbeitsfläche: links Eingaben, rechts Ergebnis */}
-      <div
-        id="gestalten"
-        className="mx-auto grid max-w-7xl gap-10 px-4 pb-24 pt-12 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:pt-20"
-      >
+      {/* Hero: erst zeigen, was rauskommt, dann zum Gestalten einladen */}
+      <section className="mx-auto grid max-w-7xl items-center gap-10 px-4 pb-16 pt-10 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:pb-24 lg:pt-16">
         <div>
           <h1 className="text-4xl font-normal leading-[1.05] tracking-[-0.035em] sm:text-5xl lg:text-[2rem] xl:text-[2.75rem]">
             Dein Raum, eingerichtet und kaufbar.
           </h1>
           <p className="mt-5 max-w-prose text-lg leading-relaxed text-muted">
-            Foto hochladen, Stil und Budget wählen. Du siehst deinen Raum neu und kaufst den
-            Look mit einem Klick.
+            Ein Foto genügt. Wir richten deinen Raum in deinem Stil und Budget ein, und jedes
+            Stück im Bild kannst du direkt kaufen.
+          </p>
+          <div className="mt-8 flex flex-wrap items-center gap-x-6 gap-y-3">
+            <a
+              href="#gestalten"
+              className="press inline-flex items-center gap-2 rounded-md bg-ink px-5 py-3 text-sm font-medium text-surface hover:bg-ink/85"
+            >
+              Raum gestalten
+              <ArrowDown size={16} />
+            </a>
+            <a
+              href="#ablauf"
+              className="text-sm text-muted underline decoration-line underline-offset-4 transition-colors hover:text-ink hover:decoration-ink"
+            >
+              So funktioniert es
+            </a>
+          </div>
+        </div>
+        <CompareSlider
+          before="/demo/vorher.webp"
+          after="/demo/nachher.webp"
+          beforeAlt="Leerer Wohnraum mit Fenster und Holzboden"
+          afterAlt="Derselbe Raum, eingerichtet mit Sofa, Sessel, Couchtisch, Teppich und Pflanze"
+          aspect="aspect-[16/10]"
+          note="Testbild, gerendert aus 3D-Modellen der Khronos glTF Sample Assets (Eric Chadwick, Rico Cilliers; CC BY 4.0 und CC0)."
+        />
+      </section>
+
+      {/* Arbeitsfläche: links Eingaben, rechts Ergebnis */}
+      <div
+        id="gestalten"
+        className="mx-auto grid max-w-7xl scroll-mt-6 gap-10 border-t border-line px-4 pb-24 pt-12 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-16 lg:pt-16"
+      >
+        <div>
+          <h2 className="text-3xl font-normal leading-tight tracking-[-0.03em]">
+            Gestalte deinen Raum.
+          </h2>
+          <p className="mt-3 max-w-prose text-muted">
+            Foto hochladen, Stil und Budget wählen. Rechts siehst du, was wir aussuchen würden.
           </p>
 
-          <div className="mt-12 space-y-8">
+          <div className="mt-10 space-y-8">
             <Step title="Foto deines Raums">
               <RoomUploader imageDataUrl={image} onImage={setImage} />
             </Step>
 
             <Step title="Raum und Stil">
-              <div className="flex flex-wrap gap-2" role="radiogroup" aria-label="Raumtyp">
+              <div className="flex flex-wrap gap-x-5 gap-y-2" role="radiogroup" aria-label="Raumtyp">
                 {rooms.map((r) => {
                   const active = r.id === roomType;
                   return (
@@ -189,10 +224,10 @@ export default function Home() {
                         setRoomType(r.id);
                         setLookId(looksForRoom(r.id)[0].id);
                       }}
-                      className={`press rounded-full border px-4 py-1.5 text-sm ${
+                      className={`press border-b py-1 text-sm transition-colors ${
                         active
-                          ? "border-accent/40 bg-tint text-ink"
-                          : "border-line bg-panel text-muted hover:border-ink/30 hover:text-ink"
+                          ? "border-ink text-ink"
+                          : "border-transparent text-muted hover:text-ink"
                       }`}
                     >
                       {r.name}
@@ -201,7 +236,7 @@ export default function Home() {
                 })}
               </div>
 
-              <div className="mt-4 grid grid-cols-2 gap-3" role="radiogroup" aria-label="Stil">
+              <div className="mt-5 grid gap-x-8 sm:grid-cols-2" role="radiogroup" aria-label="Stil">
                 {roomLooks.map((l) => {
                   const active = l.id === lookId;
                   return (
@@ -211,22 +246,30 @@ export default function Home() {
                       role="radio"
                       aria-checked={active}
                       onClick={() => setLookId(l.id)}
-                      className={`press rounded-md border p-4 text-left ${
-                        active
-                          ? "border-accent/50 bg-tint"
-                          : "border-line bg-panel hover:border-ink/30"
-                      }`}
+                      className="group flex items-start gap-3 border-b border-line py-3 text-left"
                     >
-                      <span className="block text-sm font-medium">{l.name}</span>
-                      <span className="mt-1 block text-sm leading-snug text-muted">
-                        {l.description}
+                      <span
+                        aria-hidden
+                        className={`mt-[3px] grid h-4 w-4 shrink-0 place-items-center rounded-full border transition-colors ${
+                          active ? "border-accent" : "border-ink/25 group-hover:border-ink/50"
+                        }`}
+                      >
+                        {active && <span className="h-2 w-2 rounded-full bg-accent" />}
+                      </span>
+                      <span>
+                        <span className={`block text-sm font-medium ${active ? "text-ink" : "text-ink/80"}`}>
+                          {l.name}
+                        </span>
+                        <span className="mt-0.5 block text-sm leading-snug text-muted">
+                          {l.description}
+                        </span>
                       </span>
                     </button>
                   );
                 })}
               </div>
 
-              <label className="mt-4 block">
+              <label className="mt-6 block">
                 <span className="mb-1.5 block text-xs font-medium text-muted">
                   Eigene Wünsche, optional
                 </span>
@@ -236,7 +279,7 @@ export default function Home() {
                   rows={2}
                   onChange={(e) => setStyleText(e.target.value)}
                   placeholder="Zum Beispiel: hell, viel Holz, grüne Akzente"
-                  className="w-full resize-none rounded-md border border-line bg-panel px-3 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent"
+                  className="w-full resize-none rounded-none border-0 border-b border-line bg-transparent px-0 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent"
                 />
                 <span className="mt-1 block text-right text-xs tabular-nums text-subtle">
                   {styleText.length} / {MAX_STYLE_TEXT}
@@ -281,7 +324,7 @@ export default function Home() {
                       type="button"
                       onClick={autoEstimate}
                       disabled={!image || estimating}
-                      className="press inline-flex items-center gap-2 rounded-md border border-line bg-panel px-3 py-2 text-sm hover:border-accent/50 disabled:cursor-not-allowed disabled:opacity-40"
+                      className="text-sm text-ink underline decoration-line underline-offset-4 transition-colors hover:decoration-ink disabled:cursor-not-allowed disabled:text-subtle disabled:no-underline"
                     >
                       {estimating ? "Wird geschätzt …" : "Maße aus dem Foto schätzen (Beta)"}
                     </button>
@@ -319,7 +362,7 @@ export default function Home() {
                 </p>
               )}
               {error && (
-                <p role="alert" className="mt-3 rounded-md bg-danger/10 px-3 py-2 text-sm text-danger">
+                <p role="alert" className="mt-3 text-sm text-danger">
                   {error}
                 </p>
               )}
@@ -333,7 +376,7 @@ export default function Home() {
             <div className="space-y-6" aria-live="polite" aria-busy="true">
               <span className="sr-only">Dein Raum wird gestaltet.</span>
               <div className="skeleton aspect-[4/3] rounded-md" />
-              <div className="space-y-3 rounded-md border border-line bg-panel p-5">
+              <div className="space-y-3">
                 {Array.from({ length: 4 }).map((_, i) => (
                   <div key={i} className="flex items-center gap-4">
                     <span className="skeleton h-14 w-14 rounded-md" />
@@ -398,7 +441,7 @@ export default function Home() {
       </div>
 
       {/* So funktioniert's: Verben als Überschriften, keine Nummern-Etiketten */}
-      <section id="ablauf" className="scroll-mt-6 border-t border-line bg-panel">
+      <section id="ablauf" className="scroll-mt-6 border-t border-line">
         <div className="mx-auto grid max-w-7xl gap-10 px-4 py-16 sm:px-6 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-14 lg:py-20">
           <h2 className="text-3xl font-normal leading-tight tracking-[-0.03em]">
             Vom Foto zum fertigen Raum.

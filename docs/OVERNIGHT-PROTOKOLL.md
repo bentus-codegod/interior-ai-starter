@@ -5,6 +5,26 @@ wurde, was offen bleibt. Neueste Session oben.
 
 ---
 
+## Session 4c · Hero mit gerenderten Testbildern, weniger Kästen
+
+Wunsch: keine Google Fonts, oben nicht zuerst „Foto hochladen“, sondern
+gerenderte Testbilder; schlichtere Farben, weniger Boxen und Flächen hinter
+Buttons; Skills vorher prüfen.
+
+| Punkt | Ergebnis |
+| --- | --- |
+| Google Fonts | Keine. Geist kommt als npm-Paket `geist` und wird selbst ausgeliefert. Im Browser-Test gehen alle Requests nur an die eigene Domain. |
+| Skills | three.js-Skills von CloudAI-X mit SkillSpector geprüft (Score 0), 5 davon installiert. Details: `docs/DESIGN-SKILLS-PRUEFUNG.md`. |
+| Testbilder | `scripts/render-demo/` rendert per three.js im Headless-Chromium einen leeren und einen eingerichteten Raum aus derselben Kamera nach `public/demo/vorher.webp` und `nachher.webp` (zusammen ca. 80 KB). Modelle: Khronos glTF Sample Assets, Stoffe auf Salbei, Sand und Grau umgefärbt. Lizenzen in `public/demo/README.md`. |
+| Hero | Überschrift, ein Satz, „Raum gestalten“ (springt zum Formular), Link „So funktioniert es“; rechts der Vorher/Nachher-Slider mit den Testbildern und Quellenzeile. |
+| Weniger Kästen | Raumtypen als unterstrichene Tabs statt Chips, Stile als Liste mit Radio-Punkt statt Karten, Wunsch-Feld nur mit Unterstrich, Vorschau, Einkaufsliste und Bearbeiten ohne Rahmen und Hintergrund, Herz/X ohne Kreisrahmen, Fehlermeldungen ohne Farbfläche, Ablauf-Abschnitt ohne Füllfarbe. Nur der Hauptbutton bleibt gefüllt. |
+| Prüfung | `tsc`, 37 Tests, `next build` grün; Screenshots hell, dunkel, 1024 px und mobil ohne horizontales Scrollen; Überschrift ab 1024 px auf zwei Zeilen. |
+
+Offen: Die Testbilder sind Renderings, keine echten Kundenfotos. Sobald es
+echte Vorher/Nachher-Paare gibt, einfach die zwei Dateien ersetzen.
+
+---
+
 ## Session 4b · Edler und schlichter (weniger nach KI aussehend)
 
 **Auftrag (Anton):** Die ganze Website soll nicht nach KI aussehen: edel,

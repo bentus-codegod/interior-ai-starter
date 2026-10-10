@@ -149,7 +149,7 @@ export function ShopTheLook({
     const open = swapFor === p.sku;
     const liked = state.liked.has(p.sku);
     const linkBtn =
-      "press inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-muted hover:bg-sunken hover:text-ink disabled:opacity-50";
+      "press inline-flex items-center gap-1 rounded-md px-1.5 py-1 text-muted transition-colors hover:text-ink disabled:opacity-50";
     return (
       <SwipeRow
         key={p.category}
@@ -195,7 +195,7 @@ export function ShopTheLook({
             onClick={() => dislike(index)}
             aria-label={`${p.name}: gefällt mir nicht, nächsten Vorschlag zeigen`}
             title="Gefällt mir nicht"
-            className="press grid h-8 w-8 place-items-center rounded-full border border-line text-muted hover:border-danger/50 hover:text-danger"
+            className="press grid h-8 w-8 place-items-center rounded-full text-muted transition-colors hover:text-danger"
           >
             <X size={14} />
           </button>
@@ -205,10 +205,8 @@ export function ShopTheLook({
             aria-pressed={liked}
             aria-label={`${p.name}: gefällt mir, behalten`}
             title="Gefällt mir"
-            className={`press mr-2 grid h-8 w-8 place-items-center rounded-full border ${
-              liked
-                ? "border-accent/40 bg-tint text-accent"
-                : "border-line text-muted hover:border-accent/50 hover:text-accent"
+            className={`press mr-2 grid h-8 w-8 place-items-center rounded-full transition-colors ${
+              liked ? "text-accent" : "text-muted hover:text-accent"
             }`}
           >
             <Heart size={14} weight={liked ? "fill" : "bold"} />
@@ -250,13 +248,13 @@ export function ShopTheLook({
         </div>
 
         {open && (
-          <div className="enter mt-2 ml-[72px] space-y-1 rounded-md border border-line bg-sunken/60 p-1.5">
+          <div className="enter mt-2 ml-[72px] space-y-1 border-l border-line pl-2">
             {alts.map((a) => (
               <button
                 key={a.sku}
                 type="button"
                 onClick={() => swap(index, a)}
-                className="press flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left hover:bg-panel"
+                className="press flex w-full items-center gap-3 rounded-md px-2 py-1.5 text-left transition-colors hover:text-accent"
               >
                 <ProductThumb product={a} size="sm" />
                 <span className="min-w-0 flex-1">
@@ -278,8 +276,8 @@ export function ShopTheLook({
   const overBudget = furnitureBudgetCents > 0 && subtotalCents > furnitureBudgetCents;
 
   return (
-    <section aria-labelledby="shop-title" className="enter rounded-md border border-line bg-panel">
-      <div className="border-b border-line px-5 py-4">
+    <section aria-labelledby="shop-title" className="enter">
+      <div className="border-b border-line pb-4">
         <h2 id="shop-title" className="text-base font-medium tracking-tight">
           Diesen Look kaufen
         </h2>
@@ -288,28 +286,28 @@ export function ShopTheLook({
           Zusammengehörige Stücke ziehen mit.
         </p>
         {notice && (
-          <p role="status" className="enter mt-3 rounded-md bg-tint px-3 py-2 text-sm text-ink">
+          <p role="status" className="enter mt-3 text-sm text-accent">
             {notice}
           </p>
         )}
       </div>
 
-      <ul className="divide-y divide-line px-5">
+      <ul className="divide-y divide-line">
         {furniture.map(({ item, index }) => renderItem(item, index))}
       </ul>
 
       {deko.length > 0 && (
         <>
-          <h3 className="border-t border-line px-5 pt-4 text-sm font-medium">
+          <h3 className="border-t border-line pt-6 text-sm font-medium">
             Deko und Accessoires
           </h3>
-          <ul className="divide-y divide-line px-5">
+          <ul className="divide-y divide-line">
             {deko.map(({ item, index }) => renderItem(item, index))}
           </ul>
         </>
       )}
 
-      <div className="space-y-1.5 border-t border-line px-5 py-4">
+      <div className="space-y-1.5 border-t border-line py-4">
         <div className="flex items-baseline justify-between">
           <span className="text-sm text-muted">Zwischensumme</span>
           <span className="text-xl font-medium tabular-nums">{formatEur(subtotalCents)}</span>
@@ -331,7 +329,7 @@ export function ShopTheLook({
         )}
       </div>
 
-      <div className="border-t border-line px-5 py-4">
+      <div className="border-t border-line pt-4">
         {error && <p className="mb-3 text-sm text-danger">{error}</p>}
         <button
           type="button"

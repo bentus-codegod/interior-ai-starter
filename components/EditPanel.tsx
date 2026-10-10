@@ -60,7 +60,7 @@ export function EditPanel({ baseImageUrl }: { baseImageUrl: string }) {
     "w-full rounded-md border border-line bg-panel px-3 py-2 text-sm outline-none transition-colors placeholder:text-subtle focus:border-accent";
 
   return (
-    <section aria-labelledby="edit-title" className="enter rounded-md border border-line bg-panel p-5">
+    <section aria-labelledby="edit-title" className="enter border-t border-line pt-6">
       <h2 id="edit-title" className="text-base font-medium tracking-tight">
         Möbel gezielt ändern <span className="text-sm font-normal text-subtle">Beta</span>
       </h2>
@@ -127,7 +127,7 @@ export function EditPanel({ baseImageUrl }: { baseImageUrl: string }) {
           {loading ? "Wird angewendet …" : "Anwenden"}
         </button>
         {error && (
-          <p role="alert" className="rounded-md bg-danger/10 px-3 py-2 text-sm text-danger">
+          <p role="alert" className="text-sm text-danger">
             {error}
           </p>
         )}

@@ -62,6 +62,20 @@ Grundsätze gelesen: `craft-floor.md`, `operate.md`, `mode-operate.md`,
 Wer Impeccable trotzdem nutzen will: in einer getrennten Umgebung, mit
 fester Version, und ohne Hooks in den geteilten Einstellungen.
 
+## Nachtrag: three.js-Skills für die Demo-Renderings
+
+Für die Vorher/Nachher-Testbilder im Hero wurden Skills zum Rendern
+gesucht und vorher genauso geprüft:
+
+| Kandidat | Ergebnis | Entscheidung |
+| --- | --- | --- |
+| Taste `imagegen-frontend-web` | braucht ein Bildgenerierungs-Werkzeug, das hier nicht verfügbar ist | nicht genutzt |
+| CloudAI-X/threejs-skills `b1c6230` (10 Skills) | 9 × Score 0, `threejs-animation` Score 7 (Fehlalarm „Endlosschleife“ beim Render-Loop); keine unsichtbaren Zeichen; nur Beispiel-CDNs als Hosts | 5 Skills **installiert** (fundamentals, lighting, materials, loaders, textures) |
+| OpenAEC-Foundation Three.js-Claude-Skill-Package | Score bis 7, Gesamturteil Vorsicht; für unseren Zweck unnötig groß | nicht genutzt |
+
+Die Skills sind reine Textanleitungen. Ausgeführt wurde nur unser eigenes
+Skript `scripts/render-demo/` mit dem `three`-Paket aus `node_modules`.
+
 ## Wiederholen
 
 ```bash
