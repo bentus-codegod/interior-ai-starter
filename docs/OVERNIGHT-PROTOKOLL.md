@@ -5,6 +5,129 @@ wurde, was offen bleibt. Neueste Session oben.
 
 ---
 
+## Session 4c · Hero mit gerenderten Testbildern, weniger Kästen
+
+Wunsch: keine Google Fonts, oben nicht zuerst „Foto hochladen“, sondern
+gerenderte Testbilder; schlichtere Farben, weniger Boxen und Flächen hinter
+Buttons; Skills vorher prüfen.
+
+| Punkt | Ergebnis |
+| --- | --- |
+| Google Fonts | Keine. Geist kommt als npm-Paket `geist` und wird selbst ausgeliefert. Im Browser-Test gehen alle Requests nur an die eigene Domain. |
+| Skills | three.js-Skills von CloudAI-X mit SkillSpector geprüft (Score 0), 5 davon installiert. Details: `docs/DESIGN-SKILLS-PRUEFUNG.md`. |
+| Testbilder | `scripts/render-demo/` rendert per three.js im Headless-Chromium einen leeren und einen eingerichteten Raum aus derselben Kamera nach `public/demo/vorher.webp` und `nachher.webp` (zusammen ca. 80 KB). Modelle: Khronos glTF Sample Assets, Stoffe auf Salbei, Sand und Grau umgefärbt. Lizenzen in `public/demo/README.md`. |
+| Hero | Überschrift, ein Satz, „Raum gestalten“ (springt zum Formular), Link „So funktioniert es“; rechts der Vorher/Nachher-Slider mit den Testbildern und Quellenzeile. |
+| Weniger Kästen | Raumtypen als unterstrichene Tabs statt Chips, Stile als Liste mit Radio-Punkt statt Karten, Wunsch-Feld nur mit Unterstrich, Vorschau, Einkaufsliste und Bearbeiten ohne Rahmen und Hintergrund, Herz/X ohne Kreisrahmen, Fehlermeldungen ohne Farbfläche, Ablauf-Abschnitt ohne Füllfarbe. Nur der Hauptbutton bleibt gefüllt. |
+| Prüfung | `tsc`, 37 Tests, `next build` grün; Screenshots hell, dunkel, 1024 px und mobil ohne horizontales Scrollen; Überschrift ab 1024 px auf zwei Zeilen. |
+
+Offen: Die Testbilder sind Renderings, keine echten Kundenfotos. Sobald es
+echte Vorher/Nachher-Paare gibt, einfach die zwei Dateien ersetzen.
+
+---
+
+## Session 4b · Edler und schlichter (weniger nach KI aussehend)
+
+**Auftrag (Anton):** Die ganze Website soll nicht nach KI aussehen: edel,
+schlicht, keine bunten Farben, höchstens Pastelltöne. Mit den geprüften
+Design-Skills (Taste, Emil Kowalski).
+
+Design-Einordnung (Taste 0.B): Werkzeug-Seite für einrichtungsbewusste
+Privatkunden, ruhige, zurückhaltend-luxuriöse Sprache, monochrom mit einem
+Pastellton. Regler: Gestaltungsfreiheit 6, Bewegung 4, Dichte 3.
+
+| Vorher | Nachher | Warum (Skill) |
+| --- | --- | --- |
+| Produktkacheln in Ocker/Messing (`#B08948` im Katalog) | Produktfarbe nur als Pastell-Hauch (`color-mix` mit der Fläche), feines Icon | Taste: Messing-Palette verboten, keine lauten Flächen |
+| Sparkle-Icon auf „Raum gestalten“, Zauberstab bei „Maße schätzen“ | entfernt | Glitzer/Zauber = KI-Klischee |
+| Waldgrüne Knopfflächen | Hauptknöpfe Anthrazit, Akzent nur Salbei-Pastell | monochrom + ein Pastellton |
+| Schwarz gefüllte Auswahl-Chips | feine Kontur, Auswahl als Pastellfläche | weniger Kontrast-Lärm |
+| Überschriften fett (600) | Hero 400, Zwischenüberschriften 500, enge Laufweite | leichte Schnitte wirken hochwertiger |
+| Icons im grünen Kreis („So funktioniert's“) | nur feine Linien-Icons | Icon-im-Kreis ist ein Vorlagen-Muster |
+| Radien 8 px / 12 px gemischt | einheitlich 6 px, Chips rund | Taste: Shape Consistency Lock |
+| Icon-Strichstärken gemischt | alle `light` (zentral per `IconProvider`) | Taste: ein Gewicht |
+| Stile auf dem Handy untereinander (6 lange Kacheln) | zwei Spalten | kürzere Seite |
+| Platzhalter-Bild mit kräftigem Grün | neutrales Pastell | Farbkonsistenz |
+
+Mehr Luft: größere Abstände zwischen den Eingabe-Blöcken, mehr Abstand oben.
+
+Geprüft: Typen, 37 Tests, Build; Browser hell/dunkel/Handy ohne seitliches
+Scrollen und ohne Konsolenfehler; Überschrift bei 1024/1280/1440 px auf
+2 Zeilen; 0 Gedankenstriche; alle Farbpaare WCAG AA (≥ 4,5:1) in beiden Modi.
+
+---
+
+## Session 4 — 10.10.2026 · Frontend mit geprüften Design-Skills
+
+**Auftrag (Anton):** Frontend fertig bauen, damit man es ansehen kann. Die
+Design-Skills (Emil Kowalski, Leonxlnx Taste, Paul Bakaus Impeccable) vorher
+mit NVIDIAs Skill-Scanner prüfen.
+
+### Skill-Prüfung (Details: `docs/DESIGN-SKILLS-PRUEFUNG.md`)
+- Scanner: NVIDIA SkillSpector v2.12.0, statisch.
+- **Emil Kowalski** (`emil-design-eng`): sauber, installiert.
+- **Taste** (`design-taste-frontend`): MITTEL, alle Befunde von Hand geprüft
+  (Fehlalarme), installiert.
+- **Impeccable**: KRITISCH. Bringt ausführbaren Code mit, lädt eine
+  Programmdatei nach, will Hooks in die Claude-Einstellungen schreiben.
+  **Nicht installiert**, Grundsätze nur gelesen.
+- Installiert in `.claude/skills/` (nur Textdateien, mit Lizenz, Commit notiert).
+
+### Frontend
+Design-Einordnung: Werkzeug (Operate) mit kurzem Einstieg. Regler nach Taste:
+Gestaltungsfreiheit 5, Bewegung 4, Dichte 5.
+
+| Bereich | Vorher | Jetzt | Regel |
+| --- | --- | --- | --- |
+| Farben | Creme, Messing, Ton, Salbei | kühles Neutral + eine Akzentfarbe (Waldgrün), Hell- **und Dunkelmodus** | Taste: Premium-Palette-Verbot, Dark Mode Pflicht |
+| Schrift | Fraunces (Serife) + Inter | **Geist** (eine Familie, lokal ausgeliefert) | Taste: Fraunces verboten, Inter nicht als Standard; Impeccable: eine Familie für Werkzeuge |
+| Aufbau | Formular links, leeres Feld rechts | Eingaben links, rechts **echte Vorschau** des Looks mit Katalogdaten, dann Ergebnis | Impeccable: Leerzustand erklärt die Oberfläche |
+| Ergebnis | zwei Bilder nebeneinander | **Vorher/Nachher-Schieberegler** (clip-path, Tastatur, Touch), wischt einmal zur Mitte | Emil: Comparison Slider; Impeccable: ein inszenierter Moment |
+| Laden | Text „Wird gestaltet …“ | **Skelett** in Form des Ergebnisses | Taste/Impeccable: keine Spinner |
+| Produkte | Farbkachel mit 2 Buchstaben | Kachel mit **Phosphor-Icon** je Kategorie | Taste: Icons aus einer Bibliothek, keine Emoji/Zeichen |
+| Swipe | ✕ und ♥ als Textzeichen | Icon-Knöpfe, Druck-Rückmeldung | Emil: scale(0.97) beim Drücken |
+| Upload | Klickfläche | zusätzlich **Drag & Drop**, Video-Standbilder als Skelett | |
+| Texte | Gedankenstriche, „1 · Raumfoto“ | **null Gedankenstriche**, Verben statt Schrittnummern | Taste: Em-Dash-Verbot, keine „Step 1“-Labels |
+| Browser-Details | Standard | Auswahlfarbe, Cursor, Fokus-Ring, Scrollbalken, Regler in Akzentfarbe | Impeccable: Browser-Flächen |
+| Bewegung | `transition` ohne Kurve | eigene ease-out-Kurve, < 300 ms, `prefers-reduced-motion` | Emil |
+
+Neu: `components/SiteHeader.tsx`, `components/CompareSlider.tsx` (ersetzt
+`RenderResult.tsx`), `components/LookPreview.tsx`, `app/api/preview`.
+Rechtstexte (Impressum, Datenschutz) nur umgefärbt, Inhalt unverändert.
+
+### Zusammenführung mit Bents neuem Stand
+PR #1 war bereits gemergt; `main` hatte inzwischen Bents Phase-2-Funktionen.
+Das Redesign wurde auf den aktuellen `main` gesetzt und übernimmt diese:
+- **Render-Varianten** (`RENDER_VARIANTS`): Auswahl als Vorschaubilder unter
+  dem Vorher/Nachher-Regler. Auswahl jetzt per Position statt per URL (vorher
+  waren bei gleichen Adressen alle Varianten gleichzeitig „ausgewählt“).
+- **Möbel gezielt ändern** (`EditPanel`, nur mit Replicate): neu gestaltet,
+  Logik unverändert, Lade-Skelett ergänzt.
+- **Maße aus dem Foto schätzen (Beta)**: Knopf im Bereich „Maße und Grundriss“.
+- **Erweiterte Stil-Bibliothek** (19 Looks): passt ins Stil-Raster.
+- Bents nummerierte Anleitung im leeren Ergebnisfeld ist durch die
+  Look-Vorschau und den Abschnitt „So funktioniert's“ ersetzt (Taste: keine
+  „1 · …“-Labels).
+
+### Geprüft
+- Typen, 37 Tests, Build grün.
+- Browser (Playwright): Desktop hell/dunkel, Handy; kein seitliches Scrollen;
+  0 Gedankenstriche auf allen Seiten; Überschrift bei 1024/1280/1440 px auf
+  2 Zeilen; Upload ohne Scrollen sichtbar; Schieberegler per Tastatur;
+  Kopplung meldet „Passend dazu angepasst: Nachttisch, Kommode“; keine
+  Konsolenfehler.
+- Kontraste (WCAG): alle Text/Grund-Paare in beiden Modi ≥ 4,5:1.
+
+### Offen
+- **Echte Fotos fehlen.** Diese Umgebung erreicht keine Bildquellen
+  (Unsplash, Openverse usw. gesperrt). Es gibt keine Fake-Bilder; Produkte
+  zeigen Icon-Kacheln, bis Feeds Produktfotos liefern.
+- Das Platzhalter-Bild im Mock-Modus ist ein einfaches SVG; mit echter KI
+  erscheint dort der Raum.
+- Rechtstexte enthalten noch Gedankenstriche und `[[…]]`-Platzhalter
+  (Inhalt bewusst nicht angefasst).
+
+---
+
 ## Session 3 — 02.10.2026 · Komplettes Code-Review + Schnittstellen
 
 **Auftrag (Anton):** Komplettes Code-Review (Fehler, Unnötiges, Einzelpunkte,

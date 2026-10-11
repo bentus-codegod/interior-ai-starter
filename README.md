@@ -79,6 +79,9 @@ Lokal: `stripe listen --forward-to localhost:3000/api/stripe/webhook`.
 ## Wie es aufgebaut ist
 
 - `app/page.tsx` — der Wow-Flow (Upload → Raum & Look → Render → Shop the Look)
+- `components/CompareSlider.tsx` — Vorher/Nachher-Schieberegler für das Ergebnis
+- `components/LookPreview.tsx` + `app/api/preview` — Vorschau der Produkte eines Looks, bevor ein Foto da ist
+- `.claude/skills/` — geprüfte Design-Skills (Emil Kowalski, Taste), siehe `docs/DESIGN-SKILLS-PRUEFUNG.md`
 - `lib/roomEdit.ts` — Swipe, Tauschen und Kopplung (Sets, Material-Familien)
 - `lib/stylePrompt.ts` — Freitext-Stil → Render-Prompt
 - `lib/budget.ts` — Aufteilung Budget in Einrichtung und Logistik
